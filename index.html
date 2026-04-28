@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comunidade Business - MMN 3x10</title>
-    <!-- Favicon (opcional - coloque favicon.ico na mesma pasta) -->
-    <!-- Favicon para desktop -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <!-- Apple Touch Icon (iPhone/iPad) -->
     <link rel="apple-touch-icon" sizes="180x180" href="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,18 +29,21 @@
             font-weight: bold;
             color: #2c3e50;
         }
-        .login-container { max-width: 450px; margin: 100px auto; }
+        .login-container { max-width: 450px; margin: 80px auto; }
         .login-card {
             background: white;
             border-radius: 16px;
-            padding: 40px;
+            padding: 30px 40px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             text-align: center;
         }
         .logo-login {
             width: 120px;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 4px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
         .login-card h1 { 
             font-size: 1.5rem;
@@ -82,7 +82,6 @@
         .btn-danger { background: #dc3545; width: auto; padding: 10px 24px; }
         .btn-secondary { background: #6c757d; width: auto; padding: 10px 24px; }
         .btn-success { background: #28a745; width: auto; padding: 10px 24px; }
-        .btn-warning { background: #fd7e14; width: auto; padding: 10px 24px; }
         .error {
             background: #f8d7da;
             color: #721c24;
@@ -285,22 +284,22 @@
             </div>
 
             <div class="card">
-                <div class="card-header">📋 Extrato Consolidado</div>
+                <div class="card-header">📋 HISTÓRICO COMPLETO</div>
                 <div class="table-wrapper">
                     <table id="extratoTable">
-                        <thead><tr><th>ID_Pessoa</th><th>Nome</th><th>Total Entradas</th><th>Total Saídas</th><th>Reserva</th><th>Saldo Bruto</th><th>Saque Mês</th><th>Saque Acum</th><th>Disponível</th><th>Saldo Comercial</th><th>Atualizado</th></tr></thead>
-                        <tbody id="extratoBody"><tr><td colspan="11">Carregando......</tbody>
+                        <thead><tr><th>Código</th><th>Nome</th><th>Recebido</th><th>Pago</th><th>Reserva</th><th>Saldo Bruto</th><th>Saque Mês</th><th>Saque Acum</th><th>Disponível</th><th>Saldo Comercial</th><th>Atualizado</th></tr></thead>
+                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...--</tbody>
                     </table>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header">🌳 Minha Rede (3x10)</div>
+                <div class="card-header">🌳 MINHA REDE (3x10)</div>
                 <div id="arvoreContainer" class="tree">Carregando rede...</div>
             </div>
 
             <div class="card">
-                <div class="card-header">💸 Solicitar Saque</div>
+                <div class="card-header">💸 SOLICITAR SAQUE</div>
                 <div class="saque-form">
                     <div class="form-group"><label>Valor (R$)</label><input type="number" id="valorSaque" step="0.01" min="1" placeholder="Digite o valor"></div>
                     <button class="btn" onclick="solicitarSaque()">Solicitar Saque</button>
@@ -309,48 +308,48 @@
             </div>
 
             <div id="adminSection" class="card admin-section" style="display: none;">
-                <div class="card-header">👑 Painel Administrativo</div>
+                <div class="card-header">👑 PAINEL ADMINISTRATIVO</div>
                 
                 <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
-                    <button class="btn btn-secondary" onclick="mostrarNovoParticipante()">➕ Novo Participante</button>
-                    <button class="btn btn-secondary" onclick="mostrarAprovacaoSaques()">💰 Aprovar Saques</button>
-                    <button class="btn btn-secondary" onclick="mostrarGerarCodigo()">🔑 Gerar Código</button>
-                    <button class="btn btn-secondary" onclick="mostrarParametrosPioneiro()">👑 Parâmetros Pioneiro</button>
-                    <button class="btn btn-secondary" onclick="mostrarLogAlteracoes()">📋 Log de Alterações</button>
+                    <button class="btn btn-secondary" onclick="mostrarNovoParticipante()">➕ NOVO PARTICIPANTE</button>
+                    <button class="btn btn-secondary" onclick="mostrarAprovacaoSaques()">💰 APROVAR SAQUES</button>
+                    <button class="btn btn-secondary" onclick="mostrarGerarCodigo()">🔑 GERAR CÓDIGO</button>
+                    <button class="btn btn-secondary" onclick="mostrarParametrosPioneiro()">👑 PARÂMETROS PIONEIRO</button>
+                    <button class="btn btn-secondary" onclick="mostrarLogAlteracoes()">📋 LOG</button>
                 </div>
 
                 <!-- Modal Novo Participante -->
                 <div id="modalNovoParticipante" class="modal">
                     <div class="modal-content">
                         <span class="close-modal" onclick="fecharModal('modalNovoParticipante')">&times;</span>
-                        <div class="modal-header">➕ Novo Participante</div>
+                        <div class="modal-header">➕ NOVO PARTICIPANTE</div>
                         <div class="form-group"><label>Nome Completo *</label><input type="text" id="novoNome" placeholder="Nome do participante"></div>
                         <div class="form-group"><label>CPF *</label><input type="text" id="novoCpfCad" placeholder="Apenas números" maxlength="11"></div>
                         <div class="form-group"><label>Email</label><input type="email" id="novoEmail" placeholder="email@exemplo.com"></div>
                         <div class="form-group"><label>Telefone</label><input type="text" id="novoTelefone" placeholder="(11) 99999-9999"></div>
                         <div class="form-group"><label>ID do Indicador (opcional)</label><input type="number" id="novoIndicador" placeholder="ID da cota que indicou"></div>
                         <div class="form-group"><label>Depósito inicial (R$)</label><input type="number" id="novoDeposito" step="0.01" value="0" placeholder="0,00"></div>
-                        <button class="btn btn-success" onclick="criarNovoParticipante()">✅ Criar Participante</button>
+                        <button class="btn btn-success" onclick="criarNovoParticipante()">✅ CRIAR PARTICIPANTE</button>
                         <div id="novoParticipanteMsg" class="success" style="margin-top: 16px; display: none;"></div>
                     </div>
                 </div>
 
                 <div id="adminSaques" style="display: none;">
-                    <h3>📋 Saques Pendentes</h3>
-                    <div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...--</tbody></table></div>
+                    <h3>📋 SAQUES PENDENTES</h3>
+                    <div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"></tr><td colspan="5">Carregando...--</tbody></table></div>
                 </div>
 
                 <div id="adminCodigo" style="display: none;">
-                    <h3>🔑 Gerar Código de Acesso</h3>
+                    <h3>🔑 GERAR CÓDIGO DE ACESSO</h3>
                     <div class="saque-form" style="margin-top: 12px;">
                         <div class="form-group"><label>CPF do participante</label><input type="text" id="novoCpf" placeholder="Digite o CPF"></div>
-                        <button class="btn btn-success" onclick="gerarCodigoAcesso()">Gerar Código</button>
+                        <button class="btn btn-success" onclick="gerarCodigoAcesso()">GERAR CÓDIGO</button>
                     </div>
                     <div id="codigoGerado" class="success" style="margin-top: 12px; display: none;"><strong>Código gerado:</strong> <span id="novoCodigo"></span></div>
                 </div>
 
                 <div id="adminPioneiro" style="display: none;">
-                    <h3>👑 Parâmetros de Pioneiro</h3>
+                    <h3>👑 PARÂMETROS DE PIONEIRO</h3>
                     <div class="param-grid" id="parametrosPioneiro">
                         <div class="param-card"><div class="param-label">Pioneiros Permitidos</div><div class="param-value" id="param_permitido">-</div></div>
                         <div class="param-card"><div class="param-label">Data Limite</div><div class="param-value" id="param_data_limite">-</div></div>
@@ -358,46 +357,42 @@
                         <div class="param-card"><div class="param-label">Contador Atual</div><div class="param-value" id="param_contador">-</div></div>
                     </div>
                     
-                    <h3 style="margin-top: 24px;">✏️ Editar Parâmetros</h3>
+                    <h3 style="margin-top: 24px;">✏️ EDITAR PARÂMETROS</h3>
                     <div class="param-grid">
                         <div class="form-group"><label>Pioneiros Permitidos</label><select id="edit_permitido"><option value="SIM">SIM</option><option value="NAO">NAO</option></select></div>
                         <div class="form-group"><label>Data Limite (DD/MM/AAAA)</label><input type="text" id="edit_data_limite" placeholder="31/12/2026" maxlength="10"></div>
                         <div class="form-group"><label>Quantidade Máxima</label><input type="number" id="edit_qtd_maxima" min="1" max="1000"></div>
                         <div class="form-group"><label>Contador Atual</label><input type="number" id="edit_contador" min="0"></div>
                     </div>
-                    <button class="btn btn-success" onclick="salvarParametrosPioneiro()">💾 Salvar Parâmetros</button>
+                    <button class="btn btn-success" onclick="salvarParametrosPioneiro()">💾 SALVAR PARÂMETROS</button>
                     
-                    <h3 style="margin-top: 24px;">🏆 Aprovar Novo Pioneiro</h3>
+                    <h3 style="margin-top: 24px;">🏆 APROVAR NOVO PIONEIRO</h3>
                     <div class="saque-form" style="margin-top: 12px;">
                         <div class="form-group"><label>ID da Cota a ser aprovada</label><input type="number" id="pioneiroIdCota" placeholder="Digite o ID da cota"></div>
-                        <button class="btn btn-success" onclick="aprovarPioneiro()">Aprovar Pioneiro</button>
+                        <button class="btn btn-success" onclick="aprovarPioneiro()">APROVAR PIONEIRO</button>
                     </div>
                 </div>
 
                 <div id="adminLog" style="display: none;">
-                    <h3>📋 Log de Alterações Administrativas</h3>
+                    <h3>📋 LOG DE ALTERAÇÕES</h3>
                     <div class="table-wrapper log-table">
                         <table id="logTable">
                             <thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead>
                             <tbody id="logBody"><tr><td colspan="4">Carregando...--</tbody>
                         </table>
                     </div>
-                    <button class="btn btn-secondary" style="margin-top: 16px; width: auto;" onclick="carregarLogAlteracoes()">🔄 Atualizar</button>
+                    <button class="btn btn-secondary" style="margin-top: 16px; width: auto;" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // CONSTANTES
         const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
-        
-        // VARIÁVEIS GLOBAIS
         let usuarioAtual = null;
         let isAdmin = false;
 
-        // FUNÇÕES AUXILIARES
         function formatarDataBR(dataISO) {
             if (!dataISO) return '';
             const partes = dataISO.split('-');
@@ -412,38 +407,65 @@
             return dataBR;
         }
 
-        // API FUNCTIONS
         async function fetchAPI(endpoint, options = {}) {
             const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
-            const headers = { 
-                'apikey': SUPABASE_ANON_KEY, 
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 
-                'Content-Type': 'application/json', 
-                ...options.headers 
-            };
+            const headers = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', ...options.headers };
             const response = await fetch(url, { ...options, headers });
-            if (!response.ok) throw new Error(`Erro ${response.status}: ${await response.text()}`);
-            return response.json();
-        }
-
-        async function fetchRPC(funcao, params = {}) {
-            const url = `${SUPABASE_URL}/rest/v1/rpc/${funcao}`;
-            const headers = { 
-                'apikey': SUPABASE_ANON_KEY, 
-                'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 
-                'Content-Type': 'application/json' 
-            };
-            const response = await fetch(url, { method: 'POST', headers, body: JSON.stringify(params) });
             if (!response.ok) throw new Error(`Erro ${response.status}`);
             return response.json();
         }
 
-        // MODAL
+        async function fazerLogin() {
+            const cpf = document.getElementById('cpf').value.trim();
+            const codigo = document.getElementById('codigo').value.trim().toUpperCase();
+            const errorDiv = document.getElementById('loginError');
+            if (!cpf || !codigo) { errorDiv.style.display = 'block'; errorDiv.innerText = 'Preencha CPF e código'; return; }
+            try {
+                const acessos = await fetchAPI(`acessos?cpf=eq.${cpf}&codigo=eq.${codigo}&ativo=eq.true&select=*`);
+                if (!acessos || acessos.length === 0) { errorDiv.style.display = 'block'; errorDiv.innerText = 'CPF ou código inválido'; return; }
+                const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
+                if (!participantes || participantes.length === 0) { errorDiv.style.display = 'block'; errorDiv.innerText = 'Participante não encontrado'; return; }
+                usuarioAtual = participantes[0];
+                isAdmin = (cpf === '1');
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                document.getElementById('userNome').innerText = usuarioAtual.nome;
+                document.getElementById('userCpf').innerText = cpf;
+                if (isAdmin) document.getElementById('adminSection').style.display = 'block';
+                await carregarDashboard();
+            } catch (error) { errorDiv.style.display = 'block'; errorDiv.innerText = 'Erro: ' + error.message; }
+        }
+
+        async function carregarDashboard() {
+            await carregarExtratoESaldos();
+            await carregarArvore();
+            if (isAdmin) {
+                await carregarSaquesPendentes();
+                await carregarParametrosPioneiro();
+            }
+        }
+
+        async function carregarExtratoESaldos() {
+            try {
+                const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
+                if (saldo && saldo.length > 0) {
+                    const row = saldo[0];
+                    document.getElementById('saldoReserva').innerText = `R$ ${(row.reserva_atual || 0).toFixed(2)}`;
+                    document.getElementById('saldoBruto').innerText = `R$ ${(row.saldo_bruto || 0).toFixed(2)}`;
+                    document.getElementById('saldoDisponivel').innerText = `R$ ${(row.disponivel_saque || 0).toFixed(2)}`;
+                    document.getElementById('totalMensalidades').innerText = `R$ ${(row.total_mensalidades_pagas || 0).toFixed(2)}`;
+                    document.getElementById('totalBI').innerText = `R$ ${(row.total_bi || 0).toFixed(2)}`;
+                    document.getElementById('totalBR').innerText = `R$ ${(row.total_br || 0).toFixed(2)}`;
+                    document.getElementById('indicados').innerText = `Diretos: ${row.indicados_diretos || 0} | Indiretos: ${row.indicados_indiretos || 0}`;
+                    document.getElementById('extratoBody').innerHTML = `<tr><td>${row.id_pessoa}</td><td>${row.nome}</td><td>R$ ${(row.total_entradas || 0).toFixed(2)}</td><td>R$ ${(row.total_saidas || 0).toFixed(2)}</td><td>R$ ${(row.reserva_atual || 0).toFixed(2)}</td><td>R$ ${(row.saldo_bruto || 0).toFixed(2)}</td><td>R$ ${(row.saque_mes_livre || 0).toFixed(2)}</td><td>R$ ${(row.saque_acum_livre || 0).toFixed(2)}</td><td>R$ ${(row.disponivel_saque || 0).toFixed(2)}</td><td>R$ ${(row.saldo_comercial || 0).toFixed(2)}</td><td>${new Date(row.data_atualizacao).toLocaleString()}</td></tr>`;
+                }
+            } catch (error) { console.error('Erro:', error); }
+        }
+
         function fecharModal(modalId) {
             document.getElementById(modalId).style.display = 'none';
         }
 
-        // ADMIN - NOVO PARTICIPANTE
         window.mostrarNovoParticipante = function() {
             document.getElementById('modalNovoParticipante').style.display = 'flex';
             document.getElementById('adminSaques').style.display = 'none';
@@ -452,13 +474,182 @@
             document.getElementById('adminLog').style.display = 'none';
         };
 
+        async function carregarParametrosPioneiro() {
+            try {
+                const params = await fetchAPI(`configuracoes?select=*`);
+                let permitido = 'SIM';
+                let dataLimite = '31/12/2026';
+                let qtdMaxima = '100';
+                let contador = '7';
+                
+                if (params && params.length > 0) {
+                    for (const p of params) {
+                        if (p.chave === 'pioneiro_permitido') permitido = p.valor;
+                        if (p.chave === 'pioneiro_data_limite') dataLimite = formatarDataBR(p.valor);
+                        if (p.chave === 'pioneiro_quantidade_maxima') qtdMaxima = p.valor;
+                        if (p.chave === 'pioneiro_contador_atual') contador = p.valor;
+                    }
+                }
+                
+                document.getElementById('param_permitido').innerText = permitido;
+                document.getElementById('param_data_limite').innerText = dataLimite;
+                document.getElementById('param_qtd_maxima').innerText = qtdMaxima;
+                document.getElementById('param_contador').innerText = contador;
+                
+                document.getElementById('edit_permitido').value = permitido;
+                document.getElementById('edit_data_limite').value = dataLimite;
+                document.getElementById('edit_qtd_maxima').value = qtdMaxima;
+                document.getElementById('edit_contador').value = contador;
+                
+            } catch (error) { console.error('Erro:', error); }
+        }
+
+        window.salvarParametrosPioneiro = async function() {
+            const permitido = document.getElementById('edit_permitido').value;
+            const dataLimiteBR = document.getElementById('edit_data_limite').value;
+            const dataLimiteISO = formatarDataISO(dataLimiteBR);
+            const qtdMaxima = document.getElementById('edit_qtd_maxima').value;
+            const contador = document.getElementById('edit_contador').value;
+            
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_permitido`, {
+                    method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ valor: permitido })
+                });
+                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_data_limite`, {
+                    method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ valor: dataLimiteISO })
+                });
+                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_quantidade_maxima`, {
+                    method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ valor: qtdMaxima })
+                });
+                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_contador_atual`, {
+                    method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ valor: contador })
+                });
+                alert('Parâmetros salvos com sucesso!');
+                await carregarParametrosPioneiro();
+            } catch (error) { alert('Erro ao salvar: ' + error.message); }
+        };
+
+        window.aprovarPioneiro = async function() {
+            const idCota = document.getElementById('pioneiroIdCota').value;
+            if (!idCota) { alert('Digite o ID da cota'); return; }
+            try {
+                const cota = await fetchAPI(`participantes?id=eq.${idCota}&select=*`);
+                if (!cota || cota.length === 0) { alert('Cota não encontrada'); return; }
+                const idPessoa = cota[0].id_pessoa;
+                const elegibilidade = await fetch(`${SUPABASE_URL}/rest/v1/rpc/verificar_elegibilidade_pioneiro`, {
+                    method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ p_id_pessoa: idPessoa, p_data_referencia: new Date().toISOString().split('T')[0] })
+                });
+                await fetch(`${SUPABASE_URL}/rest/v1/participantes?id=eq.${idCota}`, {
+                    method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pioneiro: 'Sim' })
+                });
+                await fetch(`${SUPABASE_URL}/rest/v1/rpc/incrementar_contador_pioneiro`, {
+                    method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                alert('Pioneiro aprovado com sucesso!');
+                await carregarParametrosPioneiro();
+                document.getElementById('pioneiroIdCota').value = '';
+            } catch (error) { alert('Erro ao aprovar: ' + error.message); }
+        };
+
+        window.mostrarAprovacaoSaques = function() {
+            document.getElementById('adminSaques').style.display = 'block';
+            document.getElementById('adminCodigo').style.display = 'none';
+            document.getElementById('adminPioneiro').style.display = 'none';
+            document.getElementById('adminLog').style.display = 'none';
+            carregarSaquesPendentes();
+        };
+        
+        window.mostrarGerarCodigo = function() {
+            document.getElementById('adminSaques').style.display = 'none';
+            document.getElementById('adminCodigo').style.display = 'block';
+            document.getElementById('adminPioneiro').style.display = 'none';
+            document.getElementById('adminLog').style.display = 'none';
+        };
+        
+        window.mostrarParametrosPioneiro = function() {
+            document.getElementById('adminSaques').style.display = 'none';
+            document.getElementById('adminCodigo').style.display = 'none';
+            document.getElementById('adminPioneiro').style.display = 'block';
+            document.getElementById('adminLog').style.display = 'none';
+            carregarParametrosPioneiro();
+        };
+        
+        window.mostrarLogAlteracoes = function() {
+            document.getElementById('adminSaques').style.display = 'none';
+            document.getElementById('adminCodigo').style.display = 'none';
+            document.getElementById('adminPioneiro').style.display = 'none';
+            document.getElementById('adminLog').style.display = 'block';
+            carregarLogAlteracoes();
+        };
+
+        async function carregarSaquesPendentes() {
+            try {
+                const saques = await fetchAPI(`saques?status=eq.Em processamento&select=*`);
+                const tbody = document.getElementById('saquesPendentesBody');
+                if (!saques || saques.length === 0) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</td></tr>'; return; }
+                tbody.innerHTML = '';
+                for (const s of saques) {
+                    const p = await fetchAPI(`participantes?id=eq.${s.participante_id}&select=nome`);
+                    const nome = (p && p.length) ? p[0].nome : 'Desconhecido';
+                    tbody.innerHTML += `<tr><td>${s.id}</td><td>${nome}</td><td>R$ ${s.valor.toFixed(2)}</td><td>${new Date(s.data_solicitacao).toLocaleString()}</td><td><button class="btn btn-success" style="width:auto; padding:6px 12px; margin-right:8px;" onclick="aprovarSaque(${s.id})">✅ Aprovar</button><button class="btn btn-danger" style="width:auto; padding:6px 12px;" onclick="recusarSaque(${s.id})">❌ Recusar</button></td></tr>`;
+                }
+            } catch (error) { console.error('Erro:', error); }
+        }
+
+        window.aprovarSaque = async function(id) { 
+            await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, {
+                method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'Aprovado', data_aprovacao: new Date().toISOString() })
+            }); 
+            await carregarSaquesPendentes(); 
+            alert('Saque aprovado!'); 
+        };
+        
+        window.recusarSaque = async function(id) { 
+            await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, {
+                method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: 'Recusado' })
+            }); 
+            await carregarSaquesPendentes(); 
+            alert('Saque recusado!'); 
+        };
+
+        window.gerarCodigoAcesso = async function() {
+            const cpf = document.getElementById('novoCpf').value.trim();
+            if (!cpf) { alert('Digite o CPF'); return; }
+            try {
+                const existente = await fetchAPI(`acessos?cpf=eq.${cpf}&select=*`);
+                if (existente && existente.length > 0) { 
+                    document.getElementById('novoCodigo').innerText = existente[0].codigo; 
+                    document.getElementById('codigoGerado').style.display = 'block'; 
+                    setTimeout(() => document.getElementById('codigoGerado').style.display = 'none', 5000); 
+                    return; 
+                }
+                const novoCodigo = 'MMN-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+                await fetch(`${SUPABASE_URL}/rest/v1/acessos`, {
+                    method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ cpf: cpf, codigo: novoCodigo, ativo: true })
+                });
+                document.getElementById('novoCodigo').innerText = novoCodigo; 
+                document.getElementById('codigoGerado').style.display = 'block'; 
+                setTimeout(() => document.getElementById('codigoGerado').style.display = 'none', 5000); 
+                document.getElementById('novoCpf').value = '';
+            } catch (error) { alert('Erro ao gerar código: ' + error.message); }
+        };
+
         window.criarNovoParticipante = async function() {
             const nome = document.getElementById('novoNome').value.trim();
             const cpf = document.getElementById('novoCpfCad').value.trim();
             const email = document.getElementById('novoEmail').value.trim();
             const telefone = document.getElementById('novoTelefone').value.trim();
             const idIndicador = parseInt(document.getElementById('novoIndicador').value) || 0;
-            const deposito = parseFloat(document.getElementById('novoDeposito').value) || 0;
             const msgDiv = document.getElementById('novoParticipanteMsg');
             
             if (!nome || !cpf) {
@@ -470,7 +661,6 @@
             }
             
             try {
-                // Verificar se CPF já existe
                 const existe = await fetchAPI(`participantes?cpf=eq.${cpf}&select=cpf`);
                 if (existe && existe.length > 0) {
                     msgDiv.style.display = 'block';
@@ -480,7 +670,6 @@
                     return;
                 }
                 
-                // Buscar próximo ID_Pessoa
                 const pessoas = await fetchAPI(`participantes?select=id_pessoa&order=id_pessoa.desc&limit=1`);
                 let novoIdPessoa = 'P001';
                 if (pessoas && pessoas.length > 0 && pessoas[0].id_pessoa) {
@@ -488,7 +677,6 @@
                     novoIdPessoa = `P${String(ultimoNumero + 1).padStart(3, '0')}`;
                 }
                 
-                // Buscar próximo ID numérico
                 const maxId = await fetchAPI(`participantes?select=id&order=id.desc&limit=1`);
                 let novoId = 1;
                 if (maxId && maxId.length > 0 && maxId[0].id) {
@@ -537,7 +725,6 @@
                     });
                 }
                 
-                // Gerar código de acesso
                 const novoCodigo = 'MMN-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
                 await fetch(`${SUPABASE_URL}/rest/v1/acessos`, {
                     method: 'POST',
@@ -550,13 +737,11 @@
                 msgDiv.style.background = '#d4edda';
                 msgDiv.style.color = '#155724';
                 
-                // Limpar formulário
                 document.getElementById('novoNome').value = '';
                 document.getElementById('novoCpfCad').value = '';
                 document.getElementById('novoEmail').value = '';
                 document.getElementById('novoTelefone').value = '';
                 document.getElementById('novoIndicador').value = '';
-                document.getElementById('novoDeposito').value = '0';
                 
                 setTimeout(() => { fecharModal('modalNovoParticipante'); msgDiv.style.display = 'none'; }, 5000);
                 
@@ -568,301 +753,30 @@
             }
         };
 
-        // LOGIN
-        async function fazerLogin() {
-            const cpf = document.getElementById('cpf').value.trim();
-            const codigo = document.getElementById('codigo').value.trim().toUpperCase();
-            const errorDiv = document.getElementById('loginError');
-            if (!cpf || !codigo) { 
-                errorDiv.style.display = 'block'; 
-                errorDiv.innerText = 'Preencha CPF e código'; 
-                return; 
-            }
-            try {
-                const acessos = await fetchAPI(`acessos?cpf=eq.${cpf}&codigo=eq.${codigo}&ativo=eq.true&select=*`);
-                if (!acessos || acessos.length === 0) { 
-                    errorDiv.style.display = 'block'; 
-                    errorDiv.innerText = 'CPF ou código inválido'; 
-                    return; 
-                }
-                const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
-                if (!participantes || participantes.length === 0) { 
-                    errorDiv.style.display = 'block'; 
-                    errorDiv.innerText = 'Participante não encontrado'; 
-                    return; 
-                }
-                usuarioAtual = participantes[0];
-                isAdmin = (cpf === '1');
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                document.getElementById('userNome').innerText = usuarioAtual.nome;
-                document.getElementById('userCpf').innerText = cpf;
-                if (isAdmin) document.getElementById('adminSection').style.display = 'block';
-                await carregarDashboard();
-            } catch (error) { 
-                errorDiv.style.display = 'block'; 
-                errorDiv.innerText = 'Erro: ' + error.message; 
-            }
-        }
-
-        // DASHBOARD
-        async function carregarDashboard() {
-            await carregarExtratoESaldos();
-            await carregarArvore();
-            if (isAdmin) {
-                await carregarSaquesPendentes();
-                await carregarParametrosPioneiro();
-            }
-        }
-
-        async function carregarExtratoESaldos() {
-            try {
-                const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-                if (saldo && saldo.length > 0) {
-                    const row = saldo[0];
-                    document.getElementById('saldoReserva').innerText = `R$ ${(row.reserva_atual || 0).toFixed(2)}`;
-                    document.getElementById('saldoBruto').innerText = `R$ ${(row.saldo_bruto || 0).toFixed(2)}`;
-                    document.getElementById('saldoDisponivel').innerText = `R$ ${(row.disponivel_saque || 0).toFixed(2)}`;
-                    document.getElementById('totalMensalidades').innerText = `R$ ${(row.total_mensalidades_pagas || 0).toFixed(2)}`;
-                    document.getElementById('totalBI').innerText = `R$ ${(row.total_bi || 0).toFixed(2)}`;
-                    document.getElementById('totalBR').innerText = `R$ ${(row.total_br || 0).toFixed(2)}`;
-                    document.getElementById('indicados').innerText = `Diretos: ${row.indicados_diretos || 0} | Indiretos: ${row.indicados_indiretos || 0}`;
-                    document.getElementById('extratoBody').innerHTML = `<tr><td>${row.id_pessoa}</td><td>${row.nome}</td><td>R$ ${(row.total_entradas || 0).toFixed(2)}</td><td>R$ ${(row.total_saidas || 0).toFixed(2)}</td><td>R$ ${(row.reserva_atual || 0).toFixed(2)}</td><td>R$ ${(row.saldo_bruto || 0).toFixed(2)}</td><td>R$ ${(row.saque_mes_livre || 0).toFixed(2)}</td><td>R$ ${(row.saque_acum_livre || 0).toFixed(2)}</td><td>R$ ${(row.disponivel_saque || 0).toFixed(2)}</td><td>R$ ${(row.saldo_comercial || 0).toFixed(2)}</td><td>${new Date(row.data_atualizacao).toLocaleString()}</td></tr>`;
-                }
-            } catch (error) { console.error('Erro carregar extrato:', error); }
-        }
-
-        // ADMIN - SAQUES
-        window.mostrarAprovacaoSaques = function() {
-            document.getElementById('adminSaques').style.display = 'block';
-            document.getElementById('adminCodigo').style.display = 'none';
-            document.getElementById('adminPioneiro').style.display = 'none';
-            document.getElementById('adminLog').style.display = 'none';
-            carregarSaquesPendentes();
-        };
-        
-        window.mostrarGerarCodigo = function() {
-            document.getElementById('adminSaques').style.display = 'none';
-            document.getElementById('adminCodigo').style.display = 'block';
-            document.getElementById('adminPioneiro').style.display = 'none';
-            document.getElementById('adminLog').style.display = 'none';
-        };
-        
-        window.mostrarParametrosPioneiro = function() {
-            document.getElementById('adminSaques').style.display = 'none';
-            document.getElementById('adminCodigo').style.display = 'none';
-            document.getElementById('adminPioneiro').style.display = 'block';
-            document.getElementById('adminLog').style.display = 'none';
-            carregarParametrosPioneiro();
-        };
-        
-        window.mostrarLogAlteracoes = function() {
-            document.getElementById('adminSaques').style.display = 'none';
-            document.getElementById('adminCodigo').style.display = 'none';
-            document.getElementById('adminPioneiro').style.display = 'none';
-            document.getElementById('adminLog').style.display = 'block';
-            carregarLogAlteracoes();
-        };
-
-        async function carregarSaquesPendentes() {
-            try {
-                const saques = await fetchAPI(`saques?status=eq.Em processamento&select=*`);
-                const tbody = document.getElementById('saquesPendentesBody');
-                if (!saques || saques.length === 0) { 
-                    tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</td></tr>'; 
-                    return; 
-                }
-                tbody.innerHTML = '';
-                for (const s of saques) {
-                    const p = await fetchAPI(`participantes?id=eq.${s.participante_id}&select=nome`);
-                    const nome = (p && p.length) ? p[0].nome : 'Desconhecido';
-                    tbody.innerHTML += `<tr>
-                        <td>${s.id}</td>
-                        <td>${nome}</td>
-                        <td>R$ ${s.valor.toFixed(2)}</td>
-                        <td>${new Date(s.data_solicitacao).toLocaleString()}</td>
-                        <td>
-                            <button class="btn btn-success" style="width:auto; padding:6px 12px; margin-right:8px;" onclick="aprovarSaque(${s.id})">✅ Aprovar</button>
-                            <button class="btn btn-danger" style="width:auto; padding:6px 12px;" onclick="recusarSaque(${s.id})">❌ Recusar</button>
-                        </td>
-                    </tr>`;
-                }
-            } catch (error) { console.error('Erro carregar saques:', error); }
-        }
-
-        window.aprovarSaque = async function(id) { 
-            await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, {
-                method: 'PATCH', 
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: 'Aprovado', data_aprovacao: new Date().toISOString() })
-            }); 
-            await carregarSaquesPendentes(); 
-            alert('Saque aprovado!'); 
-        };
-        
-        window.recusarSaque = async function(id) { 
-            await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, {
-                method: 'PATCH', 
-                headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ status: 'Recusado' })
-            }); 
-            await carregarSaquesPendentes(); 
-            alert('Saque recusado!'); 
-        };
-
-        // ADMIN - CÓDIGO
-        window.gerarCodigoAcesso = async function() {
-            const cpf = document.getElementById('novoCpf').value.trim();
-            if (!cpf) { alert('Digite o CPF'); return; }
-            try {
-                const existente = await fetchAPI(`acessos?cpf=eq.${cpf}&select=*`);
-                if (existente && existente.length > 0) { 
-                    document.getElementById('novoCodigo').innerText = existente[0].codigo; 
-                    document.getElementById('codigoGerado').style.display = 'block'; 
-                    setTimeout(() => document.getElementById('codigoGerado').style.display = 'none', 5000); 
-                    return; 
-                }
-                const novoCodigo = 'MMN-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-                await fetch(`${SUPABASE_URL}/rest/v1/acessos`, {
-                    method: 'POST', 
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ cpf: cpf, codigo: novoCodigo, ativo: true })
-                });
-                document.getElementById('novoCodigo').innerText = novoCodigo; 
-                document.getElementById('codigoGerado').style.display = 'block'; 
-                setTimeout(() => document.getElementById('codigoGerado').style.display = 'none', 5000); 
-                document.getElementById('novoCpf').value = '';
-            } catch (error) { alert('Erro ao gerar código: ' + error.message); }
-        };
-
-        // ADMIN - PIONEIRO
-        async function carregarParametrosPioneiro() {
-            try {
-                const params = await fetchAPI(`configuracoes?select=*`);
-                let permitido = 'SIM';
-                let dataLimite = '31/12/2026';
-                let qtdMaxima = '100';
-                let contador = '7';
-                
-                if (params && params.length > 0) {
-                    for (const p of params) {
-                        if (p.chave === 'pioneiro_permitido') permitido = p.valor;
-                        if (p.chave === 'pioneiro_data_limite') dataLimite = formatarDataBR(p.valor);
-                        if (p.chave === 'pioneiro_quantidade_maxima') qtdMaxima = p.valor;
-                        if (p.chave === 'pioneiro_contador_atual') contador = p.valor;
-                    }
-                }
-                
-                document.getElementById('param_permitido').innerText = permitido;
-                document.getElementById('param_data_limite').innerText = dataLimite;
-                document.getElementById('param_qtd_maxima').innerText = qtdMaxima;
-                document.getElementById('param_contador').innerText = contador;
-                
-                document.getElementById('edit_permitido').value = permitido;
-                document.getElementById('edit_data_limite').value = dataLimite;
-                document.getElementById('edit_qtd_maxima').value = qtdMaxima;
-                document.getElementById('edit_contador').value = contador;
-                
-            } catch (error) { console.error('Erro carregar parâmetros:', error); }
-        }
-
-        window.salvarParametrosPioneiro = async function() {
-            const permitido = document.getElementById('edit_permitido').value;
-            const dataLimiteBR = document.getElementById('edit_data_limite').value;
-            const dataLimiteISO = formatarDataISO(dataLimiteBR);
-            const qtdMaxima = document.getElementById('edit_qtd_maxima').value;
-            const contador = document.getElementById('edit_contador').value;
-            
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_permitido`, {
-                    method: 'PATCH', 
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ valor: permitido })
-                });
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_data_limite`, {
-                    method: 'PATCH', 
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ valor: dataLimiteISO })
-                });
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_quantidade_maxima`, {
-                    method: 'PATCH', 
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ valor: qtdMaxima })
-                });
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_contador_atual`, {
-                    method: 'PATCH', 
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ valor: contador })
-                });
-                alert('Parâmetros salvos com sucesso!');
-                await carregarParametrosPioneiro();
-            } catch (error) { alert('Erro ao salvar: ' + error.message); }
-        };
-
-        window.aprovarPioneiro = async function() {
-            const idCota = document.getElementById('pioneiroIdCota').value;
-            if (!idCota) { alert('Digite o ID da cota'); return; }
-            try {
-                const cota = await fetchAPI(`participantes?id=eq.${idCota}&select=*`);
-                if (!cota || cota.length === 0) { alert('Cota não encontrada'); return; }
-                const idPessoa = cota[0].id_pessoa;
-                await fetchRPC('incrementar_contador_pioneiro', {});
-                await fetch(`${SUPABASE_URL}/rest/v1/participantes?id=eq.${idCota}`, {
-                    method: 'PATCH', 
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pioneiro: 'Sim' })
-                });
-                alert('Pioneiro aprovado com sucesso!');
-                await carregarParametrosPioneiro();
-                document.getElementById('pioneiroIdCota').value = '';
-            } catch (error) { alert('Erro ao aprovar: ' + error.message); }
-        };
-
-        // ADMIN - LOG
         async function carregarLogAlteracoes() {
             try {
                 const logs = await fetchAPI(`log_alteracoes?order=data_hora.desc&limit=50&select=*`);
                 const tbody = document.getElementById('logBody');
-                if (!logs || logs.length === 0) { 
-                    tbody.innerHTML = '<tr><td colspan="4">Nenhum registro encontrado</td></tr>'; 
-                    return; 
-                }
+                if (!logs || logs.length === 0) { tbody.innerHTML = '<tr><td colspan="4">Nenhum registro encontrado</td></tr>'; return; }
                 tbody.innerHTML = '';
                 for (const log of logs) {
-                    tbody.innerHTML += `<tr>
-                        <td>${new Date(log.data_hora).toLocaleString()}</td>
-                        <td>${log.operador || '-'}</td>
-                        <td>${log.acao || '-'}</td>
-                        <td>${log.observacao || '-'}</td>
-                    </tr>`;
+                    tbody.innerHTML += `<tr><td>${new Date(log.data_hora).toLocaleString()}</td><td>${log.operador || '-'}</td><td>${log.acao || '-'}</td><td>${log.observacao || '-'}</td></tr>`;
                 }
-            } catch (error) { console.error('Erro carregar log:', error); }
+            } catch (error) { console.error('Erro:', error); }
         }
 
-        // ÁRVORE
         async function carregarArvore() {
             try {
                 const filhos = await fetchAPI(`participantes?id_pai=eq.${usuarioAtual.id}&select=*`);
-                if (!filhos.length) { 
-                    document.getElementById('arvoreContainer').innerHTML = 'Nenhum indicado direto'; 
-                    return; 
-                }
+                if (!filhos.length) { document.getElementById('arvoreContainer').innerHTML = 'Nenhum indicado direto'; return; }
                 let html = '<div class="children open">';
                 for (const filho of filhos) {
                     const temFilhos = await verificarTemFilhos(filho.id);
-                    html += `<div class="tree-node">
-                                <div class="tree-node-content">
-                                    <span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos ? '📂' : '📄'}</span>
-                                    <span>${filho.nome}</span>
-                                    <span>(${filho.plano})</span>
-                                    <span class="status-${filho.status}">${filho.status}</span>
-                                </div>
-                                <div class="children" data-parent="${filho.id}">${await montarSubArvore(filho.id)}</div>
-                            </div>`;
+                    html += `<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos ? '📂' : '📄'}</span><span>${filho.nome}</span><span>(${filho.plano})</span><span class="status-${filho.status}">${filho.status}</span></div><div class="children" data-parent="${filho.id}">${await montarSubArvore(filho.id)}</div></div>`;
                 }
                 html += '</div>';
                 document.getElementById('arvoreContainer').innerHTML = html;
-            } catch (error) { console.error('Erro árvore:', error); }
+            } catch (error) { console.error('Erro:', error); }
         }
 
         async function montarSubArvore(idPai) {
@@ -871,85 +785,35 @@
             let html = '';
             for (const filho of filhos) {
                 const temFilhos = await verificarTemFilhos(filho.id);
-                html += `<div class="tree-node">
-                            <div class="tree-node-content">
-                                <span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos ? '📂' : '📄'}</span>
-                                <span>${filho.nome}</span>
-                                <span>(${filho.plano})</span>
-                                <span class="status-${filho.status}">${filho.status}</span>
-                            </div>
-                            <div class="children" data-parent="${filho.id}">${await montarSubArvore(filho.id)}</div>
-                        </div>`;
+                html += `<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos ? '📂' : '📄'}</span><span>${filho.nome}</span><span>(${filho.plano})</span><span class="status-${filho.status}">${filho.status}</span></div><div class="children" data-parent="${filho.id}">${await montarSubArvore(filho.id)}</div></div>`;
             }
             return html;
         }
 
-        async function verificarTemFilhos(id) { 
-            const filhos = await fetchAPI(`participantes?id_pai=eq.${id}&select=id&limit=1`); 
-            return filhos.length > 0; 
-        }
+        async function verificarTemFilhos(id) { const filhos = await fetchAPI(`participantes?id_pai=eq.${id}&select=id&limit=1`); return filhos.length > 0; }
         
-        window.toggleChildren = function(e) { 
-            const node = e.closest('.tree-node'); 
-            const children = node.querySelector('.children'); 
-            if(children){ 
-                children.classList.toggle('open'); 
-                e.innerText = children.classList.contains('open') ? '📂' : '📁'; 
-            } 
-        };
+        window.toggleChildren = function(e) { const node = e.closest('.tree-node'); const children = node.querySelector('.children'); if(children){ children.classList.toggle('open'); e.innerText = children.classList.contains('open') ? '📂' : '📁'; } };
 
-        // SAQUE
         async function solicitarSaque() {
             const valor = parseFloat(document.getElementById('valorSaque').value);
             const msg = document.getElementById('saqueMensagem');
-            if (isNaN(valor) || valor <= 0) { 
-                msg.style.display = 'block'; 
-                msg.innerText = 'Valor inválido'; 
-                msg.style.background = '#f8d7da'; 
-                return; 
-            }
+            if (isNaN(valor) || valor <= 0) { msg.style.display = 'block'; msg.innerText = 'Valor inválido'; msg.style.background = '#f8d7da'; return; }
+            const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
+            const disponivel = (saldo && saldo.length > 0) ? (saldo[0].disponivel_saque || 0) : 0;
+            if (valor > disponivel) { msg.style.display = 'block'; msg.innerText = `Saldo insuficiente. Disponível: R$ ${disponivel.toFixed(2)}`; msg.style.background = '#f8d7da'; return; }
             try {
-                const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-                const disponivel = (saldo && saldo.length > 0) ? (saldo[0].disponivel_saque || 0) : 0;
-                if (valor > disponivel) { 
-                    msg.style.display = 'block'; 
-                    msg.innerText = `Saldo insuficiente. Disponível: R$ ${disponivel.toFixed(2)}`; 
-                    msg.style.background = '#f8d7da'; 
-                    return; 
-                }
                 await fetch(`${SUPABASE_URL}/rest/v1/saques`, { 
                     method: 'POST', 
                     headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ 
-                        participante_id: usuarioAtual.id, 
-                        id_pessoa: usuarioAtual.id_pessoa, 
-                        valor: valor, 
-                        status: 'Em processamento', 
-                        data_solicitacao: new Date().toISOString() 
-                    }) 
+                    body: JSON.stringify({ participante_id: usuarioAtual.id, id_pessoa: usuarioAtual.id_pessoa, valor: valor, status: 'Em processamento', data_solicitacao: new Date().toISOString() }) 
                 });
-                msg.style.display = 'block'; 
-                msg.innerText = `✅ Solicitação de R$ ${valor.toFixed(2)} enviada!`; 
-                msg.style.background = '#d4edda'; 
-                msg.style.color = '#155724';
+                msg.style.display = 'block'; msg.innerText = `✅ Solicitação de R$ ${valor.toFixed(2)} enviada!`; msg.style.background = '#d4edda'; msg.style.color = '#155724';
                 document.getElementById('valorSaque').value = '';
                 if (isAdmin) await carregarSaquesPendentes();
-            } catch (error) { 
-                msg.style.display = 'block'; 
-                msg.innerText = 'Erro ao solicitar saque'; 
-                msg.style.background = '#f8d7da'; 
-            }
+            } catch (error) { msg.style.display = 'block'; msg.innerText = 'Erro ao solicitar saque'; msg.style.background = '#f8d7da'; }
         }
 
-        // LOGOUT
-        function logout() { 
-            usuarioAtual = null; 
-            isAdmin = false; 
-            document.getElementById('loginScreen').style.display = 'block'; 
-            document.getElementById('dashboard').style.display = 'none'; 
-            document.getElementById('cpf').value = ''; 
-            document.getElementById('codigo').value = ''; 
-        }
+        function logout() { usuarioAtual = null; isAdmin = false; document.getElementById('loginScreen').style.display = 'block'; document.getElementById('dashboard').style.display = 'none'; document.getElementById('cpf').value = ''; document.getElementById('codigo').value = ''; }
     </script>
 </body>
 </html>
