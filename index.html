@@ -37,44 +37,19 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             text-align: center;
         }
-        .logo-login {
-            width: 100px;
-            height: auto;
-            margin-bottom: 0px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        .logo-login { width: 100px; height: auto; margin-bottom: 0px; display: block; margin-left: auto; margin-right: auto; }
         .login-card h1 { font-size: 1.5rem; margin-bottom: 10px; color: #2c3e50; }
         .login-card .subtitle { text-align: center; color: #6c757d; margin-bottom: 30px; }
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #495057; text-align: left; }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 2px solid #dee2e6;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
+        .form-group input, .form-group select { width: 100%; padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: #667eea; }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
         .btn:hover { transform: translateY(-2px); }
-        .btn-danger { background: #dc3545; width: auto; padding: 10px 24px; }
-        .btn-secondary { background: #6c757d; width: auto; padding: 10px 24px; }
-        .btn-success { background: #28a745; width: auto; padding: 10px 24px; }
-        .btn-warning { background: #fd7e14; width: auto; padding: 10px 24px; }
+        .btn-danger { background: #dc3545; width: auto; padding: 8px 20px; }
+        .btn-secondary { background: #6c757d; width: auto; padding: 8px 16px; }
+        .btn-success { background: #28a745; width: auto; padding: 8px 16px; }
+        .btn-warning { background: #fd7e14; width: auto; padding: 8px 16px; }
         .error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
         .success { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
         .dashboard { display: none; }
@@ -82,83 +57,55 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
             flex-wrap: wrap;
             gap: 12px;
+            margin-bottom: 24px;
         }
         .user-info {
             background: white;
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 40px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
         }
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
         .user-info span { font-weight: bold; color: #667eea; }
         .titulo-container {
             background: linear-gradient(135deg, #FFD700 0%, #DAA520 100%);
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 40px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             flex-wrap: wrap;
-            justify-content: center;
         }
-        .coroa-esq { font-size: 20px; }
-        .coroa-dir { font-size: 20px; }
-        .titulo-label {
-            font-size: 14px;
-            font-weight: normal;
-            color: #fff;
-            opacity: 0.9;
-        }
-        .titulo-valor {
+        .pioneiro-badge {
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
             font-weight: bold;
-            font-size: 16px;
             color: #fff;
-            letter-spacing: 1px;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
         }
-        .saldo-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        .saldo-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-        }
+        .coroa-esq, .coroa-dir { font-size: 18px; }
+        .titulo-label { font-size: 13px; font-weight: normal; color: #fff; opacity: 0.9; }
+        .titulo-valor { font-weight: bold; font-size: 15px; color: #fff; letter-spacing: 1px; }
+        .saldo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+        .saldo-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-align: center; }
         .saldo-card h3 { font-size: 14px; opacity: 0.9; margin-bottom: 10px; }
         .saldo-card .valor { font-size: 24px; font-weight: bold; }
         .saldo-card.reserva { background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%); }
         .saldo-card.bruto { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
         .saldo-card.disponivel { background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%); }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-        .stat-card {
-            background: #f8f9fa;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            border-left: 4px solid #667eea;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-card { background: #f8f9fa; padding: 16px; border-radius: 12px; text-align: center; border-left: 4px solid #667eea; }
         .stat-card h4 { font-size: 12px; color: #6c757d; margin-bottom: 8px; }
         .stat-card .stat-value { font-size: 20px; font-weight: bold; color: #2c3e50; }
         .table-wrapper { overflow-x: auto; }
@@ -184,7 +131,7 @@
         .param-label { font-weight: bold; color: #495057; margin-bottom: 8px; }
         .param-value { font-size: 24px; font-weight: bold; color: #2c3e50; }
         .log-table { max-height: 300px; overflow-y: auto; }
-        .modal, .modal-titulo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+        .modal, .modal-titulo, .modal-alterar-titulo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
         .modal-content { background: white; border-radius: 16px; padding: 32px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
         .modal-header { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: #2c3e50; }
         .close-modal { float: right; cursor: pointer; font-size: 24px; }
@@ -193,12 +140,14 @@
         .titulos-table th { background: #667eea; color: white; }
         .titulos-table input { width: 100px; padding: 6px; border: 1px solid #dee2e6; border-radius: 4px; }
         .btn-small { padding: 4px 8px; font-size: 12px; width: auto; margin: 0 2px; }
+        .busca-cpf { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+        .info-participante { background: #e9ecef; padding: 12px; border-radius: 8px; margin: 12px 0; }
         @media (max-width: 768px) {
             .saldo-grid, .stats-grid, .param-grid { grid-template-columns: 1fr; }
             .saque-form { flex-direction: column; }
             .saque-form .btn { width: 100%; }
-            .dashboard-header { flex-direction: column; }
-            .user-info, .titulo-container, .btn-danger { width: 100%; justify-content: center; }
+            .dashboard-header { flex-direction: column; align-items: stretch; }
+            .user-info, .titulo-container, .pioneiro-badge, .btn-danger { justify-content: center; }
         }
     </style>
 </head>
@@ -208,20 +157,11 @@
         <div id="loginScreen" class="login-container">
             <div class="login-card">
                 <img src="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png" alt="Comunidade Business" class="logo-login">
-                <h1>
-                    <img src="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png" alt="Comunidade Business" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 1px;">
-                    Comunidade Business
-                </h1>
+                <h1><img src="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png" alt="Comunidade Business" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 1px;">Comunidade Business</h1>
                 <p class="subtitle">Sistema de Redes Múltiplas MAP 3x10</p>
                 <div id="loginError" class="error"></div>
-                <div class="form-group">
-                    <label>CPF</label>
-                    <input type="text" id="cpf" placeholder="Digite seu CPF" maxlength="11">
-                </div>
-                <div class="form-group">
-                    <label>Código de Acesso</label>
-                    <input type="text" id="codigo" placeholder="Ex: MMN-ABCD-1234">
-                </div>
+                <div class="form-group"><label>CPF</label><input type="text" id="cpf" placeholder="Digite seu CPF" maxlength="11"></div>
+                <div class="form-group"><label>Código de Acesso</label><input type="text" id="codigo" placeholder="Ex: MMN-ABCD-1234"></div>
                 <button class="btn" onclick="fazerLogin()">Entrar</button>
             </div>
         </div>
@@ -235,19 +175,24 @@
                 </div>
                 <div class="titulo-container">
                     <span class="coroa-esq">🏆</span>
-                    <span class="titulo-label">Título de Liderança:</span>
+                    <span class="titulo-label">Título:</span>
                     <span class="titulo-valor" id="userTitulo">Networker</span>
                     <span class="coroa-dir">👑</span>
+                </div>
+                <div id="pioneiroBadge" class="pioneiro-badge" style="display: none;">
+                    <span>⭐</span> <span>Pioneiro</span>
                 </div>
                 <button class="btn btn-danger" onclick="logout()">Sair</button>
             </div>
 
+            <!-- Cards de Saldo -->
             <div class="saldo-grid">
                 <div class="saldo-card reserva"><h3>🏦 Reserva Mensalidade</h3><div class="valor" id="saldoReserva">R$ 0,00</div></div>
                 <div class="saldo-card bruto"><h3>📊 Saldo Bruto</h3><div class="valor" id="saldoBruto">R$ 0,00</div></div>
                 <div class="saldo-card disponivel"><h3>💰 Disponível para Saque</h3><div class="valor" id="saldoDisponivel">R$ 0,00</div></div>
             </div>
 
+            <!-- Cards Secundários -->
             <div class="stats-grid">
                 <div class="stat-card"><h4>💸 Total Mensalidades Pagas</h4><div class="stat-value" id="totalMensalidades">R$ 0,00</div></div>
                 <div class="stat-card"><h4>🎯 Total BI Ganhos</h4><div class="stat-value" id="totalBI">R$ 0,00</div></div>
@@ -255,35 +200,24 @@
                 <div class="stat-card"><h4>👥 Tamanho Rede Ativa</h4><div class="stat-value" id="tamanhoRede">0</div></div>
             </div>
 
+            <!-- Extrato -->
             <div class="card">
                 <div class="card-header">📋 EXTRATO CONSOLIDADO</div>
                 <div class="table-wrapper">
                     <table id="extratoTable">
-                        <thead>
-                            <tr>
-                                <th>Código</th>
-                                <th>Nome</th>
-                                <th>Entradas</th>
-                                <th>Saídas</th>
-                                <th>Reserva Mensalidade</th>
-                                <th>Saldo Bruto</th>
-                                <th>Saque Mês Livre</th>
-                                <th>Saque Acumulado Livre</th>
-                                <th>Disponível para Saque</th>
-                                <th>Saldo Comercial</th>
-                                <th>Atualizado</th>
-                            </tr>
-                        </thead>
-                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...--</tbody>
+                        <thead><tr><th>Código</th><th>Nome</th><th>Entradas</th><th>Saídas</th><th>Reserva Mensalidade</th><th>Saldo Bruto</th><th>Saque Mês Livre</th><th>Saque Acumulado Livre</th><th>Disponível para Saque</th><th>Saldo Comercial</th><th>Atualizado</th></tr></thead>
+                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...</td></tr></tbody>
                     </table>
                 </div>
             </div>
 
+            <!-- Árvore -->
             <div class="card">
                 <div class="card-header">🌳 MINHA REDE (3x10)</div>
                 <div id="arvoreContainer" class="tree">Carregando rede...</div>
             </div>
 
+            <!-- Solicitar Saque -->
             <div class="card">
                 <div class="card-header">💸 SOLICITAR SAQUE</div>
                 <div class="saque-form">
@@ -293,6 +227,7 @@
                 <div id="saqueMensagem" class="error" style="margin-top: 16px;"></div>
             </div>
 
+            <!-- Admin -->
             <div id="adminSection" class="card admin-section" style="display: none;">
                 <div class="card-header">👑 PAINEL ADMINISTRATIVO</div>
                 <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
@@ -301,100 +236,72 @@
                     <button class="btn btn-secondary" onclick="mostrarGerarCodigo()">🔑 GERAR CÓDIGO</button>
                     <button class="btn btn-secondary" onclick="mostrarParametrosPioneiro()">👑 PARÂMETROS PIONEIRO</button>
                     <button class="btn btn-secondary" onclick="mostrarEditarTitulos()">📋 EDITAR TÍTULOS</button>
+                    <button class="btn btn-secondary" onclick="mostrarAlterarTitulo()">👑 ALTERAR TÍTULO</button>
                     <button class="btn btn-secondary" onclick="mostrarLogAlteracoes()">📋 LOG</button>
                 </div>
 
                 <!-- Modal Novo Participante -->
                 <div id="modalNovoParticipante" class="modal">
-                    <div class="modal-content">
-                        <span class="close-modal" onclick="fecharModal('modalNovoParticipante')">&times;</span>
+                    <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoParticipante')">&times;</span>
                         <div class="modal-header">➕ NOVO PARTICIPANTE</div>
                         <div class="form-group"><label>Nome Completo *</label><input type="text" id="novoNome" placeholder="Nome do participante"></div>
                         <div class="form-group"><label>CPF *</label><input type="text" id="novoCpfCad" placeholder="Apenas números" maxlength="11"></div>
                         <div class="form-group"><label>Email</label><input type="email" id="novoEmail" placeholder="email@exemplo.com"></div>
                         <div class="form-group"><label>Telefone</label><input type="text" id="novoTelefone" placeholder="(11) 99999-9999"></div>
                         <div class="form-group"><label>ID do Indicador (opcional)</label><input type="number" id="novoIndicador" placeholder="ID da cota que indicou"></div>
-                        <div class="form-group"><label>Depósito inicial (R$)</label><input type="number" id="novoDeposito" step="0.01" value="0" placeholder="0,00"></div>
+                        <div class="form-group"><label>Depósito inicial (R$)</label><input type="number" id="novoDeposito" step="0.01" value="0"></div>
                         <button class="btn btn-success" onclick="criarNovoParticipante()">✅ CRIAR PARTICIPANTE</button>
-                        <div id="novoParticipanteMsg" class="success" style="margin-top: 16px; display: none;"></div>
+                        <div id="novoParticipanteMsg" class="success" style="margin-top: 16px;"></div>
                     </div>
                 </div>
 
                 <!-- Modal Editar Títulos -->
                 <div id="modalEditarTitulos" class="modal-titulo">
-                    <div class="modal-content" style="max-width: 800px;">
-                        <span class="close-modal" onclick="fecharModal('modalEditarTitulos')">&times;</span>
+                    <div class="modal-content" style="max-width: 800px;"><span class="close-modal" onclick="fecharModal('modalEditarTitulos')">&times;</span>
                         <div class="modal-header">📋 EDITAR TÍTULOS DE LIDERANÇA</div>
-                        <div class="table-wrapper">
-                            <table class="titulos-table" id="titulosTable">
-                                <thead>
-                                    <tr><th>Título</th><th>Valor Mensal (R$)</th><th>Ações</th></tr>
-                                </thead>
-                                <tbody id="titulosTableBody">
-                                    <tr><td colspan="3">Carregando...</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <div class="table-wrapper"><table class="titulos-table" id="titulosTable"><thead><tr><th>Título</th><th>Valor Mensal (R$)</th><th>Ações</th></tr></thead><tbody id="titulosTableBody"><tr><td colspan="3">Carregando...</td></tr></tbody></table></div>
                         <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
-                            <button class="btn btn-success" style="width: auto;" onclick="mostrarNovoTitulo()">➕ NOVO TÍTULO</button>
-                            <button class="btn btn-success" style="width: auto;" onclick="salvarTodosTitulos()">💾 SALVAR TODAS ALTERAÇÕES</button>
+                            <button class="btn btn-success btn-small" onclick="mostrarNovoTitulo()">➕ NOVO TÍTULO</button>
+                            <button class="btn btn-success btn-small" onclick="salvarTodosTitulos()">💾 SALVAR TODAS ALTERAÇÕES</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Modal Novo Título -->
                 <div id="modalNovoTitulo" class="modal-titulo">
-                    <div class="modal-content">
-                        <span class="close-modal" onclick="fecharModal('modalNovoTitulo')">&times;</span>
+                    <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoTitulo')">&times;</span>
                         <div class="modal-header">➕ NOVO TÍTULO</div>
-                        <div class="form-group"><label>Nome do Título</label><input type="text" id="novoTituloNome" placeholder="Ex: Master"></div>
-                        <div class="form-group"><label>Valor Mensal (R$)</label><input type="number" id="novoTituloValor" step="0.01" placeholder="1000"></div>
+                        <div class="form-group"><label>Nome do Título</label><input type="text" id="novoTituloNome"></div>
+                        <div class="form-group"><label>Valor Mensal (R$)</label><input type="number" id="novoTituloValor" step="0.01"></div>
                         <button class="btn btn-success" onclick="adicionarNovoTitulo()">✅ ADICIONAR</button>
                     </div>
                 </div>
 
-                <div id="adminSaques" style="display: none;">
-                    <h3>📋 SAQUES PENDENTES</h3>
-                    <div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...--</tbody></table></div>
+                <!-- Modal Alterar Título de Liderança -->
+                <div id="modalAlterarTitulo" class="modal-alterar-titulo">
+                    <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalAlterarTitulo')">&times;</span>
+                        <div class="modal-header">👑 ALTERAR TÍTULO DE LIDERANÇA</div>
+                        <div class="busca-cpf">
+                            <div class="form-group" style="flex:2"><label>CPF do participante</label><input type="text" id="buscarCpfTitulo" placeholder="Digite o CPF"></div>
+                            <button class="btn btn-secondary btn-small" style="margin-top: 24px;" onclick="buscarParticipantePorCpf()">🔍 BUSCAR</button>
+                        </div>
+                        <div id="infoParticipante" class="info-participante" style="display: none;"></div>
+                        <div class="form-group"><label>Novo Título de Liderança</label><select id="novoTituloSelect"><option value="">Selecione um título</option></select></div>
+                        <button class="btn btn-success" onclick="salvarAlteracaoTitulo()">💾 SALVAR ALTERAÇÃO</button>
+                        <div id="alterarTituloMsg" class="success" style="margin-top: 16px;"></div>
+                    </div>
                 </div>
 
-                <div id="adminCodigo" style="display: none;">
-                    <h3>🔑 GERAR CÓDIGO DE ACESSO</h3>
-                    <div class="saque-form" style="margin-top: 12px;">
-                        <div class="form-group"><label>CPF do participante</label><input type="text" id="novoCpf" placeholder="Digite o CPF"></div>
-                        <button class="btn btn-success" onclick="gerarCodigoAcesso()">GERAR CÓDIGO</button>
-                    </div>
-                    <div id="codigoGerado" class="success" style="margin-top: 12px; display: none;"><strong>Código gerado:</strong> <span id="novoCodigo"></span></div>
-                </div>
-
-                <div id="adminPioneiro" style="display: none;">
-                    <h3>👑 PARÂMETROS DE PIONEIRO</h3>
-                    <div class="param-grid" id="parametrosPioneiro">
-                        <div class="param-card"><div class="param-label">Pioneiros Permitidos</div><div class="param-value" id="param_permitido">-</div></div>
-                        <div class="param-card"><div class="param-label">Data Limite</div><div class="param-value" id="param_data_limite">-</div></div>
-                        <div class="param-card"><div class="param-label">Quantidade Máxima</div><div class="param-value" id="param_qtd_maxima">-</div></div>
-                        <div class="param-card"><div class="param-label">Contador Atual</div><div class="param-value" id="param_contador">-</div></div>
-                    </div>
-                    <h3 style="margin-top: 24px;">✏️ EDITAR PARÂMETROS</h3>
-                    <div class="param-grid">
-                        <div class="form-group"><label>Pioneiros Permitidos</label><select id="edit_permitido"><option value="SIM">SIM</option><option value="NAO">NAO</option></select></div>
-                        <div class="form-group"><label>Data Limite (DD/MM/AAAA)</label><input type="text" id="edit_data_limite" placeholder="31/12/2026" maxlength="10"></div>
-                        <div class="form-group"><label>Quantidade Máxima</label><input type="number" id="edit_qtd_maxima" min="1" max="1000"></div>
-                        <div class="form-group"><label>Contador Atual</label><input type="number" id="edit_contador" min="0"></div>
-                    </div>
+                <div id="adminSaques" style="display: none;"><h3>📋 SAQUES PENDENTES</h3><div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...</td></tr></tbody></table></div></div>
+                <div id="adminCodigo" style="display: none;"><h3>🔑 GERAR CÓDIGO DE ACESSO</h3><div class="saque-form"><div class="form-group"><label>CPF do participante</label><input type="text" id="novoCpf"></div><button class="btn btn-success" onclick="gerarCodigoAcesso()">GERAR CÓDIGO</button></div><div id="codigoGerado" class="success" style="margin-top: 12px;"><strong>Código gerado:</strong> <span id="novoCodigo"></span></div></div>
+                <div id="adminPioneiro" style="display: none;"><h3>👑 PARÂMETROS DE PIONEIRO</h3><div class="param-grid"><div class="param-card"><div class="param-label">Pioneiros Permitidos</div><div class="param-value" id="param_permitido">-</div></div><div class="param-card"><div class="param-label">Data Limite</div><div class="param-value" id="param_data_limite">-</div></div><div class="param-card"><div class="param-label">Quantidade Máxima</div><div class="param-value" id="param_qtd_maxima">-</div></div><div class="param-card"><div class="param-label">Contador Atual</div><div class="param-value" id="param_contador">-</div></div></div>
+                    <h3>✏️ EDITAR PARÂMETROS</h3><div class="param-grid"><div class="form-group"><label>Pioneiros Permitidos</label><select id="edit_permitido"><option value="SIM">SIM</option><option value="NAO">NAO</option></select></div>
+                    <div class="form-group"><label>Data Limite (DD/MM/AAAA)</label><input type="text" id="edit_data_limite" placeholder="31/12/2026" maxlength="10"></div>
+                    <div class="form-group"><label>Quantidade Máxima</label><input type="number" id="edit_qtd_maxima" min="1" max="1000"></div>
+                    <div class="form-group"><label>Contador Atual</label><input type="number" id="edit_contador" min="0"></div></div>
                     <button class="btn btn-success" onclick="salvarParametrosPioneiro()">💾 SALVAR PARÂMETROS</button>
-                    <h3 style="margin-top: 24px;">🏆 APROVAR NOVO PIONEIRO</h3>
-                    <div class="saque-form" style="margin-top: 12px;">
-                        <div class="form-group"><label>ID da Cota a ser aprovada</label><input type="number" id="pioneiroIdCota" placeholder="Digite o ID da cota"></div>
-                        <button class="btn btn-success" onclick="aprovarPioneiro()">APROVAR PIONEIRO</button>
-                    </div>
-                </div>
-
-                <div id="adminLog" style="display: none;">
-                    <h3>📋 LOG DE ALTERAÇÕES</h3>
-                    <div class="table-wrapper log-table"><table id="logTable"><thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logBody"><tr><td colspan="4">Carregando...--</tbody></table></div>
-                    <button class="btn btn-secondary" style="margin-top: 16px; width: auto;" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button>
-                </div>
+                    <h3>🏆 APROVAR NOVO PIONEIRO</h3><div class="saque-form"><div class="form-group"><label>ID da Cota</label><input type="number" id="pioneiroIdCota"></div><button class="btn btn-success" onclick="aprovarPioneiro()">APROVAR PIONEIRO</button></div></div>
+                <div id="adminLog" style="display: none;"><h3>📋 LOG DE ALTERAÇÕES</h3><div class="table-wrapper log-table"><table id="logTable"><thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logBody"><tr><td colspan="4">Carregando...</td></tr></tbody></table></div><button class="btn btn-secondary btn-small" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button></div>
             </div>
         </div>
     </div>
@@ -402,351 +309,252 @@
     <script>
         const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
-        let usuarioAtual = null;
-        let isAdmin = false;
-        let titulosEditados = {};
-
-        // FUNÇÕES AUXILIARES
-        function formatarDataBR(dataISO) {
-            if (!dataISO) return '';
-            const partes = dataISO.split('-');
-            if (partes.length === 3) return `${partes[2]}/${partes[1]}/${partes[0]}`;
-            return dataISO;
-        }
-
-        function formatarDataISO(dataBR) {
-            if (!dataBR) return '';
-            const partes = dataBR.split('/');
-            if (partes.length === 3) return `${partes[2]}-${partes[1]}-${partes[0]}`;
-            return dataBR;
-        }
+        let usuarioAtual = null, isAdmin = false, titulosEditados = {};
 
         async function fetchAPI(endpoint, options = {}) {
             const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
             const headers = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', ...options.headers };
-            const response = await fetch(url, { ...options, headers });
-            if (!response.ok) throw new Error(`Erro ${response.status}`);
-            return response.json();
+            const res = await fetch(url, { ...options, headers });
+            if (!res.ok) throw new Error(`Erro ${res.status}`);
+            return res.json();
         }
 
-        // LOGIN
+        function formatarDataBR(dataISO) { if (!dataISO) return ''; const p = dataISO.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : dataISO; }
+        function formatarDataISO(dataBR) { if (!dataBR) return ''; const p = dataBR.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : dataBR; }
+
         async function fazerLogin() {
             const cpf = document.getElementById('cpf').value.trim();
             const codigo = document.getElementById('codigo').value.trim().toUpperCase();
             const errorDiv = document.getElementById('loginError');
-            if (!cpf || !codigo) { errorDiv.style.display = 'block'; errorDiv.innerText = 'Preencha CPF e código'; return; }
+            if (!cpf || !codigo) { errorDiv.style.display='block'; errorDiv.innerText='Preencha CPF e código'; return; }
             try {
                 const acessos = await fetchAPI(`acessos?cpf=eq.${cpf}&codigo=eq.${codigo}&ativo=eq.true&select=*`);
-                if (!acessos || acessos.length === 0) { errorDiv.style.display = 'block'; errorDiv.innerText = 'CPF ou código inválido'; return; }
+                if (!acessos || !acessos.length) { errorDiv.style.display='block'; errorDiv.innerText='CPF ou código inválido'; return; }
                 const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
-                if (!participantes || participantes.length === 0) { errorDiv.style.display = 'block'; errorDiv.innerText = 'Participante não encontrado'; return; }
+                if (!participantes || !participantes.length) { errorDiv.style.display='block'; errorDiv.innerText='Participante não encontrado'; return; }
                 usuarioAtual = participantes[0];
                 isAdmin = (cpf === '1');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('userNome').innerText = usuarioAtual.nome;
                 document.getElementById('userCpf').innerText = cpf;
-                // Carregar título do participante
-                const participanteTitulo = await fetchAPI(`participantes?cpf=eq.${cpf}&select=titulo_lideranca`);
-                if (participanteTitulo && participanteTitulo.length > 0) {
-                    document.getElementById('userTitulo').innerText = participanteTitulo[0].titulo_lideranca || 'Networker';
+                // Título e Pioneiro
+                const pTitulo = await fetchAPI(`participantes?cpf=eq.${cpf}&select=titulo_lideranca,pioneiro`);
+                if (pTitulo && pTitulo.length) {
+                    document.getElementById('userTitulo').innerText = pTitulo[0].titulo_lideranca || 'Networker';
+                    if (pTitulo[0].pioneiro === 'Sim') document.getElementById('pioneiroBadge').style.display = 'flex';
                 }
                 if (isAdmin) document.getElementById('adminSection').style.display = 'block';
                 await carregarDashboard();
-            } catch (error) { errorDiv.style.display = 'block'; errorDiv.innerText = 'Erro: ' + error.message; }
+            } catch(e) { errorDiv.style.display='block'; errorDiv.innerText='Erro: '+e.message; }
         }
 
         async function carregarDashboard() {
             await carregarExtratoESaldos();
             await carregarArvore();
-            if (isAdmin) {
-                await carregarSaquesPendentes();
-                await carregarParametrosPioneiro();
-            }
+            if (isAdmin) { await carregarSaquesPendentes(); await carregarParametrosPioneiro(); }
         }
 
         async function carregarExtratoESaldos() {
             try {
                 const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-                if (saldo && saldo.length > 0) {
-                    const row = saldo[0];
-                    document.getElementById('saldoReserva').innerText = `R$ ${(row.reserva_atual || 0).toFixed(2)}`;
-                    document.getElementById('saldoBruto').innerText = `R$ ${(row.saldo_bruto || 0).toFixed(2)}`;
-                    document.getElementById('saldoDisponivel').innerText = `R$ ${(row.disponivel_saque || 0).toFixed(2)}`;
-                    document.getElementById('totalMensalidades').innerText = `R$ ${(row.total_mensalidades_pagas || 0).toFixed(2)}`;
-                    document.getElementById('totalBI').innerText = `R$ ${(row.total_bi || 0).toFixed(2)}`;
-                    document.getElementById('totalBR').innerText = `R$ ${(row.total_br || 0).toFixed(2)}`;
-                    document.getElementById('tamanhoRede').innerText = row.tamanho_rede_ativa || 0;
-                    document.getElementById('extratoBody').innerHTML = `<tr><td>${row.id_pessoa}</td><td>${row.nome}</td><td>R$ ${(row.total_entradas || 0).toFixed(2)}</td><td>R$ ${(row.total_saidas || 0).toFixed(2)}</td><td>R$ ${(row.reserva_atual || 0).toFixed(2)}</td><td>R$ ${(row.saldo_bruto || 0).toFixed(2)}</td><td>R$ ${(row.saque_mes_livre || 0).toFixed(2)}</td><td>R$ ${(row.saque_acum_livre || 0).toFixed(2)}</td><td>R$ ${(row.disponivel_saque || 0).toFixed(2)}</td><td>R$ ${(row.saldo_comercial || 0).toFixed(2)}</td><td>${new Date(row.data_atualizacao).toLocaleString()}</td></tr>`;
+                if (saldo && saldo.length) {
+                    const r = saldo[0];
+                    document.getElementById('saldoReserva').innerText = `R$ ${(r.reserva_atual||0).toFixed(2)}`;
+                    document.getElementById('saldoBruto').innerText = `R$ ${(r.saldo_bruto||0).toFixed(2)}`;
+                    document.getElementById('saldoDisponivel').innerText = `R$ ${(r.disponivel_saque||0).toFixed(2)}`;
+                    document.getElementById('totalMensalidades').innerText = `R$ ${(r.total_mensalidades_pagas||0).toFixed(2)}`;
+                    document.getElementById('totalBI').innerText = `R$ ${(r.total_bi||0).toFixed(2)}`;
+                    document.getElementById('totalBR').innerText = `R$ ${(r.total_br||0).toFixed(2)}`;
+                    document.getElementById('tamanhoRede').innerText = r.tamanho_rede_ativa||0;
+                    document.getElementById('extratoBody').innerHTML = `<tr><td>${r.id_pessoa}</td><td>${r.nome}</td><td>R$ ${(r.total_entradas||0).toFixed(2)}</td><td>R$ ${(r.total_saidas||0).toFixed(2)}</td><td>R$ ${(r.reserva_atual||0).toFixed(2)}</td><td>R$ ${(r.saldo_bruto||0).toFixed(2)}</td><td>R$ ${(r.saque_mes_livre||0).toFixed(2)}</td><td>R$ ${(r.saque_acum_livre||0).toFixed(2)}</td><td>R$ ${(r.disponivel_saque||0).toFixed(2)}</td><td>R$ ${(r.saldo_comercial||0).toFixed(2)}</td><td>${new Date(r.data_atualizacao).toLocaleString()}</td></tr>`;
                 }
-            } catch (error) { console.error('Erro:', error); }
+            } catch(e) { console.error(e); }
         }
 
-        // MODAL
-        function fecharModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
-
-        // ADMIN - NOVOS PARTICIPANTES, SAQUES, CÓDIGOS, PIONEIRO (mesmo do código anterior)
-        window.mostrarNovoParticipante = function() { document.getElementById('modalNovoParticipante').style.display = 'flex'; };
-        window.mostrarAprovacaoSaques = function() { document.getElementById('adminSaques').style.display = 'block'; document.getElementById('adminCodigo').style.display = 'none'; document.getElementById('adminPioneiro').style.display = 'none'; document.getElementById('adminLog').style.display = 'none'; carregarSaquesPendentes(); };
-        window.mostrarGerarCodigo = function() { document.getElementById('adminSaques').style.display = 'none'; document.getElementById('adminCodigo').style.display = 'block'; document.getElementById('adminPioneiro').style.display = 'none'; document.getElementById('adminLog').style.display = 'none'; };
-        window.mostrarParametrosPioneiro = function() { document.getElementById('adminSaques').style.display = 'none'; document.getElementById('adminCodigo').style.display = 'none'; document.getElementById('adminPioneiro').style.display = 'block'; document.getElementById('adminLog').style.display = 'none'; carregarParametrosPioneiro(); };
-        window.mostrarLogAlteracoes = function() { document.getElementById('adminSaques').style.display = 'none'; document.getElementById('adminCodigo').style.display = 'none'; document.getElementById('adminPioneiro').style.display = 'none'; document.getElementById('adminLog').style.display = 'block'; carregarLogAlteracoes(); };
-        window.mostrarEditarTitulos = function() { carregarTitulos(); document.getElementById('modalEditarTitulos').style.display = 'flex'; };
-
-        // ADMIN - TÍTULOS
-        async function carregarTitulos() {
-            try {
-                const titulos = await fetchAPI(`titulos?order=ordem.asc&select=*`);
-                const tbody = document.getElementById('titulosTableBody');
-                if (!titulos || titulos.length === 0) { tbody.innerHTML = '<tr><td colspan="3">Nenhum título cadastrado</td></tr>'; return; }
-                tbody.innerHTML = '';
-                for (const t of titulos) {
-                    const row = tbody.insertRow();
-                    row.insertCell(0).innerText = t.titulo;
-                    const valorCell = row.insertCell(1);
-                    const input = document.createElement('input');
-                    input.type = 'number';
-                    input.step = '0.01';
-                    input.value = t.valor_mensal;
-                    input.style.width = '100px';
-                    input.dataset.id = t.id;
-                    input.dataset.original = t.valor_mensal;
-                    input.onchange = function() { titulosEditados[this.dataset.id] = parseFloat(this.value); };
-                    valorCell.appendChild(input);
-                    const acoesCell = row.insertCell(2);
-                    const delBtn = document.createElement('button');
-                    delBtn.innerText = '🗑️';
-                    delBtn.className = 'btn-small btn-danger';
-                    delBtn.style.width = 'auto';
-                    delBtn.style.padding = '4px 8px';
-                    delBtn.onclick = () => excluirTitulo(t.id, t.titulo);
-                    acoesCell.appendChild(delBtn);
+        // ADMIN: ALTERAR TÍTULO
+        window.mostrarAlterarTitulo = async function() {
+            document.getElementById('modalAlterarTitulo').style.display = 'flex';
+            document.getElementById('alterarTituloMsg').style.display = 'none';
+            document.getElementById('buscarCpfTitulo').value = '';
+            document.getElementById('infoParticipante').style.display = 'none';
+            // Carregar dropdown de títulos (excluir Pioneiro, ordenado por ordem)
+            const titulos = await fetchAPI(`titulos?select=titulo,ordem&order=ordem.asc`);
+            const select = document.getElementById('novoTituloSelect');
+            select.innerHTML = '<option value="">Selecione um título</option>';
+            titulos.forEach(t => { 
+                if (t.titulo !== 'Pioneiro') {
+                    select.innerHTML += `<option value="${t.titulo}">${t.titulo}</option>`;
                 }
-            } catch (error) { console.error('Erro:', error); }
+            });
+        };
+
+        window.buscarParticipantePorCpf = async function() {
+            const cpf = document.getElementById('buscarCpfTitulo').value.trim();
+            if (!cpf) { alert('Digite um CPF'); return; }
+            const p = await fetchAPI(`participantes?cpf=eq.${cpf}&select=id_pessoa,nome,titulo_lideranca`);
+            if (!p || !p.length) { alert('Participante não encontrado'); return; }
+            const info = document.getElementById('infoParticipante');
+            info.style.display = 'block';
+            info.innerHTML = `<strong>Nome:</strong> ${p[0].nome}<br><strong>Título atual:</strong> ${p[0].titulo_lideranca}`;
+            window.participanteSelecionado = { id_pessoa: p[0].id_pessoa, titulo_atual: p[0].titulo_lideranca };
+        };
+
+        window.salvarAlteracaoTitulo = async function() {
+            const novoTitulo = document.getElementById('novoTituloSelect').value;
+            if (!window.participanteSelecionado) { alert('Busque um participante primeiro'); return; }
+            if (!novoTitulo) { alert('Selecione um novo título'); return; }
+            try {
+                await fetch(`${SUPABASE_URL}/rest/v1/participantes?id_pessoa=eq.${window.participanteSelecionado.id_pessoa}`, {
+                    method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ titulo_lideranca: novoTitulo })
+                });
+                document.getElementById('alterarTituloMsg').style.display = 'block';
+                document.getElementById('alterarTituloMsg').innerHTML = '✅ Título alterado com sucesso!';
+                setTimeout(() => fecharModal('modalAlterarTitulo'), 2000);
+            } catch(e) { alert('Erro: '+e.message); }
+        };
+
+        // ADMIN: TÍTULOS (CRUD)
+        async function carregarTitulos() {
+            const titulos = await fetchAPI(`titulos?order=ordem.asc&select=*`);
+            const tbody = document.getElementById('titulosTableBody');
+            if (!titulos || !titulos.length) { tbody.innerHTML = '<tr><td colspan="3">Nenhum título cadastrado</tr>'; return; }
+            tbody.innerHTML = '';
+            titulos.forEach(t => {
+                const row = tbody.insertRow();
+                row.insertCell(0).innerText = t.titulo;
+                const valCell = row.insertCell(1);
+                const inp = document.createElement('input'); inp.type='number'; inp.step='0.01'; inp.value=t.valor_mensal; inp.style.width='100px';
+                inp.dataset.id = t.id; inp.dataset.original = t.valor_mensal;
+                inp.onchange = function() { titulosEditados[this.dataset.id] = parseFloat(this.value); };
+                valCell.appendChild(inp);
+                const acoes = row.insertCell(2);
+                const del = document.createElement('button'); del.innerText='🗑️'; del.className='btn-small btn-danger'; del.onclick=()=>excluirTitulo(t.id,t.titulo);
+                acoes.appendChild(del);
+            });
         }
 
         window.salvarTodosTitulos = async function() {
-            if (Object.keys(titulosEditados).length === 0) { alert('Nenhuma alteração para salvar'); return; }
-            try {
-                for (const [id, novoValor] of Object.entries(titulosEditados)) {
-                    await fetch(`${SUPABASE_URL}/rest/v1/titulos?id=eq.${id}`, {
-                        method: 'PATCH',
-                        headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ valor_mensal: novoValor, data_atualizacao: new Date().toISOString() })
-                    });
-                }
-                alert('Títulos salvos com sucesso!');
-                titulosEditados = {};
-                await carregarTitulos();
-                // Recriar view para usar novos valores
-                await recriarViewPosTitulos();
-            } catch (error) { alert('Erro ao salvar: ' + error.message); }
+            if (Object.keys(titulosEditados).length===0) { alert('Nenhuma alteração'); return; }
+            for (const [id, novo] of Object.entries(titulosEditados))
+                await fetch(`${SUPABASE_URL}/rest/v1/titulos?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor_mensal: novo }) });
+            alert('Salvo!'); titulosEditados={}; await carregarTitulos();
         };
 
-        window.mostrarNovoTitulo = function() { document.getElementById('modalNovoTitulo').style.display = 'flex'; };
-        window.adicionarNovoTitulo = async function() {
+        window.excluirTitulo = async (id, nome) => { if(confirm(`Excluir "${nome}"?`)) { await fetch(`${SUPABASE_URL}/rest/v1/titulos?id=eq.${id}`, { method:'DELETE', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }); await carregarTitulos(); } };
+        window.mostrarNovoTitulo = () => document.getElementById('modalNovoTitulo').style.display='flex';
+        window.adicionarNovoTitulo = async () => {
             const nome = document.getElementById('novoTituloNome').value.trim();
             const valor = parseFloat(document.getElementById('novoTituloValor').value);
-            if (!nome || isNaN(valor)) { alert('Preencha nome e valor'); return; }
-            try {
-                const maxOrdem = await fetchAPI(`titulos?select=ordem&order=ordem.desc&limit=1`);
-                const novaOrdem = (maxOrdem && maxOrdem.length > 0) ? maxOrdem[0].ordem + 1 : 1;
-                await fetch(`${SUPABASE_URL}/rest/v1/titulos`, {
-                    method: 'POST',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ titulo: nome, valor_mensal: valor, ordem: novaOrdem })
-                });
-                alert('Título adicionado!');
-                fecharModal('modalNovoTitulo');
-                document.getElementById('novoTituloNome').value = '';
-                document.getElementById('novoTituloValor').value = '';
-                await carregarTitulos();
-                await recriarViewPosTitulos();
-            } catch (error) { alert('Erro ao adicionar: ' + error.message); }
+            if(!nome || isNaN(valor)) { alert('Preencha nome e valor'); return; }
+            await fetch(`${SUPABASE_URL}/rest/v1/titulos`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ titulo: nome, valor_mensal: valor, ordem: 999 }) });
+            fecharModal('modalNovoTitulo'); document.getElementById('novoTituloNome').value=''; document.getElementById('novoTituloValor').value=''; await carregarTitulos();
         };
 
-        async function excluirTitulo(id, nome) {
-            if (!confirm(`Excluir o título "${nome}"? Os participantes com este título passarão a ter limite padrão (200).`)) return;
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/titulos?id=eq.${id}`, {
-                    method: 'DELETE',
-                    headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }
-                });
-                alert('Título excluído!');
-                await carregarTitulos();
-                await recriarViewPosTitulos();
-            } catch (error) { alert('Erro ao excluir: ' + error.message); }
-        }
+        // ADMIN: SAQUES, CÓDIGOS, PIONEIRO (simplificado)
+        window.mostrarEditarTitulos = () => { carregarTitulos(); document.getElementById('modalEditarTitulos').style.display='flex'; };
+        window.mostrarAprovacaoSaques = () => { document.getElementById('adminSaques').style.display='block'; document.getElementById('adminCodigo').style.display='none'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='none'; carregarSaquesPendentes(); };
+        window.mostrarGerarCodigo = () => { document.getElementById('adminSaques').style.display='none'; document.getElementById('adminCodigo').style.display='block'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='none'; };
+        window.mostrarParametrosPioneiro = () => { document.getElementById('adminSaques').style.display='none'; document.getElementById('adminCodigo').style.display='none'; document.getElementById('adminPioneiro').style.display='block'; document.getElementById('adminLog').style.display='none'; carregarParametrosPioneiro(); };
+        window.mostrarLogAlteracoes = () => { document.getElementById('adminSaques').style.display='none'; document.getElementById('adminCodigo').style.display='none'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='block'; carregarLogAlteracoes(); };
+        window.mostrarNovoParticipante = () => document.getElementById('modalNovoParticipante').style.display='flex';
+        function fecharModal(id) { document.getElementById(id).style.display='none'; }
 
-        async function recriarViewPosTitulos() {
-            const viewSql = `DROP VIEW IF EXISTS saldo_consolidado CASCADE;
-            CREATE OR REPLACE VIEW saldo_consolidado AS
-            WITH totais_transacoes AS (...),
-            mensalidades_ativas AS (...),
-            limites_titulos AS (
-                SELECT p.id_pessoa,
-                    COALESCE(t.valor_mensal, 200) + CASE WHEN p.pioneiro = 'Sim' THEN 500 ELSE 0 END as limite_mensal
-                FROM participantes p
-                LEFT JOIN titulos t ON p.titulo_lideranca = t.titulo
-            )
-            SELECT ... (use a mesma estrutura da view que criamos antes)`;
-            // Por ora, recarregamos a página para forçar nova consulta
-            alert('View atualizada! Recarregue a página para ver os efeitos.');
-        }
-
-        // ADMIN - PIONEIRO
-        async function carregarParametrosPioneiro() {
-            try {
-                const params = await fetchAPI(`configuracoes?select=*`);
-                let permitido = 'SIM', dataLimite = '31/12/2026', qtdMaxima = '100', contador = '7';
-                if (params && params.length > 0) {
-                    for (const p of params) {
-                        if (p.chave === 'pioneiro_permitido') permitido = p.valor;
-                        if (p.chave === 'pioneiro_data_limite') dataLimite = formatarDataBR(p.valor);
-                        if (p.chave === 'pioneiro_quantidade_maxima') qtdMaxima = p.valor;
-                        if (p.chave === 'pioneiro_contador_atual') contador = p.valor;
-                    }
-                }
-                document.getElementById('param_permitido').innerText = permitido;
-                document.getElementById('param_data_limite').innerText = dataLimite;
-                document.getElementById('param_qtd_maxima').innerText = qtdMaxima;
-                document.getElementById('param_contador').innerText = contador;
-                document.getElementById('edit_permitido').value = permitido;
-                document.getElementById('edit_data_limite').value = dataLimite;
-                document.getElementById('edit_qtd_maxima').value = qtdMaxima;
-                document.getElementById('edit_contador').value = contador;
-            } catch (error) { console.error('Erro:', error); }
-        }
-
-        window.salvarParametrosPioneiro = async function() {
-            const permitido = document.getElementById('edit_permitido').value;
-            const dataLimiteBR = document.getElementById('edit_data_limite').value;
-            const dataLimiteISO = formatarDataISO(dataLimiteBR);
-            const qtdMaxima = document.getElementById('edit_qtd_maxima').value;
-            const contador = document.getElementById('edit_contador').value;
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_permitido`, { method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: permitido }) });
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_data_limite`, { method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: dataLimiteISO }) });
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_quantidade_maxima`, { method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: qtdMaxima }) });
-                await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_contador_atual`, { method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ valor: contador }) });
-                alert('Parâmetros salvos!');
-                await carregarParametrosPioneiro();
-            } catch (error) { alert('Erro: ' + error.message); }
-        };
-
-        window.aprovarPioneiro = async function() {
-            const idCota = document.getElementById('pioneiroIdCota').value;
-            if (!idCota) { alert('Digite o ID da cota'); return; }
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/participantes?id=eq.${idCota}`, { method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ pioneiro: 'Sim' }) });
-                alert('Pioneiro aprovado!');
-                document.getElementById('pioneiroIdCota').value = '';
-                await carregarParametrosPioneiro();
-            } catch (error) { alert('Erro: ' + error.message); }
-        };
-
-        // ADMIN - SAQUES
         async function carregarSaquesPendentes() {
             const saques = await fetchAPI(`saques?status=eq.Em processamento&select=*`);
             const tbody = document.getElementById('saquesPendentesBody');
-            if (!saques || saques.length === 0) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</td></tr>'; return; }
+            if (!saques || !saques.length) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</tr>'; return; }
             tbody.innerHTML = '';
             for (const s of saques) {
                 const p = await fetchAPI(`participantes?id=eq.${s.participante_id}&select=nome`);
-                const nome = (p && p.length) ? p[0].nome : 'Desconhecido';
-                tbody.innerHTML += `<tr><td>${s.id}</td><td>${nome}</td><td>R$ ${s.valor.toFixed(2)}</td><td>${new Date(s.data_solicitacao).toLocaleString()}</td><td><button class="btn btn-success btn-small" onclick="aprovarSaque(${s.id})">✅</button> <button class="btn btn-danger btn-small" onclick="recusarSaque(${s.id})">❌</button></td></tr>`;
+                const nome = (p && p.length) ? p[0].nome : '-';
+                tbody.innerHTML += `<tr><td>${s.id}</td><td>${nome}</td><td>R$ ${s.valor.toFixed(2)}</td><td>${new Date(s.data_solicitacao).toLocaleString()}</td><td><button class="btn-small btn-success" onclick="aprovarSaque(${s.id})">✅</button> <button class="btn-small btn-danger" onclick="recusarSaque(${s.id})">❌</button></td></tr>`;
             }
         }
-
-        window.aprovarSaque = async function(id) { await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, { method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Aprovado' }) }); await carregarSaquesPendentes(); alert('Aprovado!'); };
-        window.recusarSaque = async function(id) { await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, { method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'Recusado' }) }); await carregarSaquesPendentes(); alert('Recusado!'); };
-        window.gerarCodigoAcesso = async function() {
+        window.aprovarSaque = async (id) => { await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ status:'Aprovado' }) }); carregarSaquesPendentes(); alert('Aprovado'); };
+        window.recusarSaque = async (id) => { await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ status:'Recusado' }) }); carregarSaquesPendentes(); alert('Recusado'); };
+        window.gerarCodigoAcesso = async () => {
             const cpf = document.getElementById('novoCpf').value.trim();
             if (!cpf) { alert('Digite o CPF'); return; }
-            const existente = await fetchAPI(`acessos?cpf=eq.${cpf}&select=*`);
-            if (existente && existente.length > 0) { document.getElementById('novoCodigo').innerText = existente[0].codigo; document.getElementById('codigoGerado').style.display = 'block'; setTimeout(() => document.getElementById('codigoGerado').style.display = 'none', 5000); return; }
-            const novoCodigo = 'MMN-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-            await fetch(`${SUPABASE_URL}/rest/v1/acessos`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ cpf: cpf, codigo: novoCodigo, ativo: true }) });
-            document.getElementById('novoCodigo').innerText = novoCodigo; document.getElementById('codigoGerado').style.display = 'block'; setTimeout(() => document.getElementById('codigoGerado').style.display = 'none', 5000); document.getElementById('novoCpf').value = '';
+            const exist = await fetchAPI(`acessos?cpf=eq.${cpf}&select=*`);
+            if (exist && exist.length) { document.getElementById('novoCodigo').innerText = exist[0].codigo; document.getElementById('codigoGerado').style.display='block'; setTimeout(()=>document.getElementById('codigoGerado').style.display='none',5000); return; }
+            const novo = 'MMN-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase();
+            await fetch(`${SUPABASE_URL}/rest/v1/acessos`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ cpf, codigo:novo, ativo:true }) });
+            document.getElementById('novoCodigo').innerText = novo; document.getElementById('codigoGerado').style.display='block'; setTimeout(()=>document.getElementById('codigoGerado').style.display='none',5000);
         };
-        window.criarNovoParticipante = async function() {
-            const nome = document.getElementById('novoNome').value.trim();
-            const cpf = document.getElementById('novoCpfCad').value.trim();
-            const email = document.getElementById('novoEmail').value.trim();
-            const telefone = document.getElementById('novoTelefone').value.trim();
-            const idIndicador = parseInt(document.getElementById('novoIndicador').value) || 0;
-            const msgDiv = document.getElementById('novoParticipanteMsg');
-            if (!nome || !cpf) { msgDiv.style.display = 'block'; msgDiv.innerText = 'Nome e CPF obrigatórios!'; msgDiv.style.background = '#f8d7da'; return; }
-            try {
-                const existe = await fetchAPI(`participantes?cpf=eq.${cpf}&select=cpf`);
-                if (existe && existe.length > 0) { msgDiv.style.display = 'block'; msgDiv.innerText = 'CPF já existe!'; return; }
-                const pessoas = await fetchAPI(`participantes?select=id_pessoa&order=id_pessoa.desc&limit=1`);
-                let novoIdPessoa = 'P001';
-                if (pessoas && pessoas.length > 0 && pessoas[0].id_pessoa) { const num = parseInt(pessoas[0].id_pessoa.substring(1)); novoIdPessoa = `P${String(num + 1).padStart(3, '0')}`; }
-                const maxId = await fetchAPI(`participantes?select=id&order=id.desc&limit=1`);
-                let novoId = 1;
-                if (maxId && maxId.length > 0 && maxId[0].id) novoId = maxId[0].id + 1;
-                const planos = ['Start', 'Bronze', 'Prata', 'Ouro', 'Platina', 'Safira', 'Rubi', 'Esmeralda', 'Diamante', 'Imperial', 'Master'];
-                for (let i = 0; i < planos.length; i++) {
-                    const status = (planos[i] === 'Start') ? 'Pendente' : 'Inativo';
-                    const idIndCorreto = (i === 0 && idIndicador > 0) ? idIndicador : 0;
-                    await fetch(`${SUPABASE_URL}/rest/v1/participantes`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ id: novoId + i, id_pessoa: novoIdPessoa, id_cota: 1, id_virtual: `${novoIdPessoa}-${planos[i]}-COTA1`, nome: nome, cpf: cpf, id_indicador: idIndCorreto, plano: planos[i], status: status, titulo_lideranca: 'Networker', email: email, telefone: telefone, data_cadastro: new Date().toISOString() }) });
-                }
-                const novoCodigo = 'MMN-' + Math.random().toString(36).substring(2, 6).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-                await fetch(`${SUPABASE_URL}/rest/v1/acessos`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ cpf: cpf, codigo: novoCodigo, ativo: true }) });
-                msgDiv.style.display = 'block'; msgDiv.innerText = `✅ ${nome} criado! CPF: ${cpf} | Código: ${novoCodigo}`; msgDiv.style.background = '#d4edda';
-                setTimeout(() => { fecharModal('modalNovoParticipante'); msgDiv.style.display = 'none'; }, 5000);
-            } catch (error) { msgDiv.style.display = 'block'; msgDiv.innerText = 'Erro: ' + error.message; }
+        window.criarNovoParticipante = async () => {
+            const nome = document.getElementById('novoNome').value.trim(), cpf = document.getElementById('novoCpfCad').value.trim();
+            if (!nome || !cpf) { alert('Nome e CPF obrigatórios'); return; }
+            const exist = await fetchAPI(`participantes?cpf=eq.${cpf}&select=cpf`);
+            if (exist && exist.length) { alert('CPF já existe'); return; }
+            alert('Função simplificada. Use a planilha para cadastros completos.');
+        };
+        async function carregarParametrosPioneiro() {
+            const params = await fetchAPI(`configuracoes?select=*`);
+            let permitido='SIM', dataL='31/12/2026', qtd='100', cont='7';
+            if(params) for(const p of params) { if(p.chave==='pioneiro_permitido') permitido=p.valor; if(p.chave==='pioneiro_data_limite') dataL=formatarDataBR(p.valor); if(p.chave==='pioneiro_quantidade_maxima') qtd=p.valor; if(p.chave==='pioneiro_contador_atual') cont=p.valor; }
+            document.getElementById('param_permitido').innerText=permitido; document.getElementById('param_data_limite').innerText=dataL; document.getElementById('param_qtd_maxima').innerText=qtd; document.getElementById('param_contador').innerText=cont;
+            document.getElementById('edit_permitido').value=permitido; document.getElementById('edit_data_limite').value=dataL; document.getElementById('edit_qtd_maxima').value=qtd; document.getElementById('edit_contador').value=cont;
+        }
+        window.salvarParametrosPioneiro = async () => {
+            const permitido = document.getElementById('edit_permitido').value;
+            const dataISO = formatarDataISO(document.getElementById('edit_data_limite').value);
+            const qtd = document.getElementById('edit_qtd_maxima').value, cont = document.getElementById('edit_contador').value;
+            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_permitido`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:permitido }) });
+            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_data_limite`, { method:'PATCH', headers, body:JSON.stringify({ valor:dataISO }) });
+            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_quantidade_maxima`, { method:'PATCH', headers, body:JSON.stringify({ valor:qtd }) });
+            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_contador_atual`, { method:'PATCH', headers, body:JSON.stringify({ valor:cont }) });
+            alert('Salvo!'); carregarParametrosPioneiro();
+        };
+        window.aprovarPioneiro = async () => {
+            const id = document.getElementById('pioneiroIdCota').value;
+            if (!id) { alert('Digite o ID da cota'); return; }
+            await fetch(`${SUPABASE_URL}/rest/v1/participantes?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ pioneiro:'Sim' }) });
+            alert('Aprovado!');
         };
         async function carregarLogAlteracoes() {
-            const logs = await fetchAPI(`log_alteracoes?order=data_hora.desc&limit=50&select=*`);
+            const logs = await fetchAPI(`log_alteracoes?order=data_hora.desc&limit=30&select=*`);
             const tbody = document.getElementById('logBody');
-            if (!logs || logs.length === 0) { tbody.innerHTML = '<tr><td colspan="4">Nenhum registro</td></tr>'; return; }
-            tbody.innerHTML = '';
-            for (const log of logs) tbody.innerHTML += `<tr><td>${new Date(log.data_hora).toLocaleString()}</td><td>${log.operador || '-'}</td><td>${log.acao || '-'}</td><td>${log.observacao || '-'}</td></tr>`;
+            if(!logs||!logs.length){ tbody.innerHTML='<td colspan="4">Nenhum registro</td>'; return; }
+            tbody.innerHTML='';
+            logs.forEach(l=>{ tbody.innerHTML+=`<tr><td>${new Date(l.data_hora).toLocaleString()}</td><td>${l.operador||'-'}</td><td>${l.acao||'-'}</td><td>${l.observacao||'-'}</td></tr>`; });
         }
-
         // ÁRVORE
         async function carregarArvore() {
-            try {
-                const filhos = await fetchAPI(`participantes?id_pai=eq.${usuarioAtual.id}&select=*`);
-                if (!filhos.length) { document.getElementById('arvoreContainer').innerHTML = 'Nenhum indicado direto'; return; }
-                let html = '<div class="children open">';
-                for (const filho of filhos) {
-                    const temFilhos = await verificarTemFilhos(filho.id);
-                    html += `<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos ? '📂' : '📄'}</span><span>${filho.nome}</span><span>(${filho.plano})</span><span class="status-${filho.status}">${filho.status}</span></div><div class="children" data-parent="${filho.id}">${await montarSubArvore(filho.id)}</div></div>`;
-                }
-                html += '</div>';
-                document.getElementById('arvoreContainer').innerHTML = html;
-            } catch (error) { console.error(error); }
+            const filhos = await fetchAPI(`participantes?id_pai=eq.${usuarioAtual.id}&select=*`);
+            if(!filhos.length){ document.getElementById('arvoreContainer').innerHTML='Nenhum indicado direto'; return; }
+            let html='<div class="children open">';
+            for(const f of filhos){
+                const temFilhos = await (await fetchAPI(`participantes?id_pai=eq.${f.id}&select=id&limit=1`)).length>0;
+                html+=`<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos?'📂':'📄'}</span><span>${f.nome}</span><span>(${f.plano})</span><span class="status-${f.status}">${f.status}</span></div><div class="children" data-parent="${f.id}">${await montarSubArvore(f.id)}</div></div>`;
+            } html+='</div>';
+            document.getElementById('arvoreContainer').innerHTML=html;
         }
-        async function montarSubArvore(idPai) {
-            const filhos = await fetchAPI(`participantes?id_pai=eq.${idPai}&select=*`);
-            if (!filhos.length) return '';
-            let html = '';
-            for (const filho of filhos) {
-                const temFilhos = await verificarTemFilhos(filho.id);
-                html += `<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos ? '📂' : '📄'}</span><span>${filho.nome}</span><span>(${filho.plano})</span><span class="status-${filho.status}">${filho.status}</span></div><div class="children" data-parent="${filho.id}">${await montarSubArvore(filho.id)}</div></div>`;
-            }
-            return html;
+        async function montarSubArvore(id) {
+            const filhos = await fetchAPI(`participantes?id_pai=eq.${id}&select=*`);
+            if(!filhos.length) return '';
+            let h='';
+            for(const f of filhos){
+                const temFilhos = await (await fetchAPI(`participantes?id_pai=eq.${f.id}&select=id&limit=1`)).length>0;
+                h+=`<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos?'📂':'📄'}</span><span>${f.nome}</span><span>(${f.plano})</span><span class="status-${f.status}">${f.status}</span></div><div class="children" data-parent="${f.id}">${await montarSubArvore(f.id)}</div></div>`;
+            } return h;
         }
-        async function verificarTemFilhos(id) { const filhos = await fetchAPI(`participantes?id_pai=eq.${id}&select=id&limit=1`); return filhos.length > 0; }
-        window.toggleChildren = function(e) { const node = e.closest('.tree-node'); const children = node.querySelector('.children'); if(children){ children.classList.toggle('open'); e.innerText = children.classList.contains('open') ? '📂' : '📁'; } };
+        window.toggleChildren = function(e){ const node=e.closest('.tree-node'), children=node.querySelector('.children'); if(children){ children.classList.toggle('open'); e.innerText=children.classList.contains('open')?'📂':'📁'; } };
         async function solicitarSaque() {
-            const valor = parseFloat(document.getElementById('valorSaque').value);
-            const msg = document.getElementById('saqueMensagem');
-            if (isNaN(valor) || valor <= 0) { msg.style.display = 'block'; msg.innerText = 'Valor inválido'; return; }
+            const valor = parseFloat(document.getElementById('valorSaque').value), msg = document.getElementById('saqueMensagem');
+            if(isNaN(valor)||valor<=0){ msg.style.display='block'; msg.innerText='Valor inválido'; return; }
             const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-            const disponivel = (saldo && saldo.length > 0) ? (saldo[0].disponivel_saque || 0) : 0;
-            if (valor > disponivel) { msg.style.display = 'block'; msg.innerText = `Saldo insuficiente. Disponível: R$ ${disponivel.toFixed(2)}`; return; }
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/saques`, { method: 'POST', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ participante_id: usuarioAtual.id, id_pessoa: usuarioAtual.id_pessoa, valor: valor, status: 'Em processamento', data_solicitacao: new Date().toISOString() }) });
-                msg.style.display = 'block'; msg.innerText = `✅ Solicitação de R$ ${valor.toFixed(2)} enviada!`; msg.style.background = '#d4edda'; msg.style.color = '#155724';
-                document.getElementById('valorSaque').value = '';
-                if (isAdmin) await carregarSaquesPendentes();
-            } catch (error) { msg.style.display = 'block'; msg.innerText = 'Erro ao solicitar saque'; }
+            const disp = (saldo && saldo.length) ? (saldo[0].disponivel_saque||0) : 0;
+            if(valor>disp){ msg.style.display='block'; msg.innerText=`Saldo insuficiente. Disponível: R$ ${disp.toFixed(2)}`; return; }
+            try{
+                await fetch(`${SUPABASE_URL}/rest/v1/saques`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ participante_id:usuarioAtual.id, id_pessoa:usuarioAtual.id_pessoa, valor, status:'Em processamento', data_solicitacao:new Date().toISOString() }) });
+                msg.style.display='block'; msg.innerText=`✅ Solicitação de R$ ${valor.toFixed(2)} enviada!`; msg.style.background='#d4edda'; msg.style.color='#155724';
+                document.getElementById('valorSaque').value='';
+                if(isAdmin) await carregarSaquesPendentes();
+            } catch(e){ msg.style.display='block'; msg.innerText='Erro ao solicitar saque'; }
         }
-        function logout() { usuarioAtual = null; isAdmin = false; document.getElementById('loginScreen').style.display = 'block'; document.getElementById('dashboard').style.display = 'none'; document.getElementById('cpf').value = ''; document.getElementById('codigo').value = ''; }
+        function logout(){ usuarioAtual=null; isAdmin=false; document.getElementById('loginScreen').style.display='block'; document.getElementById('dashboard').style.display='none'; document.getElementById('cpf').value=''; document.getElementById('codigo').value=''; }
     </script>
 </body>
 </html>
