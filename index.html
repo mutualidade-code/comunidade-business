@@ -322,32 +322,84 @@
         function formatarDataBR(dataISO) { if (!dataISO) return ''; const p = dataISO.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : dataISO; }
         function formatarDataISO(dataBR) { if (!dataBR) return ''; const p = dataBR.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : dataBR; }
 
-        async function fazerLogin() {
-            const cpf = document.getElementById('cpf').value.trim();
-            const codigo = document.getElementById('codigo').value.trim().toUpperCase();
-            const errorDiv = document.getElementById('loginError');
-            if (!cpf || !codigo) { errorDiv.style.display='block'; errorDiv.innerText='Preencha CPF e código'; return; }
-            try {
-                const acessos = await fetchAPI(`acessos?cpf=eq.${cpf}&codigo=eq.${codigo}&ativo=eq.true&select=*`);
-                if (!acessos || !acessos.length) { errorDiv.style.display='block'; errorDiv.innerText='CPF ou código inválido'; return; }
-                const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
-                if (!participantes || !participantes.length) { errorDiv.style.display='block'; errorDiv.innerText='Participante não encontrado'; return; }
-                usuarioAtual = participantes[0];
-                isAdmin = (cpf === '1');
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('dashboard').style.display = 'block';
-                document.getElementById('userNome').innerText = usuarioAtual.nome;
-                document.getElementById('userCpf').innerText = cpf;
-                // Título e Pioneiro
-                const pTitulo = await fetchAPI(`participantes?cpf=eq.${cpf}&select=titulo_lideranca,pioneiro`);
-                if (pTitulo && pTitulo.length) {
-                    document.getElementById('userTitulo').innerText = pTitulo[0].titulo_lideranca || 'Networker';
-                    if (pTitulo[0].pioneiro === 'Sim') document.getElementById('pioneiroBadge').style.display = 'flex';
-                }
-                if (isAdmin) document.getElementById('adminSection').style.display = 'block';
-                await carregarDashboard();
-            } catch(e) { errorDiv.style.display='block'; errorDiv.innerText='Erro: '+e.message; }
+async function fazerLogin() {
+    const cpf = document.getElementById('cpf').value.trim();
+    const codigo = document.getElementById('codigo').value.trim().toUpperCase();
+    const errorDiv = document.getElementById('loginError');
+    if (!cpf || !codigo) { 
+        errorDiv.style.display='block'; 
+        errorDiv.innerText='Preencha CPF e código'; 
+        return; 
+    }
+    try {
+        const acessos = await fetchAPI(`acessos?cpf=eq.${cpf}&codigo=eq.${codigo}&ativo=eq.true&select=*`);
+        if (!acessos || !acessos.length) { 
+            errorDiv.style.display='block'; 
+            errorDiv.innerText='CPF ou código inválido'; 
+            return; 
         }
+        
+        const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
+        if (!participantes || !participantes.length) { 
+            errorDiv.style.display='block'; 
+            errorDiv.innerText='Participante não encontrado'; 
+            return; 
+        }
+        
+        usuarioAtual = participantes[0];
+        isAdmin = (cpf === '1');
+        
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('userNome').innerText = usuarioAtual.nome;
+        document.getElementById('userCpf').innerText = cpf;
+        
+        // ========== PARTE CORRIGIDA ==========
+        const pTitulo = await fetchAPI(`participantes?cpf=eq.${cpf}&select=titulo_lideranca,pioneiro`);
+        
+        console.log('Dados do participante:', pTitulo);
+        
+        if (pTitulo && pTitulo.length) {
+            const tituloAtual = pTitulo[0].titulo_lideranca || 'Networker';
+            document.getElementById('userTitulo').innerText = tituloAtual;
+            
+            const valorPioneiro = pTitulo[0].pioneiro;
+            let isPioneiro = false;
+            
+            if (valorPioneiro === 'Sim' || 
+                valorPioneiro === 'sim' || 
+                valorPioneiro === 'SIM' || 
+                valorPioneiro === 'S' ||
+                valorPioneiro === 'true' ||
+                valorPioneiro === true ||
+                valorPioneiro === 1 ||
+                valorPioneiro === '1') {
+                isPioneiro = true;
+            }
+            
+            console.log('É pioneiro?', isPioneiro, 'Valor original:', valorPioneiro);
+            
+            if (isPioneiro) {
+                const badge = document.getElementById('pioneiroBadge');
+                badge.style.display = 'flex';
+                console.log('Badge de pioneiro exibido');
+            } else {
+                console.log('Badge NÃO exibido - valor:', valorPioneiro);
+            }
+        } else {
+            console.error('Não foi possível carregar título/pioneiro');
+        }
+        // ========== FIM DA PARTE CORRIGIDA ==========
+        
+        if (isAdmin) document.getElementById('adminSection').style.display = 'block';
+        await carregarDashboard();
+        
+    } catch(e) { 
+        errorDiv.style.display='block'; 
+        errorDiv.innerText='Erro: '+e.message;
+        console.error('Erro no login:', e);
+    }
+}
 
         async function carregarDashboard() {
             await carregarExtratoESaldos();
