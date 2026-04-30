@@ -11,6 +11,8 @@
         .pending { background: #fff0e0; }
         .atrasado { background: #ffe0e0; }
         .children { margin-left: 20px; }
+        .error { color: red; background: #ffeeee; padding: 10px; border: 1px solid red; }
+        pre { background: #f0f0f0; padding: 10px; overflow-x: auto; }
     </style>
 </head>
 <body>
@@ -29,7 +31,8 @@
             resultadoDiv.innerHTML = 'Carregando...';
             
             try {
-                // Chama a função SQL
+                console.log('Chamando função testar_rede para ID:', id);
+                
                 const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede`, {
                     method: 'POST',
                     headers: {
@@ -41,12 +44,26 @@
                 });
                 
                 const data = await response.json();
-                console.log('Dados recebidos:', data);
+                console.log('Resposta completa:', data);
                 
-                if (!data || data.length === 0) {
-                    resultadoDiv.innerHTML = '<p>❌ Nenhum participante encontrado ou rede vazia.</p>';
+                // Verificar se houve erro
+                if (data && data.message) {
+                    resultadoDiv.innerHTML = `<div class="error">❌ Erro do Supabase: ${data.message}</div>`;
                     return;
                 }
+                
+                // Verificar se é array
+                if (!Array.isArray(data)) {
+                    resultadoDiv.innerHTML = `<div class="error">❌ Resposta não é um array. Tipo: ${typeof data}<br><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
+                    return;
+                }
+                
+                if (data.length === 0) {
+                    resultadoDiv.innerHTML = '<p>❌ Nenhum participante encontrado ou rede vazia para o ID ' + id + '.</p><p>Verifique se o ID existe na tabela participantes.</p>';
+                    return;
+                }
+                
+                console.log('Array recebido com', data.length, 'elementos');
                 
                 // Montar árvore
                 const nodes = {};
@@ -56,7 +73,7 @@
                 
                 const root = nodes[parseInt(id)];
                 if (!root) {
-                    resultadoDiv.innerHTML = '<p>❌ Participante não encontrado.</p>';
+                    resultadoDiv.innerHTML = `<p>❌ Participante ID ${id} não encontrado no resultado.</p><p>IDs encontrados: ${Object.keys(nodes).join(', ')}</p>`;
                     return;
                 }
                 
@@ -74,13 +91,8 @@
                     
                     const padding = nivel * 20;
                     let html = `<div class="node ${statusClass}" style="margin-left: ${padding}px">`;
-                    html += `<strong>${node.nome}</strong> (ID:${node.id}) - ${node.plano} - ${node.status}`;
+                    html += `<strong>${node.nome || '(sem nome)'}</strong> (ID:${node.id}) - ${node.plano || '?'} - ${node.status || '?'}`;
                     if (node.posicao > 0) html += ` - Posição: ${node.posicao}`;
-                    if (!node.tem_filhos && node.children.length === 0) {
-                        // Tentar detectar filhos pelo id_pai
-                        const hasChildren = data.some(c => c.id_pai === node.id);
-                        if (!hasChildren) html += ` ⭐ (sem filhos)`;
-                    }
                     html += `</div>`;
                     
                     if (node.children.length > 0) {
@@ -89,16 +101,6 @@
                             html += renderNode(child, nivel + 1);
                         });
                         html += `</div>`;
-                    } else {
-                        // Verificar se tem filhos no array original
-                        const filhos = data.filter(c => c.id_pai === node.id);
-                        if (filhos.length > 0) {
-                            html += `<div class="children">`;
-                            filhos.forEach(child => {
-                                html += renderNode(child, nivel + 1);
-                            });
-                            html += `</div>`;
-                        }
                     }
                     
                     return html;
@@ -107,8 +109,8 @@
                 resultadoDiv.innerHTML = renderNode(root);
                 
             } catch (error) {
-                console.error('Erro:', error);
-                resultadoDiv.innerHTML = `<p>❌ Erro ao carregar: ${error.message}</p>`;
+                console.error('Erro detalhado:', error);
+                resultadoDiv.innerHTML = `<div class="error"><p>❌ Erro ao carregar: ${error.message}</p><p>Verifique o console do navegador (F12) para mais detalhes.</p></div>`;
             }
         }
         
