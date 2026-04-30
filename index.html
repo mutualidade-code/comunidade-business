@@ -173,7 +173,7 @@
                     <img src="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png" alt="Logo" class="user-avatar">
                     <span id="userNome"></span> | CPF: <span id="userCpf"></span>
                 </div>
-                <div class="titulo-container">
+                <div class="titulo-container" id="tituloContainer">
                     <span class="coroa-esq">🏆</span>
                     <span class="titulo-label">Título:</span>
                     <span class="titulo-valor" id="userTitulo">Networker</span>
@@ -419,7 +419,7 @@
         async function carregarTitulos() {
             const titulos = await fetchAPI(`titulos?order=ordem.asc&select=*`);
             const tbody = document.getElementById('titulosTableBody');
-            if (!titulos || !titulos.length) { tbody.innerHTML = '<tr><td colspan="3">Nenhum título cadastrado</tr>'; return; }
+            if (!titulos || !titulos.length) { tbody.innerHTML = '</tr><td colspan="3">Nenhum título cadastrado</td> Septy'; return; }
             tbody.innerHTML = '';
             titulos.forEach(t => {
                 const row = tbody.insertRow();
@@ -464,7 +464,7 @@
         async function carregarSaquesPendentes() {
             const saques = await fetchAPI(`saques?status=eq.Em processamento&select=*`);
             const tbody = document.getElementById('saquesPendentesBody');
-            if (!saques || !saques.length) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</tr>'; return; }
+            if (!saques || !saques.length) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</td> </tr>'; return; }
             tbody.innerHTML = '';
             for (const s of saques) {
                 const p = await fetchAPI(`participantes?id=eq.${s.participante_id}&select=nome`);
@@ -502,9 +502,9 @@
             const dataISO = formatarDataISO(document.getElementById('edit_data_limite').value);
             const qtd = document.getElementById('edit_qtd_maxima').value, cont = document.getElementById('edit_contador').value;
             await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_permitido`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:permitido }) });
-            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_data_limite`, { method:'PATCH', headers, body:JSON.stringify({ valor:dataISO }) });
-            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_quantidade_maxima`, { method:'PATCH', headers, body:JSON.stringify({ valor:qtd }) });
-            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_contador_atual`, { method:'PATCH', headers, body:JSON.stringify({ valor:cont }) });
+            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_data_limite`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:dataISO }) });
+            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_quantidade_maxima`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:qtd }) });
+            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_contador_atual`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:cont }) });
             alert('Salvo!'); carregarParametrosPioneiro();
         };
         window.aprovarPioneiro = async () => {
@@ -516,7 +516,7 @@
         async function carregarLogAlteracoes() {
             const logs = await fetchAPI(`log_alteracoes?order=data_hora.desc&limit=30&select=*`);
             const tbody = document.getElementById('logBody');
-            if(!logs||!logs.length){ tbody.innerHTML='<td colspan="4">Nenhum registro</td>'; return; }
+            if(!logs||!logs.length){ tbody.innerHTML='<tr><td colspan="4">Nenhum registro</td></tr>'; return; }
             tbody.innerHTML='';
             logs.forEach(l=>{ tbody.innerHTML+=`<tr><td>${new Date(l.data_hora).toLocaleString()}</td><td>${l.operador||'-'}</td><td>${l.acao||'-'}</td><td>${l.observacao||'-'}</td></tr>`; });
         }
