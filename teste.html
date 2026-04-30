@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Teste Rede MMN 3x10</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .tree { margin-left: 20px; }
+        .node { margin: 5px 0; padding: 5px; border-left: 2px solid #ccc; }
+        .active { background: #e0ffe0; }
+        .pending { background: #fff0e0; }
+        .atrasado { background: #ffe0e0; }
+        .children { margin-left: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Teste de Rede 3x10</h1>
+    <input type="number" id="participanteId" value="1" placeholder="ID do participante">
+    <button onclick="carregarRede()">Carregar Rede</button>
+    <div id="resultado"></div>
+
+    <script>
+        const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
+
+        async function carregarRede() {
+            const id = document.getElementById('participanteId').value;
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = 'Carregando...';
+            
+            try {
+                // Chama a função SQL
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    },
+                    body: JSON.stringify({ p_id_participante: parseInt(id) })
+                });
+                
+                const data = await response.json();
+                console.log('Dados recebidos:', data);
+                
+                if (!data || data.length === 0) {
+                    resultadoDiv.innerHTML = '<p>❌ Nenhum participante encontrado ou rede vazia.</p>';
+                    return;
+                }
+                
+                // Montar árvore
+                const nodes = {};
+                data.forEach(node => {
+                    nodes[node.id] = { ...node, children: [] };
+                });
+                
+                const root = nodes[parseInt(id)];
+                if (!root) {
+                    resultadoDiv.innerHTML = '<p>❌ Participante não encontrado.</p>';
+                    return;
+                }
+                
+                data.forEach(node => {
+                    if (node.id_pai && nodes[node.id_pai] && node.id !== node.id_pai) {
+                        nodes[node.id_pai].children.push(node);
+                    }
+                });
+                
+                function renderNode(node, nivel = 0) {
+                    let statusClass = '';
+                    if (node.status === 'Ativo') statusClass = 'active';
+                    else if (node.status === 'Pendente') statusClass = 'pending';
+                    else if (node.status === 'Atrasado') statusClass = 'atrasado';
+                    
+                    const padding = nivel * 20;
+                    let html = `<div class="node ${statusClass}" style="margin-left: ${padding}px">`;
+                    html += `<strong>${node.nome}</strong> (ID:${node.id}) - ${node.plano} - ${node.status}`;
+                    if (node.posicao > 0) html += ` - Posição: ${node.posicao}`;
+                    if (!node.tem_filhos && node.children.length === 0) {
+                        // Tentar detectar filhos pelo id_pai
+                        const hasChildren = data.some(c => c.id_pai === node.id);
+                        if (!hasChildren) html += ` ⭐ (sem filhos)`;
+                    }
+                    html += `</div>`;
+                    
+                    if (node.children.length > 0) {
+                        html += `<div class="children">`;
+                        node.children.forEach(child => {
+                            html += renderNode(child, nivel + 1);
+                        });
+                        html += `</div>`;
+                    } else {
+                        // Verificar se tem filhos no array original
+                        const filhos = data.filter(c => c.id_pai === node.id);
+                        if (filhos.length > 0) {
+                            html += `<div class="children">`;
+                            filhos.forEach(child => {
+                                html += renderNode(child, nivel + 1);
+                            });
+                            html += `</div>`;
+                        }
+                    }
+                    
+                    return html;
+                }
+                
+                resultadoDiv.innerHTML = renderNode(root);
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                resultadoDiv.innerHTML = `<p>❌ Erro ao carregar: ${error.message}</p>`;
+            }
+        }
+        
+        // Carregar automaticamente ao abrir
+        window.onload = () => carregarRede();
+    </script>
+</body>
+</html>
