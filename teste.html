@@ -5,18 +5,14 @@
     <title>Teste Rede MMN 3x10</title>
     <style>
         body { font-family: Arial; padding: 20px; }
-        .tree { margin-left: 20px; }
         .node { margin: 5px 0; padding: 5px; border-left: 2px solid #ccc; }
         .active { background: #e0ffe0; }
-        .pending { background: #fff0e0; }
-        .atrasado { background: #ffe0e0; }
         .children { margin-left: 20px; }
-        .error { color: red; background: #ffeeee; padding: 10px; border: 1px solid red; }
-        pre { background: #f0f0f0; padding: 10px; overflow-x: auto; }
+        .error { color: red; background: #ffeeee; padding: 10px; }
     </style>
 </head>
 <body>
-    <h1>Teste de Rede 3x10</h1>
+    <h1>Teste de Rede 3x10 (consulta direta)</h1>
     <input type="number" id="participanteId" value="1" placeholder="ID do participante">
     <button onclick="carregarRede()">Carregar Rede</button>
     <div id="resultado"></div>
@@ -31,74 +27,56 @@
             resultadoDiv.innerHTML = 'Carregando...';
             
             try {
-                console.log('Chamando função testar_rede para ID:', id);
-                
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede`, {
-                    method: 'POST',
+                // Buscar TODOS os participantes (para montar a árvore em memória)
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/participantes?select=id,nome,plano,status,posicao,id_pai`, {
                     headers: {
-                        'Content-Type': 'application/json',
                         'apikey': SUPABASE_ANON_KEY,
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    },
-                    body: JSON.stringify({ p_id_participante: parseInt(id) })
-                });
-                
-                const data = await response.json();
-                console.log('Resposta completa:', data);
-                
-                // Verificar se houve erro
-                if (data && data.message) {
-                    resultadoDiv.innerHTML = `<div class="error">❌ Erro do Supabase: ${data.message}</div>`;
-                    return;
-                }
-                
-                // Verificar se é array
-                if (!Array.isArray(data)) {
-                    resultadoDiv.innerHTML = `<div class="error">❌ Resposta não é um array. Tipo: ${typeof data}<br><pre>${JSON.stringify(data, null, 2)}</pre></div>`;
-                    return;
-                }
-                
-                if (data.length === 0) {
-                    resultadoDiv.innerHTML = '<p>❌ Nenhum participante encontrado ou rede vazia para o ID ' + id + '.</p><p>Verifique se o ID existe na tabela participantes.</p>';
-                    return;
-                }
-                
-                console.log('Array recebido com', data.length, 'elementos');
-                
-                // Montar árvore
-                const nodes = {};
-                data.forEach(node => {
-                    nodes[node.id] = { ...node, children: [] };
-                });
-                
-                const root = nodes[parseInt(id)];
-                if (!root) {
-                    resultadoDiv.innerHTML = `<p>❌ Participante ID ${id} não encontrado no resultado.</p><p>IDs encontrados: ${Object.keys(nodes).join(', ')}</p>`;
-                    return;
-                }
-                
-                data.forEach(node => {
-                    if (node.id_pai && nodes[node.id_pai] && node.id !== node.id_pai) {
-                        nodes[node.id_pai].children.push(node);
                     }
                 });
                 
-                function renderNode(node, nivel = 0) {
-                    let statusClass = '';
-                    if (node.status === 'Ativo') statusClass = 'active';
-                    else if (node.status === 'Pendente') statusClass = 'pending';
-                    else if (node.status === 'Atrasado') statusClass = 'atrasado';
-                    
-                    const padding = nivel * 20;
-                    let html = `<div class="node ${statusClass}" style="margin-left: ${padding}px">`;
-                    html += `<strong>${node.nome || '(sem nome)'}</strong> (ID:${node.id}) - ${node.plano || '?'} - ${node.status || '?'}`;
-                    if (node.posicao > 0) html += ` - Posição: ${node.posicao}`;
+                const data = await response.json();
+                console.log('Total de participantes:', data.length);
+                
+                if (!Array.isArray(data)) {
+                    resultadoDiv.innerHTML = `<div class="error">Erro: ${JSON.stringify(data)}</div>`;
+                    return;
+                }
+                
+                // Encontrar o participante raiz
+                const root = data.find(p => p.id == id);
+                if (!root) {
+                    resultadoDiv.innerHTML = `<div class="error">Participante ID ${id} não encontrado.</div>`;
+                    return;
+                }
+                
+                // Montar árvore recursivamente
+                function getChildren(parentId, nivel = 0) {
+                    const children = data.filter(p => p.id_pai === parentId && p.status === 'Ativo');
+                    return children.map(child => ({
+                        ...child,
+                        nivel: nivel + 1,
+                        children: getChildren(child.id, nivel + 1)
+                    }));
+                }
+                
+                const tree = {
+                    ...root,
+                    nivel: 0,
+                    children: getChildren(root.id)
+                };
+                
+                function renderNode(node) {
+                    const indent = node.nivel * 20;
+                    let html = `<div class="node active" style="margin-left: ${indent}px">`;
+                    html += `<strong>${node.nome}</strong> (ID:${node.id}) - ${node.plano} - ${node.status}`;
+                    if (node.posicao > 0) html += ` - Pos: ${node.posicao}`;
                     html += `</div>`;
                     
-                    if (node.children.length > 0) {
+                    if (node.children && node.children.length > 0) {
                         html += `<div class="children">`;
                         node.children.forEach(child => {
-                            html += renderNode(child, nivel + 1);
+                            html += renderNode(child);
                         });
                         html += `</div>`;
                     }
@@ -106,15 +84,13 @@
                     return html;
                 }
                 
-                resultadoDiv.innerHTML = renderNode(root);
+                resultadoDiv.innerHTML = renderNode(tree);
                 
             } catch (error) {
-                console.error('Erro detalhado:', error);
-                resultadoDiv.innerHTML = `<div class="error"><p>❌ Erro ao carregar: ${error.message}</p><p>Verifique o console do navegador (F12) para mais detalhes.</p></div>`;
+                resultadoDiv.innerHTML = `<div class="error">Erro: ${error.message}</div>`;
             }
         }
         
-        // Carregar automaticamente ao abrir
         window.onload = () => carregarRede();
     </script>
 </body>
