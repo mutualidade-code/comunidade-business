@@ -3,175 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comunidade Business - Minha Rede</title>
+    <title>Comunidade Business - Rede</title>
     <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; padding: 20px; margin: 0; }
-        .container { max-width: 900px; margin: 0 auto; }
-        .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        h1 { color: #366092; margin: 0 0 5px 0; font-size: 24px; }
-        h2 { color: #366092; font-size: 18px; margin: 0 0 15px 0; border-bottom: 2px solid #366092; padding-bottom: 5px; }
-        .tree-node { margin: 5px 0; padding: 10px; border-left: 3px solid #366092; background: #f9f9f9; border-radius: 0 8px 8px 0; }
-        .tree-node.active { background: #e8f5e9; border-left-color: #4caf50; }
-        .tree-children { margin-left: 35px; }
-        .status-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-left: 8px; }
+        body { font-family: Arial; padding: 20px; background: #f0f2f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+        .node { margin: 5px 0; padding: 8px; border-left: 3px solid #366092; background: #f9f9f9; }
+        .active { background: #e8f5e9; border-left-color: #4caf50; }
+        .children { margin-left: 30px; }
+        .error { color: red; background: #ffebee; padding: 10px; border-radius: 5px; }
+        .plano-badge { background: #366092; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
         .status-Ativo { background: #4caf50; color: white; }
-        .status-Pendente { background: #ff9800; color: white; }
-        .status-Atrasado { background: #f44336; color: white; }
-        .plano-badge { background: #366092; color: white; padding: 2px 10px; border-radius: 20px; font-size: 11px; margin-left: 8px; display: inline-block; }
-        .stats { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px; }
-        .loading { text-align: center; padding: 40px; color: #666; }
-        .error { background: #ffebee; color: #c62828; padding: 15px; border-radius: 8px; }
-        .indicador-item { padding: 8px; border-bottom: 1px solid #eee; }
-        .total { font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 2px solid #366092; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="card">
-            <h1>🌳 Comunidade Business</h1>
-            <p>Sistema MMN 3x10 - Matriz Forçada com Derramamento</p>
-        </div>
-
-        <div class="card">
-            <h2>📊 Meus Indicados Diretos</h2>
-            <div id="indicadores">
-                <div class="loading">Carregando indicadores...</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>🌿 Minha Rede (3x10)</h2>
-            <div id="arvore-rede">
-                <div class="loading">Carregando árvore da rede...</div>
-            </div>
-        </div>
+        <h1>🌳 Comunidade Business - Minha Rede</h1>
+        <div id="resultado">Carregando...</div>
     </div>
 
     <script>
-        (function() {
-            const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
-            const SUPABASE_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
-            const USUARIO_ID = 1;
-
-            async function fetchFromSupabase(endpoint) {
-                const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
-                console.log('Fetching:', url);
-                
-                const response = await fetch(url, {
-                    method: 'GET',
+        const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
+        const USUARIO_ID = 1;
+        
+        async function carregar() {
+            const div = document.getElementById('resultado');
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede?p_id_participante=${USUARIO_ID}`, {
                     headers: {
                         'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
-                        'Content-Type': 'application/json'
+                        'Authorization': `Bearer ${SUPABASE_KEY}`
                     }
                 });
                 
                 if (!response.ok) {
-                    const text = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${text.substring(0, 200)}`);
+                    throw new Error(`HTTP ${response.status}`);
                 }
                 
-                return response.json();
-            }
-
-            async function carregarIndicadores() {
-                const div = document.getElementById('indicadores');
-                try {
-                    const data = await fetchFromSupabase(`participantes?select=id,nome,plano,status&id_pai=eq.${USUARIO_ID}`);
+                const data = await response.json();
+                console.log('Dados:', data);
+                
+                if (!data || data.length === 0) {
+                    div.innerHTML = '<p>Nenhum dado encontrado. Verifique se a função testar_rede existe.</p>';
+                    return;
+                }
+                
+                function render(node, level = 0) {
+                    const indent = level * 25;
+                    let html = `<div class="node active" style="margin-left: ${indent}px">`;
+                    html += `<strong>${node.nome}</strong> (ID:${node.id}) `;
+                    html += `<span class="plano-badge">${node.plano}</span> `;
+                    html += `<span class="status-badge status-${node.status}">${node.status}</span>`;
+                    if (node.posicao > 0) html += ` 📍 Pos: ${node.posicao}`;
+                    html += `</div>`;
                     
-                    if (data && data.length > 0) {
-                        let html = '';
-                        data.forEach(p => {
-                            html += `<div class="indicador-item">
-                                        ✅ <strong>${p.nome}</strong> 
-                                        <span class="plano-badge">${p.plano || 'Start'}</span>
-                                        <span class="status-badge status-${p.status || 'Ativo'}">${p.status || 'Ativo'}</span>
-                                     </div>`;
+                    const filhos = data.filter(p => p.id_pai === node.id && p.status === 'Ativo');
+                    if (filhos.length > 0) {
+                        html += `<div class="children">`;
+                        filhos.forEach(filho => {
+                            html += render(filho, level + 1);
                         });
-                        html += `<div class="total">📌 Total de indicados diretos: ${data.length}</div>`;
-                        div.innerHTML = html;
-                    } else {
-                        div.innerHTML = '<p>⚠️ Nenhum indicado direto ainda.</p>';
-                    }
-                } catch (error) {
-                    div.innerHTML = `<div class="error">❌ Erro ao carregar indicadores: ${error.message}</div>`;
-                }
-            }
-
-            async function carregarArvore() {
-                const div = document.getElementById('arvore-rede');
-                try {
-                    const data = await fetchFromSupabase(`rpc/testar_rede?p_id_participante=${USUARIO_ID}`);
-                    
-                    console.log('Resposta da rede:', data);
-                    
-                    if (!data || data.length === 0) {
-                        div.innerHTML = '<p>❌ Nenhum dado encontrado na rede. Verifique se a função testar_rede existe.</p>';
-                        return;
-                    }
-                    
-                    const root = data.find(p => p.nivel === 0);
-                    if (!root) {
-                        div.innerHTML = '<p>❌ Raiz da rede não encontrada.</p>';
-                        return;
-                    }
-                    
-                    function renderNode(node, level = 0) {
-                        const indent = level * 25;
-                        const activeClass = node.status === 'Ativo' ? 'active' : '';
-                        
-                        let html = `<div class="tree-node ${activeClass}" style="margin-left: ${indent}px">`;
-                        html += `<strong>${node.nome || '(sem nome)'}</strong> `;
-                        html += `<span style="color: #666;">(ID:${node.id})</span> `;
-                        html += `<span class="plano-badge">${node.plano || 'Start'}</span> `;
-                        html += `<span class="status-badge status-${node.status || 'Ativo'}">${node.status || 'Ativo'}</span>`;
-                        if (node.posicao > 0) html += ` <span style="font-size: 11px; color: #666;">📍 Pos: ${node.posicao}</span>`;
                         html += `</div>`;
-                        
-                        const filhos = data.filter(p => p.id_pai === node.id && p.status === 'Ativo');
-                        if (filhos.length > 0) {
-                            html += `<div class="tree-children">`;
-                            filhos.forEach(filho => {
-                                html += renderNode(filho, level + 1);
-                            });
-                            html += `</div>`;
-                        }
-                        return html;
                     }
-                    
-                    const totalAtivos = data.filter(p => p.status === 'Ativo').length;
-                    const maxNivel = Math.max(...data.map(p => p.nivel));
-                    const diretos = data.filter(p => p.id_pai === USUARIO_ID && p.status === 'Ativo').length;
-                    
-                    div.innerHTML = renderNode(root);
-                    div.innerHTML += `
-                        <div class="stats">
-                            <strong>📊 Estatísticas da rede:</strong><br>
-                            • Total de membros ativos na rede: ${totalAtivos}<br>
-                            • Profundidade máxima: ${maxNivel} níveis<br>
-                            • Indicados diretos ativos: ${diretos}
-                        </div>
-                    `;
-                    
-                } catch (error) {
-                    console.error('Erro detalhado:', error);
-                    div.innerHTML = `<div class="error">
-                        <strong>❌ Erro ao carregar rede:</strong><br>
-                        ${error.message}<br><br>
-                        <strong>Soluções possíveis:</strong><br>
-                        1. Verifique se a função 'testar_rede' existe no Supabase<br>
-                        2. Execute no SQL Editor: CREATE OR REPLACE FUNCTION testar_rede...
-                    </div>`;
+                    return html;
                 }
+                
+                const root = data.find(p => p.nivel === 0);
+                if (!root) {
+                    div.innerHTML = '<p>Raiz não encontrada.</p>';
+                    return;
+                }
+                
+                div.innerHTML = render(root);
+                
+                // Estatísticas
+                const totalAtivos = data.filter(p => p.status === 'Ativo').length;
+                div.innerHTML += `<p style="margin-top: 20px;"><strong>Total de membros ativos: ${totalAtivos}</strong></p>`;
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                div.innerHTML = `<div class="error">❌ Erro: ${error.message}</div>`;
             }
-
-            async function iniciar() {
-                await carregarIndicadores();
-                await carregarArvore();
-            }
-            
-            iniciar();
-        })();
+        }
+        
+        carregar();
     </script>
 </body>
 </html>
