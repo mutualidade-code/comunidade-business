@@ -332,13 +332,23 @@
                 if (!acessos || !acessos.length) { errorDiv.style.display='block'; errorDiv.innerText='CPF ou código inválido'; return; }
                 const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
                 if (!participantes || !participantes.length) { errorDiv.style.display='block'; errorDiv.innerText='Participante não encontrado'; return; }
-                usuarioAtual = participantes[0];
+                
+                // CORREÇÃO: Buscar a cota Start Ativa (raiz da rede da pessoa)
+                let cotaPrincipal = participantes.find(p => p.plano === 'Start' && p.status === 'Ativo');
+                if (!cotaPrincipal) {
+                    cotaPrincipal = participantes.find(p => p.status === 'Ativo');
+                }
+                if (!cotaPrincipal) {
+                    cotaPrincipal = participantes[0];
+                }
+                usuarioAtual = cotaPrincipal;
+                
                 isAdmin = (cpf === '1');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('userNome').innerText = usuarioAtual.nome;
                 document.getElementById('userCpf').innerText = cpf;
-                const pTitulo = await fetchAPI(`participantes?cpf=eq.${cpf}&select=titulo_lideranca,pioneiro`);
+                const pTitulo = await fetchAPI(`participantes?id=eq.${usuarioAtual.id}&select=titulo_lideranca,pioneiro`);
                 if (pTitulo && pTitulo.length) {
                     document.getElementById('userTitulo').innerText = pTitulo[0].titulo_lideranca || 'Networker';
                     if (pTitulo[0].pioneiro === 'Sim') document.getElementById('pioneiroBadge').style.display = 'flex';
