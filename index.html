@@ -42,14 +42,51 @@
         .login-card .subtitle { text-align: center; color: #6c757d; margin-bottom: 30px; }
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #495057; text-align: left; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            background: white;
+            color: #2c3e50;
+        }
         .form-group input:focus, .form-group select:focus { outline: none; border-color: #667eea; }
-        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
         .btn:hover { transform: translateY(-2px); }
         .btn-danger { background: #dc3545; width: auto; padding: 8px 20px; }
         .btn-secondary { background: #6c757d; width: auto; padding: 8px 16px; }
         .btn-success { background: #28a745; width: auto; padding: 8px 16px; }
         .btn-warning { background: #fd7e14; width: auto; padding: 8px 16px; }
+        
+        /* Botão de filtro - fundo claro e texto visível */
+        .btn-filtro {
+            background: #e9ecef;
+            color: #2c3e50;
+            border: 1px solid #ced4da;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-filtro:hover {
+            background: #dee2e6;
+            transform: translateY(-1px);
+        }
+        
         .error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
         .success { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
         .dashboard { display: none; }
@@ -144,12 +181,88 @@
         .busca-cpf { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
         .info-participante { background: #e9ecef; padding: 12px; border-radius: 8px; margin: 12px 0; }
         .inativos-card { background: #fff8e7; border-left: 4px solid #fd7e14; margin-top: 20px; }
+        
+        /* Estilo para agrupamento de movimentações */
+        .periodo-group {
+            margin-top: 16px;
+            border-left: 3px solid #366092;
+            padding-left: 12px;
+        }
+        .periodo-header {
+            font-weight: bold;
+            font-size: 1.1rem;
+            background: #f0f2f5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .periodo-header:hover {
+            background: #e9ecef;
+        }
+        .periodo-header .toggle-symbol {
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+        .periodo-content {
+            display: none;
+            margin-top: 8px;
+            margin-bottom: 16px;
+        }
+        .periodo-content.open {
+            display: block;
+        }
+        .mov-item {
+            display: grid;
+            grid-template-columns: 160px 120px 100px 1fr 110px;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.85rem;
+            align-items: center;
+        }
+        .mov-item:hover {
+            background: #f8f9fa;
+        }
+        .mov-item.header {
+            font-weight: bold;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            position: sticky;
+            top: 0;
+        }
+        .mov-data { color: #666; font-size: 0.8rem; }
+        .mov-tipo .badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e9ecef;
+        }
+        .mov-valor.entrada { color: #28a745; font-weight: bold; }
+        .mov-valor.saida { color: #dc3545; font-weight: bold; }
+        .mov-saldo { font-family: monospace; font-weight: 500; }
+        
         @media (max-width: 768px) {
             .saldo-grid, .stats-grid, .param-grid { grid-template-columns: 1fr; }
             .saque-form { flex-direction: column; }
             .saque-form .btn { width: 100%; }
             .dashboard-header { flex-direction: column; align-items: stretch; }
             .user-info, .titulo-container, .pioneiro-badge, .btn-danger { justify-content: center; }
+            .mov-item {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                padding: 12px;
+                border-bottom: 1px solid #ddd;
+            }
+            .mov-item.header { display: none; }
+            .mov-item .mov-data::before { content: "📅 "; font-weight: bold; }
+            .mov-item .mov-tipo::before { content: "📌 "; font-weight: bold; }
+            .mov-item .mov-valor::before { content: "💰 "; font-weight: bold; }
+            .mov-item .mov-descricao::before { content: "📝 "; font-weight: bold; }
+            .mov-item .mov-saldo::before { content: "🏦 Saldo: "; font-weight: bold; }
         }
     </style>
 </head>
@@ -224,6 +337,65 @@
                 <div class="card-header">⚠️ MEMBROS INATIVOS/ATRASADOS/PENDENTES EM TODA A MINHA REDE</div>
                 <div id="inativosContainer" class="tree">Carregando...</div>
                 <p style="font-size: 12px; color: #666; margin-top: 10px;">📌 Estes membros estão com mensalidade atrasada ou temporariamente inativos. Entre em contato para ajudar na regularização.</p>
+            </div>
+
+            <!-- MINHAS MOVIMENTAÇÕES -->
+            <div class="card">
+                <div class="card-header">💰 MINHAS MOVIMENTAÇÕES</div>
+             
+                <!-- Filtros -->
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; align-items: flex-end;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12px;">Ano</label>
+                        <select id="filtroAno" style="width: 100px;">
+                            <option value="todos">Todos</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12px;">Mês</label>
+                        <select id="filtroMes" style="width: 120px;">
+                            <option value="todos">Todos</option>
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12px;">Tipo</label>
+                        <select id="filtroTipo" style="width: 150px;">
+                            <option value="todos">Todos</option>
+                            <option value="BI">BI (Bônus Indicação)</option>
+                            <option value="BR">BR (Bônus Rede)</option>
+                            <option value="Depósito">Depósito</option>
+                            <option value="Pagamento">Pagamento</option>
+                            <option value="Mensalidade">Mensalidade</option>
+                            <option value="Saque">Saque</option>
+                            <option value="Reserva">Reserva</option>
+                            <option value="Transferência">Transferência (em breve)</option>
+                        </select>
+                    </div>
+                    <button class="btn-filtro" onclick="aplicarFiltrosMovimentacoes()">🔍 Filtrar</button>
+                    <button class="btn-filtro" onclick="limparFiltrosMovimentacoes()">🗑️ Limpar</button>
+                </div>
+                
+                <!-- Lista agrupada por Ano/Mês -->
+                <div id="movimentacoesContainer" class="tree">
+                    <div class="loading">Carregando movimentações...</div>
+                </div>
+                
+                <!-- Mensagem de fim -->
+                <div id="movimentacoesFim" style="text-align: center; padding: 16px; color: #666; display: none;">
+                    — Fim do histórico —
+                </div>
             </div>
 
             <!-- Solicitar Saque -->
@@ -368,6 +540,7 @@
             await carregarExtratoESaldos();
             await carregarArvore();
             await carregarInativos();
+            await carregarMovimentacoes();
             if (isAdmin) { 
                 await carregarSaquesPendentes(); 
                 await carregarParametrosPioneiro(); 
@@ -527,6 +700,209 @@
                 container.innerHTML = `Erro ao carregar: ${error.message}`;
             }
         }
+
+        // ==================== MINHAS MOVIMENTAÇÕES ====================
+        let movimentacoesCompletas = [];
+        let movimentacoesFiltradas = [];
+
+        async function carregarMovimentacoes() {
+            const container = document.getElementById('movimentacoesContainer');
+            if (!container) return;
+            
+            // Verificar se usuarioAtual existe antes de continuar
+            if (!usuarioAtual || !usuarioAtual.id_pessoa) {
+                console.warn('Aguardando login para carregar movimentações...');
+                container.innerHTML = '<div class="loading">Aguardando login...</div>';
+                return;
+            }
+            
+            container.innerHTML = '<div class="loading">Carregando movimentações...</div>';
+            
+            try {
+                const data = await fetchAPI(`transacoes?id_pessoa=eq.${usuarioAtual.id_pessoa}&order=data_hora.desc`);
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p>📭 Nenhuma movimentação encontrada.</p>';
+                    return;
+                }
+                
+                movimentacoesCompletas = data;
+                movimentacoesFiltradas = [...data];
+                
+                // Popular dropdown de anos
+                const anos = [...new Set(data.map(m => new Date(m.data_hora).getFullYear()))];
+                const selectAno = document.getElementById('filtroAno');
+                if (selectAno) {
+                    selectAno.innerHTML = '<option value="todos">Todos</option>';
+                    anos.sort((a,b)=>b-a).forEach(ano => {
+                        selectAno.innerHTML += `<option value="${ano}">${ano}</option>`;
+                    });
+                }
+                
+                renderizarMovimentacoesAgrupadas();
+                
+            } catch (error) {
+                console.error('Erro ao carregar movimentações:', error);
+                container.innerHTML = '<div class="error">❌ Erro ao carregar movimentações</div>';
+            }
+        }
+
+        function limparFiltrosMovimentacoes() {
+            document.getElementById('filtroAno').value = 'todos';
+            document.getElementById('filtroMes').value = 'todos';
+            document.getElementById('filtroTipo').value = 'todos';
+            movimentacoesFiltradas = [...movimentacoesCompletas];
+            renderizarMovimentacoesAgrupadas();
+        }
+
+        function aplicarFiltrosMovimentacoes() {
+            const anoFiltro = document.getElementById('filtroAno')?.value || 'todos';
+            const mesFiltro = document.getElementById('filtroMes')?.value || 'todos';
+            const tipoFiltro = document.getElementById('filtroTipo')?.value || 'todos';
+            
+            let dataFiltrada = [...movimentacoesCompletas];
+            
+            if (anoFiltro !== 'todos') {
+                dataFiltrada = dataFiltrada.filter(m => new Date(m.data_hora).getFullYear() === parseInt(anoFiltro));
+            }
+            
+            if (mesFiltro !== 'todos') {
+                dataFiltrada = dataFiltrada.filter(m => (new Date(m.data_hora).getMonth() + 1) === parseInt(mesFiltro));
+            }
+            
+            if (tipoFiltro !== 'todos') {
+                dataFiltrada = dataFiltrada.filter(m => m.tipo === tipoFiltro);
+            }
+            
+            movimentacoesFiltradas = dataFiltrada;
+            
+            // Determinar qual mês/ano deve abrir automaticamente
+            let mesParaAbrir = null;
+            let anoParaAbrir = null;
+            
+            if (mesFiltro !== 'todos') {
+                mesParaAbrir = parseInt(mesFiltro);
+                
+                // Se o ano NÃO foi selecionado, pegar o ano do primeiro movimento filtrado
+                if (anoFiltro === 'todos' && dataFiltrada.length > 0) {
+                    anoParaAbrir = new Date(dataFiltrada[0].data_hora).getFullYear();
+                } else if (anoFiltro !== 'todos') {
+                    anoParaAbrir = parseInt(anoFiltro);
+                }
+            } else if (anoFiltro !== 'todos') {
+                // Se apenas o ano foi selecionado, abrir o primeiro mês com dados?
+                // Por enquanto, não abre (deixa todos fechados)
+                anoParaAbrir = null;
+            }
+            
+            console.log('Filtrando:', { mesParaAbrir, anoParaAbrir, total: dataFiltrada.length });
+            
+            renderizarMovimentacoesAgrupadas(mesParaAbrir, anoParaAbrir);
+        }
+
+        function renderizarMovimentacoesAgrupadas(mesParaAbrir = null, anoParaAbrir = null) {
+            const container = document.getElementById('movimentacoesContainer');
+            if (!container) return;
+            
+            if (movimentacoesFiltradas.length === 0) {
+                container.innerHTML = '<p>📭 Nenhuma movimentação encontrada com os filtros selecionados.</p>';
+                return;
+            }
+            
+            // Agrupar por ano/mês
+            const grupos = {};
+            movimentacoesFiltradas.forEach(mov => {
+                const data = new Date(mov.data_hora);
+                const ano = data.getFullYear();
+                const mes = data.getMonth() + 1;
+                const chave = `${ano}-${mes.toString().padStart(2,'0')}`;
+                const nomeMes = data.toLocaleString('pt-BR', { month: 'long' });
+                if (!grupos[chave]) {
+                    grupos[chave] = { ano, mes, nomeMes, movimentos: [] };
+                }
+                grupos[chave].movimentos.push(mov);
+            });
+            
+            const chavesOrdenadas = Object.keys(grupos).sort().reverse();
+            let html = '';
+            
+            for (const chave of chavesOrdenadas) {
+                const grupo = grupos[chave];
+                const movimentosOrdenados = grupo.movimentos;
+                
+                let saldoPeriodo = 0;
+                movimentosOrdenados.forEach(m => { saldoPeriodo += m.valor || 0; });
+                
+                const mesAnoLabel = `${grupo.nomeMes.charAt(0).toUpperCase() + grupo.nomeMes.slice(1)} de ${grupo.ano}`;
+                
+                // Verificar se este grupo deve ficar aberto
+                let deveAbrir = false;
+                if (mesParaAbrir !== null && anoParaAbrir !== null) {
+                    deveAbrir = (grupo.mes === mesParaAbrir && grupo.ano === anoParaAbrir);
+                }
+                
+                // LOG para depuração
+                if (mesParaAbrir !== null) {
+                    console.log(`Grupo ${grupo.ano}-${grupo.mes}: deveAbrir=${deveAbrir} (filtro: ${anoParaAbrir}-${mesParaAbrir})`);
+                }
+                
+                const abertoClass = deveAbrir ? 'open' : '';
+                const simbolo = deveAbrir ? '▼' : '▶';
+                
+                html += `
+                    <div class="periodo-group">
+                        <div class="periodo-header" onclick="togglePeriodo(this)">
+                            <span class="toggle-symbol">${simbolo}</span>
+                            <span>📅 ${mesAnoLabel}</span>
+                            <span style="font-size:0.7rem; color:#666;">(${grupo.movimentos.length} movimentações)</span>
+                            <span style="margin-left: auto; font-size:0.8rem;">💰 ${saldoPeriodo.toFixed(2)}</span>
+                        </div>
+                        <div class="periodo-content ${abertoClass}">
+                            <div class="mov-item header">
+                                <span>Data/Hora</span>
+                                <span>Tipo</span>
+                                <span>Valor (R$)</span>
+                                <span>Descrição</span>
+                                <span>Saldo</span>
+                            </div>
+                `;
+                
+                for (const m of movimentosOrdenados) {
+                    const valor = m.valor || 0;
+                    const valorAbs = Math.abs(valor);
+                    const ehEntrada = valor >= 0;
+                    const sinal = ehEntrada ? '+' : '-';
+                    const valorClass = ehEntrada ? 'entrada' : 'saida';
+                    const saldoMomento = m.saldo_depois || 0;
+                    
+                    html += `
+                        <div class="mov-item">
+                            <div class="mov-data">${new Date(m.data_hora).toLocaleString()}</div>
+                            <div class="mov-tipo"><span class="badge">${m.tipo || '-'}</span></div>
+                            <div class="mov-valor ${valorClass}">${sinal} R$ ${valorAbs.toFixed(2)}</div>
+                            <div class="mov-descricao">${m.descricao || '-'}</div>
+                            <div class="mov-saldo">R$ ${saldoMomento.toFixed(2)}</div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div></div>`;
+            }
+            
+            container.innerHTML = html;
+            document.getElementById('movimentacoesFim').style.display = 'block';
+        }
+
+        window.togglePeriodo = function(element) {
+            const content = element.nextElementSibling;
+            const symbol = element.querySelector('.toggle-symbol');
+            if (content) {
+                content.classList.toggle('open');
+                if (symbol) {
+                    symbol.innerText = content.classList.contains('open') ? '▼' : '▶';
+                }
+            }
+        };
 
         window.toggleChildren = function(e) {
             const node = e.closest('.tree-node');
