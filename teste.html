@@ -643,7 +643,7 @@
             if (!cpf) { alert('Digite o CPF'); return; }
             const exist = await fetchAPI(`acessos?cpf=eq.${cpf}&select=*`);
             if (exist && exist.length) { document.getElementById('novoCodigo').innerText = exist[0].codigo; document.getElementById('codigoGerado').style.display='block'; setTimeout(()=>document.getElementById('codigoGerado').style.display='none',5000); return; }
-            const novo = 'MMN-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase();
+            const novo = 'MAP-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase();
             await fetch(`${SUPABASE_URL}/rest/v1/acessos`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ cpf, codigo:novo, ativo:true }) });
             document.getElementById('novoCodigo').innerText = novo; document.getElementById('codigoGerado').style.display='block'; setTimeout(()=>document.getElementById('codigoGerado').style.display='none',5000);
         };
