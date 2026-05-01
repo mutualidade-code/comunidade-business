@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comunidade Business - Área do Participante</title>
+    <title>Comunidade Business - Minha Rede</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; padding: 20px; margin: 0; }
+        .container { max-width: 900px; margin: 0 auto; }
         .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        h1 { color: #366092; margin-bottom: 10px; }
-        h2 { color: #366092; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #366092; padding-bottom: 5px; }
-        .tree-node { margin: 5px 0; padding: 8px; border-left: 3px solid #366092; background: #f9f9f9; }
+        h1 { color: #366092; margin: 0 0 5px 0; font-size: 24px; }
+        h2 { color: #366092; font-size: 18px; margin: 0 0 15px 0; border-bottom: 2px solid #366092; padding-bottom: 5px; }
+        .tree-node { margin: 5px 0; padding: 10px; border-left: 3px solid #366092; background: #f9f9f9; border-radius: 0 8px 8px 0; }
         .tree-node.active { background: #e8f5e9; border-left-color: #4caf50; }
-        .tree-children { margin-left: 30px; }
-        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        .tree-children { margin-left: 35px; }
+        .status-badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-left: 8px; }
         .status-Ativo { background: #4caf50; color: white; }
         .status-Pendente { background: #ff9800; color: white; }
         .status-Atrasado { background: #f44336; color: white; }
-        .plano-badge { background: #366092; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
-        .stats { background: #e3f2fd; padding: 10px; border-radius: 8px; margin-top: 15px; }
+        .plano-badge { background: #366092; color: white; padding: 2px 10px; border-radius: 20px; font-size: 11px; margin-left: 8px; display: inline-block; }
+        .stats { background: #e3f2fd; padding: 15px; border-radius: 8px; margin-top: 20px; }
         .loading { text-align: center; padding: 40px; color: #666; }
         .error { background: #ffebee; color: #c62828; padding: 15px; border-radius: 8px; }
+        .indicador-item { padding: 8px; border-bottom: 1px solid #eee; }
+        .total { font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 2px solid #366092; }
     </style>
 </head>
 <body>
@@ -32,7 +33,7 @@
         </div>
 
         <div class="card">
-            <h2>📊 Meus Indicadores</h2>
+            <h2>📊 Meus Indicados Diretos</h2>
             <div id="indicadores">
                 <div class="loading">Carregando indicadores...</div>
             </div>
@@ -47,140 +48,130 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
-        
-        // ID do participante logado (futuramente virá do login)
-        const USUARIO_ID = 1;
+        (function() {
+            const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
+            const SUPABASE_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
+            const USUARIO_ID = 1;
 
-        async function carregarIndicadores() {
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/participantes?select=id,nome,plano,status,id_pai&id_pai=eq.${USUARIO_ID}`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
+            async function fetchFromSupabase(endpoint) {
+                const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
+                console.log('Fetching:', url);
                 
-                const diretos = await response.json();
-                const indicadoresDiv = document.getElementById('indicadores');
-                
-                if (diretos && diretos.length > 0) {
-                    let html = '<ul style="list-style: none;">';
-                    diretos.forEach(p => {
-                        html += `<li>✅ ${p.nome} - ${p.plano} <span class="status-badge status-${p.status}">${p.status}</span></li>`;
-                    });
-                    html += '</ul>';
-                    html += `<p><strong>Total de indicados diretos: ${diretos.length}</strong></p>`;
-                    indicadoresDiv.innerHTML = html;
-                } else {
-                    indicadoresDiv.innerHTML = '<p>⚠️ Nenhum indicado direto ainda.</p>';
-                }
-            } catch (error) {
-                document.getElementById('indicadores').innerHTML = `<div class="error">Erro ao carregar indicadores: ${error.message}</div>`;
-            }
-        }
-
-        async function carregarArvoreRede() {
-            const arvoreDiv = document.getElementById('arvore-rede');
-            
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/view_rede_completa?select=*`, {
+                const response = await fetch(url, {
+                    method: 'GET',
                     headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json'
                     }
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                    const text = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${text.substring(0, 200)}`);
                 }
                 
-                const data = await response.json();
-                
-                if (!data || data.length === 0) {
-                    arvoreDiv.innerHTML = '<p>❌ Nenhum dado encontrado na view_rede_completa.</p>';
-                    return;
-                }
-                
-                // Encontrar a raiz (nivel 0)
-                const root = data.find(p => p.nivel === 0);
-                if (!root) {
-                    arvoreDiv.innerHTML = '<p>❌ Raiz da rede não encontrada.</p>';
-                    return;
-                }
-                
-                // Montar árvore
-                function buildTree(parentId) {
-                    const children = data.filter(p => p.id_pai === parentId && p.status === 'Ativo');
-                    return children.map(child => ({
-                        ...child,
-                        children: buildTree(child.id)
-                    }));
-                }
-                
-                const tree = {
-                    ...root,
-                    children: buildTree(root.id)
-                };
-                
-                // Renderizar árvore recursivamente
-                function renderNode(node, level = 0) {
-                    const indent = level * 25;
-                    const statusClass = node.status === 'Ativo' ? 'active' : '';
+                return response.json();
+            }
+
+            async function carregarIndicadores() {
+                const div = document.getElementById('indicadores');
+                try {
+                    const data = await fetchFromSupabase(`participantes?select=id,nome,plano,status&id_pai=eq.${USUARIO_ID}`);
                     
-                    let html = `<div class="tree-node ${statusClass}" style="margin-left: ${indent}px">`;
-                    html += `<strong>${node.nome || '(sem nome)'}</strong> `;
-                    html += `<span style="color: #666;">(ID:${node.id})</span> `;
-                    html += `<span class="plano-badge">${node.plano || '?'}</span> `;
-                    html += `<span class="status-badge status-${node.status}">${node.status || '?'}</span>`;
-                    if (node.posicao > 0) html += ` <span style="font-size: 11px; color: #666;">📍 Pos: ${node.posicao}</span>`;
-                    html += `</div>`;
-                    
-                    if (node.children && node.children.length > 0) {
-                        html += `<div class="tree-children">`;
-                        node.children.forEach(child => {
-                            html += renderNode(child, level + 1);
+                    if (data && data.length > 0) {
+                        let html = '';
+                        data.forEach(p => {
+                            html += `<div class="indicador-item">
+                                        ✅ <strong>${p.nome}</strong> 
+                                        <span class="plano-badge">${p.plano || 'Start'}</span>
+                                        <span class="status-badge status-${p.status || 'Ativo'}">${p.status || 'Ativo'}</span>
+                                     </div>`;
                         });
-                        html += `</div>`;
+                        html += `<div class="total">📌 Total de indicados diretos: ${data.length}</div>`;
+                        div.innerHTML = html;
+                    } else {
+                        div.innerHTML = '<p>⚠️ Nenhum indicado direto ainda.</p>';
+                    }
+                } catch (error) {
+                    div.innerHTML = `<div class="error">❌ Erro ao carregar indicadores: ${error.message}</div>`;
+                }
+            }
+
+            async function carregarArvore() {
+                const div = document.getElementById('arvore-rede');
+                try {
+                    const data = await fetchFromSupabase(`rpc/testar_rede?p_id_participante=${USUARIO_ID}`);
+                    
+                    console.log('Resposta da rede:', data);
+                    
+                    if (!data || data.length === 0) {
+                        div.innerHTML = '<p>❌ Nenhum dado encontrado na rede. Verifique se a função testar_rede existe.</p>';
+                        return;
                     }
                     
-                    return html;
+                    const root = data.find(p => p.nivel === 0);
+                    if (!root) {
+                        div.innerHTML = '<p>❌ Raiz da rede não encontrada.</p>';
+                        return;
+                    }
+                    
+                    function renderNode(node, level = 0) {
+                        const indent = level * 25;
+                        const activeClass = node.status === 'Ativo' ? 'active' : '';
+                        
+                        let html = `<div class="tree-node ${activeClass}" style="margin-left: ${indent}px">`;
+                        html += `<strong>${node.nome || '(sem nome)'}</strong> `;
+                        html += `<span style="color: #666;">(ID:${node.id})</span> `;
+                        html += `<span class="plano-badge">${node.plano || 'Start'}</span> `;
+                        html += `<span class="status-badge status-${node.status || 'Ativo'}">${node.status || 'Ativo'}</span>`;
+                        if (node.posicao > 0) html += ` <span style="font-size: 11px; color: #666;">📍 Pos: ${node.posicao}</span>`;
+                        html += `</div>`;
+                        
+                        const filhos = data.filter(p => p.id_pai === node.id && p.status === 'Ativo');
+                        if (filhos.length > 0) {
+                            html += `<div class="tree-children">`;
+                            filhos.forEach(filho => {
+                                html += renderNode(filho, level + 1);
+                            });
+                            html += `</div>`;
+                        }
+                        return html;
+                    }
+                    
+                    const totalAtivos = data.filter(p => p.status === 'Ativo').length;
+                    const maxNivel = Math.max(...data.map(p => p.nivel));
+                    const diretos = data.filter(p => p.id_pai === USUARIO_ID && p.status === 'Ativo').length;
+                    
+                    div.innerHTML = renderNode(root);
+                    div.innerHTML += `
+                        <div class="stats">
+                            <strong>📊 Estatísticas da rede:</strong><br>
+                            • Total de membros ativos na rede: ${totalAtivos}<br>
+                            • Profundidade máxima: ${maxNivel} níveis<br>
+                            • Indicados diretos ativos: ${diretos}
+                        </div>
+                    `;
+                    
+                } catch (error) {
+                    console.error('Erro detalhado:', error);
+                    div.innerHTML = `<div class="error">
+                        <strong>❌ Erro ao carregar rede:</strong><br>
+                        ${error.message}<br><br>
+                        <strong>Soluções possíveis:</strong><br>
+                        1. Verifique se a função 'testar_rede' existe no Supabase<br>
+                        2. Execute no SQL Editor: CREATE OR REPLACE FUNCTION testar_rede...
+                    </div>`;
                 }
-                
-                arvoreDiv.innerHTML = renderNode(tree);
-                
-                // Estatísticas
-                const totalAtivos = data.filter(p => p.status === 'Ativo').length;
-                const totalNiveis = Math.max(...data.map(p => p.nivel));
-                const totalIndicadosDiretos = data.filter(p => p.id_pai === USUARIO_ID && p.status === 'Ativo').length;
-                
-                arvoreDiv.innerHTML += `
-                    <div class="stats">
-                        <strong>📊 Estatísticas da rede:</strong><br>
-                        • Total de membros ativos: ${totalAtivos}<br>
-                        • Profundidade máxima: ${totalNiveis} níveis<br>
-                        • Indicados diretos: ${totalIndicadosDiretos}
-                    </div>
-                `;
-                
-            } catch (error) {
-                console.error('Erro detalhado:', error);
-                arvoreDiv.innerHTML = `<div class="error">
-                    <strong>❌ Erro ao carregar rede:</strong><br>
-                    ${error.message}<br><br>
-                    Verifique se a VIEW 'view_rede_completa' foi criada no Supabase.
-                </div>`;
             }
-        }
-        
-        // Carregar tudo
-        async function iniciar() {
-            await carregarIndicadores();
-            await carregarArvoreRede();
-        }
-        
-        iniciar();
+
+            async function iniciar() {
+                await carregarIndicadores();
+                await carregarArvore();
+            }
+            
+            iniciar();
+        })();
     </script>
 </body>
 </html>
