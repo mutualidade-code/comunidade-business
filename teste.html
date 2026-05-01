@@ -408,12 +408,13 @@
                 }
                 
                 function montarArvoreRecursiva(id_pai) {
+                    // MOSTRAR TODOS OS STATUS (incluindo Inativos, Atrasados, Pendentes)
                     const filhos = redeData.filter(p => p.id_pai === id_pai);
                     if (filhos.length === 0) return '';
                     
                     let html = '<div class="children open">';
                     for (const filho of filhos) {
-                        const temFilhos = redeData.some(p => p.id_pai === filho.id && p.status === 'Ativo');
+                        const temFilhos = redeData.some(p => p.id_pai === filho.id);
                         html += `
                             <div class="tree-node">
                                 <div class="tree-node-content">
