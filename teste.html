@@ -151,6 +151,77 @@
             .dashboard-header { flex-direction: column; align-items: stretch; }
             .user-info, .titulo-container, .pioneiro-badge, .btn-danger { justify-content: center; }
         }
+        /* Estilo para agrupamento de movimentações */
+        .periodo-group {
+            margin-top: 16px;
+            border-left: 3px solid #366092;
+            padding-left: 12px;
+        }
+        .periodo-header {
+            font-weight: bold;
+            font-size: 1.1rem;
+            background: #f0f2f5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .periodo-header:hover {
+            background: #e0e4e8;
+        }
+        .periodo-content {
+            display: none;
+            margin-top: 8px;
+            margin-bottom: 16px;
+        }
+        .periodo-content.open {
+            display: block;
+        }
+        .mov-item {
+            display: grid;
+            grid-template-columns: 160px 120px 100px 1fr 110px;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 0.85rem;
+            align-items: center;
+        }
+        .mov-item:hover {
+            background: #f8f9fa;
+        }
+        .mov-item.header {
+            font-weight: bold;
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            position: sticky;
+            top: 0;
+        }
+        .mov-data { color: #666; font-size: 0.8rem; }
+        .mov-tipo .badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e9ecef;
+        }
+        .mov-valor.entrada { color: #28a745; font-weight: bold; }
+        .mov-valor.saida { color: #dc3545; font-weight: bold; }
+        .mov-saldo { font-family: monospace; font-weight: 500; }
+        @media (max-width: 768px) {
+            .mov-item {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                padding: 12px;
+                border-bottom: 1px solid #ddd;
+            }
+            .mov-item.header { display: none; }
+            .mov-item .mov-data::before { content: "📅 "; font-weight: bold; }
+            .mov-item .mov-tipo::before { content: "📌 "; font-weight: bold; }
+            .mov-item .mov-valor::before { content: "💰 "; font-weight: bold; }
+            .mov-item .mov-descricao::before { content: "📝 "; font-weight: bold; }
+            .mov-item .mov-saldo::before { content: "🏦 Saldo: "; font-weight: bold; }
+        }
     </style>
 </head>
 <body>
@@ -217,6 +288,49 @@
             <div class="card">
                 <div class="card-header">🌳 MINHA REDE (3x10) - MEMBROS ATIVOS</div>
                 <div id="arvoreContainer" class="tree">Carregando rede...</div>
+            </div>
+
+            <!-- MINHAS MOVIMENTAÇÕES -->
+            <div class="card">
+                <div class="card-header">💰 MINHAS MOVIMENTAÇÕES</div>
+                
+                <!-- Filtros -->
+                <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px; align-items: flex-end;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12px;">Tipo</label>
+                        <select id="filtroTipo" style="width: 150px;">
+                            <option value="todos">Todos</option>
+                            <option value="BI">BI (Bônus Indicação)</option>
+                            <option value="BR">BR (Bônus Rede)</option>
+                            <option value="Depósito">Depósito</option>
+                            <option value="Pagamento">Pagamento</option>
+                            <option value="Mensalidade">Mensalidade</option>
+                            <option value="Saque">Saque</option>
+                            <option value="Reserva">Reserva</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12px;">Período</label>
+                        <select id="filtroPeriodo" style="width: 150px;">
+                            <option value="todos">Todo histórico</option>
+                            <option value="30d">Últimos 30 dias</option>
+                            <option value="90d">Últimos 90 dias</option>
+                            <option value="ano">Este ano</option>
+                            <option value="mes">Este mês</option>
+                        </select>
+                    </div>
+                    <button class="btn-secondary" onclick="aplicarFiltrosMovimentacoes()" style="padding: 8px 16px;">🔍 Filtrar</button>
+                </div>
+                
+                <!-- Lista agrupada por Ano/Mês -->
+                <div id="movimentacoesContainer" class="tree">
+                    <div class="loading">Carregando movimentações...</div>
+                </div>
+                
+                <!-- Mensagem de fim -->
+                <div id="movimentacoesFim" style="text-align: center; padding: 16px; color: #666; display: none;">
+                    — Fim do histórico —
+                </div>
             </div>
 
             <!-- Árvore de Inativos/Atrasados -->
@@ -368,6 +482,7 @@
             await carregarExtratoESaldos();
             await carregarArvore();
             await carregarInativos();
+            await carregarMovimentacoes();
             if (isAdmin) { 
                 await carregarSaquesPendentes(); 
                 await carregarParametrosPioneiro(); 
@@ -527,6 +642,142 @@
                 container.innerHTML = `Erro ao carregar: ${error.message}`;
             }
         }
+
+        // ==================== MINHAS MOVIMENTAÇÕES ====================
+        let movimentacoesCompletas = [];
+        let movimentacoesFiltradas = [];
+
+        async function carregarMovimentacoes() {
+            const container = document.getElementById('movimentacoesContainer');
+            if (!container) return;
+            
+            container.innerHTML = '<div class="loading">Carregando movimentações...</div>';
+            
+            try {
+                const data = await fetchAPI(`transacoes?id_pessoa=eq.${usuarioAtual.id_pessoa}&order=data_hora.desc`);
+                
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<p>📭 Nenhuma movimentação encontrada.</p>';
+                    return;
+                }
+                
+                movimentacoesCompletas = data;
+                movimentacoesFiltradas = [...data];
+                renderizarMovimentacoesAgrupadas();
+                
+            } catch (error) {
+                console.error('Erro ao carregar movimentações:', error);
+                container.innerHTML = '<div class="error">❌ Erro ao carregar movimentações</div>';
+            }
+        }
+
+        function aplicarFiltrosMovimentacoes() {
+            const tipoFiltro = document.getElementById('filtroTipo')?.value || 'todos';
+            const periodoFiltro = document.getElementById('filtroPeriodo')?.value || 'todos';
+            
+            let dataFiltrada = [...movimentacoesCompletas];
+            
+            if (tipoFiltro !== 'todos') {
+                dataFiltrada = dataFiltrada.filter(m => m.tipo === tipoFiltro);
+            }
+            
+            const agora = new Date();
+            if (periodoFiltro !== 'todos') {
+                const limite = new Date();
+                switch(periodoFiltro) {
+                    case '30d': limite.setDate(agora.getDate() - 30); break;
+                    case '90d': limite.setDate(agora.getDate() - 90); break;
+                    case 'mes': limite.setMonth(agora.getMonth() - 1); break;
+                    case 'ano': limite.setMonth(0); limite.setDate(1); break;
+                }
+                dataFiltrada = dataFiltrada.filter(m => new Date(m.data_hora) >= limite);
+            }
+            
+            movimentacoesFiltradas = dataFiltrada;
+            renderizarMovimentacoesAgrupadas();
+        }
+
+        function renderizarMovimentacoesAgrupadas() {
+            const container = document.getElementById('movimentacoesContainer');
+            if (!container) return;
+            
+            if (movimentacoesFiltradas.length === 0) {
+                container.innerHTML = '<p>📭 Nenhuma movimentação encontrada com os filtros selecionados.</p>';
+                return;
+            }
+            
+            const grupos = {};
+            movimentacoesFiltradas.forEach(mov => {
+                const data = new Date(mov.data_hora);
+                const ano = data.getFullYear();
+                const mes = data.getMonth() + 1;
+                const chave = `${ano}-${mes.toString().padStart(2,'0')}`;
+                const nomeMes = data.toLocaleString('pt-BR', { month: 'long' });
+                if (!grupos[chave]) {
+                    grupos[chave] = { ano, mes, nomeMes, movimentos: [] };
+                }
+                grupos[chave].movimentos.push(mov);
+            });
+            
+            const chavesOrdenadas = Object.keys(grupos).sort().reverse();
+            let html = '';
+            
+            for (const chave of chavesOrdenadas) {
+                const grupo = grupos[chave];
+                const movimentosOrdenados = grupo.movimentos;
+                
+                let saldoPeriodo = 0;
+                movimentosOrdenados.forEach(m => { saldoPeriodo += m.valor || 0; });
+                
+                html += `
+                    <div class="periodo-group">
+                        <div class="periodo-header" onclick="togglePeriodo(this)">
+                            <span>📅 ${grupo.nomeMes} de ${grupo.ano}</span>
+                            <span style="font-size:0.7rem; color:#666;">(${grupo.movimentos.length} movimentações)</span>
+                            <span style="margin-left: auto; font-size:0.8rem;">💰 ${saldoPeriodo.toFixed(2)}</span>
+                        </div>
+                        <div class="periodo-content open">
+                            <div class="mov-item header">
+                                <span>Data/Hora</span>
+                                <span>Tipo</span>
+                                <span>Valor (R$)</span>
+                                <span>Descrição</span>
+                                <span>Saldo</span>
+                            </div>
+                `;
+                
+                for (const m of movimentosOrdenados) {
+                    const valor = m.valor || 0;
+                    const valorAbs = Math.abs(valor);
+                    const ehEntrada = valor >= 0;
+                    const sinal = ehEntrada ? '+' : '-';
+                    const valorClass = ehEntrada ? 'entrada' : 'saida';
+                    const saldoMomento = m.saldo_depois || 0;
+                    
+                    html += `
+                        <div class="mov-item">
+                            <div class="mov-data">${new Date(m.data_hora).toLocaleString()}</div>
+                            <div class="mov-tipo"><span class="badge">${m.tipo || '-'}</span></div>
+                            <div class="mov-valor ${valorClass}">${sinal} R$ ${valorAbs.toFixed(2)}</div>
+                            <div class="mov-descricao">${m.descricao || '-'}</div>
+                            <div class="mov-saldo">R$ ${saldoMomento.toFixed(2)}</div>
+                        </div>
+                    `;
+                }
+                
+                html += `</div></div>`;
+            }
+            
+            container.innerHTML = html;
+            document.getElementById('movimentacoesFim').style.display = 'block';
+        }
+
+        window.togglePeriodo = function(element) {
+            const content = element.nextElementSibling;
+            if (content) {
+                content.classList.toggle('open');
+            }
+        };
 
         window.toggleChildren = function(e) {
             const node = e.closest('.tree-node');
