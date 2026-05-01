@@ -2,93 +2,518 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comunidade Business - Rede</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Comunidade Business - Área do Participante</title>
     <style>
-        body { font-family: Arial; padding: 20px; background: #f0f2f5; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
-        .node { margin: 5px 0; padding: 8px; border-left: 3px solid #366092; background: #f9f9f9; }
-        .active { background: #e8f5e9; border-left-color: #4caf50; }
-        .children { margin-left: 30px; }
-        .error { color: red; background: #ffebee; padding: 10px; border-radius: 5px; }
-        .plano-badge { background: #366092; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
-        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
-        .status-Ativo { background: #4caf50; color: white; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 16px;
+            padding-bottom: 32px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        h1 {
+            font-size: 1.6rem;
+            color: #1a2a3a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2 {
+            font-size: 1.3rem;
+            color: #1a2a3a;
+            margin-bottom: 16px;
+            border-left: 4px solid #2c7da0;
+            padding-left: 12px;
+        }
+        h3 {
+            font-size: 1rem;
+            color: #2c7da0;
+            margin-bottom: 12px;
+        }
+        
+        /* Dashboard grids */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e9ecef;
+        }
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c7da0;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        /* Tabela de extrato - versão simplificada mas com scroll */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 16px 0;
+            border-radius: 12px;
+            border: 1px solid #e9ecef;
+            background: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            min-width: 800px;
+        }
+        th {
+            background: #2c7da0;
+            color: white;
+            padding: 12px 8px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        td {
+            padding: 10px 8px;
+            border-bottom: 1px solid #e9ecef;
+            color: #2c3e50;
+        }
+        tr:hover { background: #f8f9fa; }
+        
+        /* Árvore */
+        .tree-node {
+            margin: 4px 0;
+            padding: 10px 12px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .tree-node:hover { background: #e9ecef; }
+        .tree-children { margin-left: 28px; padding-left: 12px; border-left: 2px dashed #cbd5e1; }
+        .level-indent { display: inline-block; width: 24px; flex-shrink: 0; }
+        
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            gap: 6px;
+        }
+        .badge-start { background: #e3f2fd; color: #0d47a1; }
+        .badge-ouro { background: #fff3e0; color: #e65100; }
+        .badge-platina { background: #e0f2f1; color: #00695c; }
+        .status-ativo { background: #c8e6c9; color: #1b5e20; }
+        .status-pendente { background: #fff9c4; color: #b26a00; }
+        
+        button {
+            background: #2c7da0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:active { transform: scale(0.97); background: #1f5e7a; }
+        .btn-outline {
+            background: white;
+            border: 1px solid #2c7da0;
+            color: #2c7da0;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        /* Admin */
+        .admin-only { 
+            background: #fef3e8; 
+            border-left: 4px solid #e67e22; 
+            margin-top: 20px; 
+            padding: 16px;
+            border-radius: 16px;
+        }
+        .badge-admin { background: #e67e22; color: white; border-radius: 30px; padding: 4px 12px; font-size: 0.7rem; }
+        
+        @media (max-width: 600px) {
+            body { padding: 12px; }
+            h1 { font-size: 1.3rem; }
+            .stat-value { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🌳 Comunidade Business - Minha Rede</h1>
-        <div id="resultado">Carregando...</div>
-    </div>
+<div class="container" id="app">
+    <div class="loading">🔐 Carregando área do participante...</div>
+</div>
 
-    <script>
-        const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
-        const USUARIO_ID = 1;
-        
-        async function carregar() {
-            const div = document.getElementById('resultado');
-            
-            try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede?p_id_participante=${USUARIO_ID}`, {
-                    headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Dados:', data);
-                
-                if (!data || data.length === 0) {
-                    div.innerHTML = '<p>Nenhum dado encontrado. Verifique se a função testar_rede existe.</p>';
-                    return;
-                }
-                
-                function render(node, level = 0) {
-                    const indent = level * 25;
-                    let html = `<div class="node active" style="margin-left: ${indent}px">`;
-                    html += `<strong>${node.nome}</strong> (ID:${node.id}) `;
-                    html += `<span class="plano-badge">${node.plano}</span> `;
-                    html += `<span class="status-badge status-${node.status}">${node.status}</span>`;
-                    if (node.posicao > 0) html += ` 📍 Pos: ${node.posicao}`;
-                    html += `</div>`;
-                    
-                    const filhos = data.filter(p => p.id_pai === node.id && p.status === 'Ativo');
-                    if (filhos.length > 0) {
-                        html += `<div class="children">`;
-                        filhos.forEach(filho => {
-                            html += render(filho, level + 1);
-                        });
-                        html += `</div>`;
-                    }
-                    return html;
-                }
-                
-                const root = data.find(p => p.nivel === 0);
-                if (!root) {
-                    div.innerHTML = '<p>Raiz não encontrada.</p>';
-                    return;
-                }
-                
-                div.innerHTML = render(root);
-                
-                // Estatísticas
-                const totalAtivos = data.filter(p => p.status === 'Ativo').length;
-                div.innerHTML += `<p style="margin-top: 20px;"><strong>Total de membros ativos: ${totalAtivos}</strong></p>`;
-                
-            } catch (error) {
-                console.error('Erro:', error);
-                div.innerHTML = `<div class="error">❌ Erro: ${error.message}</div>`;
+<script>
+    // ==================== CONFIG ====================
+    const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
+    
+    let currentUser = null;      // { id, id_pessoa, nome, cpf, plano, id_virtual, isAdmin }
+    let saldoData = null;
+    let transacoes = [];
+    let redeData = [];
+    let saquesPendentesAdmin = [];
+    
+    // ==================== HELPERS ====================
+    async function fetchAPI(path, options = {}) {
+        const url = `${SUPABASE_URL}/rest/v1/${path}`;
+        const res = await fetch(url, {
+            ...options,
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                ...options.headers
             }
+        });
+        if (!res.ok) throw new Error(`Erro ${res.status}: ${await res.text()}`);
+        return res.json();
+    }
+    
+    async function fetchRPC(func, params = {}) {
+        const url = `${SUPABASE_URL}/rest/v1/rpc/${func}`;
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(params)
+        });
+        if (!res.ok) throw new Error(`RPC ${func} falhou: ${await res.text()}`);
+        return res.json();
+    }
+    
+    // ==================== LOGIN ====================
+    async function doLogin(cpf, codigo) {
+        const { data, error } = await fetchAPI(`acessos?select=*&cpf=eq.${cpf}&codigo=eq.${codigo}&limit=1`);
+        if (!data || data.length === 0) throw new Error('CPF ou código inválido');
+        const acesso = data[0];
+        const participanteData = await fetchAPI(`participantes?select=id,id_pessoa,nome,cpf,plano,id_virtual,status&cpf=eq.${cpf}&limit=1`);
+        if (!participanteData || participanteData.length === 0) throw new Error('Participante não encontrado');
+        const p = participanteData[0];
+        currentUser = {
+            id: p.id,
+            id_pessoa: p.id_pessoa,
+            nome: p.nome,
+            cpf: p.cpf,
+            plano: p.plano,
+            id_virtual: p.id_virtual,
+            isAdmin: (cpf === '1' || cpf === '11111111111')
+        };
+        localStorage.setItem('mmn_user', JSON.stringify(currentUser));
+        return currentUser;
+    }
+    
+    function getStoredUser() {
+        const stored = localStorage.getItem('mmn_user');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch(e) { return null; }
         }
+        return null;
+    }
+    
+    function logout() {
+        localStorage.removeItem('mmn_user');
+        currentUser = null;
+        renderLogin();
+    }
+    
+    // ==================== DADOS DO PARTICIPANTE ====================
+    async function loadSaldo() {
+        const data = await fetchAPI(`saldo_consolidado?select=*&id_pessoa=eq.${currentUser.id_pessoa}&limit=1`);
+        if (data && data.length) saldoData = data[0];
+        else saldoData = null;
+    }
+    
+    async function loadTransacoes() {
+        const data = await fetchAPI(`transacoes?select=*&id_pessoa=eq.${currentUser.id_pessoa}&order=data_hora.desc`);
+        transacoes = data || [];
+    }
+    
+    async function loadRede() {
+        try {
+            const data = await fetchRPC('testar_rede', { p_id_participante: currentUser.id });
+            redeData = data || [];
+        } catch(e) {
+            console.warn('Erro ao carregar rede:', e);
+            redeData = [];
+        }
+    }
+    
+    // ==================== RENDERIZAÇÃO PRINCIPAL ====================
+    function renderDashboard() {
+        const isAdmin = currentUser.isAdmin;
+        const reserva = saldoData?.reserva_atual || 0;
+        const saldoBruto = saldoData?.saldo_bruto || 0;
+        const disponivel = saldoData?.disponivel_saque || 0;
         
-        carregar();
-    </script>
+        const html = `
+            <div class="card">
+                <div class="card-header">
+                    <h1>🌳 Comunidade Business</h1>
+                    <div style="display: flex; gap: 12px;">
+                        <span class="badge-admin" style="background:#2c7da0;">👤 ${currentUser.nome}</span>
+                        ${isAdmin ? '<span class="badge-admin">👑 ADMIN</span>' : ''}
+                        <button class="btn-outline" onclick="logout()" style="padding:6px 14px;">Sair</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Cards financeiros -->
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-value">R$ ${reserva.toFixed(2)}</div><div class="stat-label">🏦 Reserva Atual</div></div>
+                <div class="stat-card"><div class="stat-value">R$ ${saldoBruto.toFixed(2)}</div><div class="stat-label">📊 Saldo Bruto</div></div>
+                <div class="stat-card"><div class="stat-value">R$ ${disponivel.toFixed(2)}</div><div class="stat-label">💰 Disponível para Saque</div></div>
+            </div>
+            
+            <!-- Extrato -->
+            <div class="card">
+                <h2>📜 Extrato Consolidado</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>Data/Hora</th><th>Tipo</th><th>Valor (R$)</th><th>Saldo Antes</th><th>Saldo Depois</th><th>Descrição</th>
+                        </tr></thead>
+                        <tbody>
+                            ${transacoes.map(t => `
+                                <tr>
+                                    <td>${t.data_hora?.substring(0,16) || ''}</td>
+                                    <td>${t.tipo || ''}</td>
+                                    <td style="color:${(t.valor||0)>=0?'#2e7d32':'#c62828'}">${(t.valor||0).toFixed(2)}</td>
+                                    <td>${(t.saldo_antes||0).toFixed(2)}</td>
+                                    <td>${(t.saldo_depois||0).toFixed(2)}</td>
+                                    <td>${t.descricao || ''}</td>
+                                </tr>
+                            `).join('')}
+                            ${transacoes.length === 0 ? '<tr><td colspan="6">Nenhuma movimentação encontrada</td></tr>' : ''}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Árvore da Rede -->
+            <div class="card">
+                <h2>🌳 MINHA REDE (3x10)</h2>
+                <div id="tree-container">${renderTree()}</div>
+            </div>
+            
+            <!-- Saque -->
+            <div class="card">
+                <h2>💸 Solicitar Saque</h2>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                    <span>Valor: R$ <input type="number" id="saqueValor" step="0.01" min="1" max="${disponivel}" value="${Math.min(50, disponivel)}" style="padding:8px; width:120px; border-radius:30px; border:1px solid #ccc;"></span>
+                    <button onclick="solicitarSaque()">Solicitar Saque</button>
+                    <span style="font-size:0.8rem;">Taxa: R$ 1,00 | Disponível: R$ ${disponivel.toFixed(2)}</span>
+                </div>
+                <div id="saqueMsg" style="margin-top:12px;"></div>
+            </div>
+            
+            ${isAdmin ? `
+            <div class="admin-only">
+                <h2>⚙️ PAINEL ADMINISTRATIVO</h2>
+                <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+                    <button onclick="adminAprovarSaques()">💰 APROVAR SAQUES</button>
+                    <button onclick="adminGerarCodigo()">🔑 GERAR CÓDIGO DE ACESSO</button>
+                    <button onclick="adminPioneiroParams()">👑 PARÂMETROS PIONEIRO</button>
+                    <button onclick="adminLog()">📋 LOG DE ALTERAÇÕES</button>
+                </div>
+                <div id="adminPanel"></div>
+            </div>
+            ` : ''}
+        `;
+        document.getElementById('app').innerHTML = html;
+    }
+    
+    function renderTree() {
+        if (!redeData || redeData.length === 0) return '<div class="loading">🌿 Nenhum membro na rede ainda.</div>';
+        const root = redeData.find(p => p.nivel === 0);
+        if (!root) return '<div class="loading">Raiz não encontrada.</div>';
+        
+        function renderNode(node, level = 0) {
+            const filhos = redeData.filter(p => p.id_pai === node.id && p.status === 'Ativo');
+            const hasChildren = filhos.length > 0;
+            const badgeClass = node.plano === 'Start' ? 'badge-start' : (node.plano === 'Ouro' ? 'badge-ouro' : 'badge-platina');
+            const statusClass = node.status === 'Ativo' ? 'status-ativo' : 'status-pendente';
+            const marginLeft = level * 28;
+            let html = `
+                <div class="tree-node" style="margin-left: ${marginLeft}px;">
+                    <span class="level-indent">${'└ '.repeat(level)}</span>
+                    <strong>${node.nome}</strong>
+                    <span class="badge ${badgeClass}">${node.plano || 'Start'}</span>
+                    <span class="badge ${statusClass}">${node.status || 'Ativo'}</span>
+                    <span style="font-size:0.7rem; color:#555;">ID:${node.id}</span>
+                    ${node.posicao ? `<span style="font-size:0.7rem;">📍Pos ${node.posicao}</span>` : ''}
+                </div>
+            `;
+            if (hasChildren) {
+                html += `<div class="tree-children">`;
+                filhos.forEach(f => { html += renderNode(f, level + 1); });
+                html += `</div>`;
+            }
+            return html;
+        }
+        return renderNode(root);
+    }
+    
+    // ==================== AÇÕES ====================
+    window.solicitarSaque = async function() {
+        const valorInput = document.getElementById('saqueValor');
+        const valor = parseFloat(valorInput?.value);
+        if (isNaN(valor) || valor <= 0) return alert('Valor inválido');
+        const disponivel = saldoData?.disponivel_saque || 0;
+        if (valor > disponivel) return alert(`Valor acima do disponível (R$ ${disponivel.toFixed(2)})`);
+        if (!confirm(`Solicitar saque de R$ ${valor.toFixed(2)} (taxa R$ 1,00)?`)) return;
+        try {
+            await fetchAPI('saques', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id_pessoa: currentUser.id_pessoa,
+                    id_participante: currentUser.id,
+                    valor: valor,
+                    status: 'Em processamento',
+                    data_solicitacao: new Date().toISOString()
+                })
+            });
+            document.getElementById('saqueMsg').innerHTML = '<span style="color:green;">✅ Saque solicitado! Aguarde aprovação.</span>';
+            setTimeout(() => location.reload(), 1500);
+        } catch(e) {
+            alert('Erro ao solicitar saque: ' + e.message);
+        }
+    };
+    
+    window.adminAprovarSaques = async function() {
+        const panel = document.getElementById('adminPanel');
+        panel.innerHTML = '<div class="loading">Carregando saques...</div>';
+        try {
+            const saques = await fetchAPI('saques?select=*&status=eq.Em%20processamento&order=data_solicitacao.asc');
+            if (!saques.length) { panel.innerHTML = '<p>✅ Nenhum saque pendente.</p>'; return; }
+            let html = '<h3>💰 Saques Pendentes</h3><div class="table-wrapper"><table><thead><tr><th>Data</th><th>Participante</th><th>Valor</th><th>Ações</th></tr></thead><tbody>';
+            for (const s of saques) {
+                const part = await fetchAPI(`participantes?select=nome,id_pessoa&id_pessoa=eq.${s.id_pessoa}&limit=1`);
+                const nome = part[0]?.nome || s.id_pessoa;
+                html += `<tr>
+                    <td>${new Date(s.data_solicitacao).toLocaleDateString()}</td>
+                    <td>${nome}</td>
+                    <td>R$ ${s.valor.toFixed(2)}</td>
+                    <td><button onclick="adminProcessarSaque(${s.id}, true)">Aprovar</button> <button onclick="adminProcessarSaque(${s.id}, false)">Recusar</button></td>
+                </tr>`;
+            }
+            html += '</tbody></table></div>';
+            panel.innerHTML = html;
+        } catch(e) { panel.innerHTML = '<p>Erro ao carregar saques.</p>'; }
+    };
+    
+    window.adminProcessarSaque = async function(id, aprovar) {
+        const status = aprovar ? 'Aprovado' : 'Recusado';
+        if (!confirm(`Confirmar ${status} deste saque?`)) return;
+        try {
+            await fetchAPI(`saques?id=eq.${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+            alert(`Saque ${status.toLowerCase()}!`);
+            adminAprovarSaques();
+            if (aprovar) location.reload();
+        } catch(e) { alert('Erro: ' + e.message); }
+    };
+    
+    window.adminGerarCodigo = async function() {
+        const cpf = prompt('Digite o CPF do participante para gerar código de acesso:');
+        if (!cpf) return;
+        try {
+            const participante = await fetchAPI(`participantes?select=id_pessoa,nome&cpf=eq.${cpf}&limit=1`);
+            if (!participante.length) return alert('CPF não encontrado.');
+            const codigo = 'MMN-' + Math.random().toString(36).substring(2,6).toUpperCase() + '-' + Math.random().toString(36).substring(2,6).toUpperCase();
+            await fetchAPI('acessos', { method: 'POST', body: JSON.stringify({ cpf, codigo, criado_em: new Date().toISOString() }) });
+            alert(`✅ Código gerado: ${codigo}\nGuarde este código para o participante.`);
+        } catch(e) { alert('Erro: ' + e.message); }
+    };
+    
+    window.adminPioneiroParams = async function() {
+        alert('Função de parâmetros pioneiro em desenvolvimento - use o Excel para editar.');
+    };
+    window.adminLog = async function() {
+        alert('Log de alterações - em breve via Web.');
+    };
+    
+    // ==================== INICIALIZAÇÃO ====================
+    async function renderLogin() {
+        document.getElementById('app').innerHTML = `
+            <div class="card" style="max-width:400px; margin:40px auto; text-align:center;">
+                <h1>🌳 Comunidade Business</h1>
+                <p>Área do Participante</p>
+                <input type="text" id="loginCpf" placeholder="CPF (apenas números)" style="width:100%; padding:12px; margin:10px 0; border-radius:30px; border:1px solid #ccc;">
+                <input type="text" id="loginCodigo" placeholder="Código de acesso (ex: MMN-XXXX-XXXX)" style="width:100%; padding:12px; margin:10px 0; border-radius:30px; border:1px solid #ccc;">
+                <button onclick="efetuarLogin()" style="width:100%;">Entrar</button>
+                <p style="margin-top:16px; font-size:0.8rem;">Não tem acesso? Solicite ao administrador.</p>
+            </div>
+        `;
+    }
+    
+    window.efetuarLogin = async function() {
+        const cpf = document.getElementById('loginCpf').value.trim().replace(/\D/g, '');
+        const codigo = document.getElementById('loginCodigo').value.trim();
+        if (!cpf || !codigo) return alert('Preencha CPF e código');
+        try {
+            await doLogin(cpf, codigo);
+            await loadDashboard();
+        } catch(e) {
+            alert('Erro: ' + e.message);
+        }
+    };
+    
+    async function loadDashboard() {
+        if (!currentUser) return renderLogin();
+        await Promise.all([loadSaldo(), loadTransacoes(), loadRede()]);
+        renderDashboard();
+    }
+    
+    // Main
+    const stored = getStoredUser();
+    if (stored) { currentUser = stored; loadDashboard(); }
+    else { renderLogin(); }
+</script>
 </body>
 </html>
