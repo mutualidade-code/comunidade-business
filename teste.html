@@ -122,6 +122,7 @@
         .status-Ativo { color: #28a745; font-weight: bold; }
         .status-Pendente { color: #ffc107; }
         .status-Inativo { color: #dc3545; }
+        .status-Atrasado { color: #fd7e14; }
         .saque-form { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
         .saque-form .form-group { flex: 1; margin-bottom: 0; }
         .saque-form .btn { width: auto; padding: 12px 32px; }
@@ -142,6 +143,7 @@
         .btn-small { padding: 4px 8px; font-size: 12px; width: auto; margin: 0 2px; }
         .busca-cpf { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
         .info-participante { background: #e9ecef; padding: 12px; border-radius: 8px; margin: 12px 0; }
+        .inativos-card { background: #fff8e7; border-left: 4px solid #fd7e14; margin-top: 20px; }
         @media (max-width: 768px) {
             .saldo-grid, .stats-grid, .param-grid { grid-template-columns: 1fr; }
             .saque-form { flex-direction: column; }
@@ -206,15 +208,22 @@
                 <div class="table-wrapper">
                     <table id="extratoTable">
                         <thead><tr><th>Código</th><th>Nome</th><th>Entradas</th><th>Saídas</th><th>Reserva Mensalidade</th><th>Saldo Bruto</th><th>Saque Mês Livre</th><th>Saque Acumulado Livre</th><th>Disponível para Saque</th><th>Saldo Comercial</th><th>Atualizado</th></tr></thead>
-                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...</tr></tbody>
+                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...</td></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Árvore -->
+            <!-- Árvore Principal (Apenas Ativos) -->
             <div class="card">
-                <div class="card-header">🌳 MINHA REDE (3x10)</div>
+                <div class="card-header">🌳 MINHA REDE (3x10) - MEMBROS ATIVOS</div>
                 <div id="arvoreContainer" class="tree">Carregando rede...</div>
+            </div>
+
+            <!-- Árvore de Inativos/Atrasados -->
+            <div class="card inativos-card">
+                <div class="card-header">⚠️ MEMBROS INATIVOS/ATRASADOS/PENDENTES NA MINHA REDE DIRETA</div>
+                <div id="inativosContainer" class="tree">Carregando...</div>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">📌 Estes membros estão com mensalidade atrasada ou temporariamente inativos. Entre em contato para ajudar na regularização.</p>
             </div>
 
             <!-- Solicitar Saque -->
@@ -240,7 +249,7 @@
                     <button class="btn btn-secondary" onclick="mostrarLogAlteracoes()">📋 LOG</button>
                 </div>
 
-                <!-- Modal Novo Participante -->
+                <!-- Modais (mantidos iguais aos originais) -->
                 <div id="modalNovoParticipante" class="modal">
                     <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoParticipante')">&times;</span>
                         <div class="modal-header">➕ NOVO PARTICIPANTE</div>
@@ -255,7 +264,6 @@
                     </div>
                 </div>
 
-                <!-- Modal Editar Títulos -->
                 <div id="modalEditarTitulos" class="modal-titulo">
                     <div class="modal-content" style="max-width: 800px;"><span class="close-modal" onclick="fecharModal('modalEditarTitulos')">&times;</span>
                         <div class="modal-header">📋 EDITAR TÍTULOS DE LIDERANÇA</div>
@@ -267,7 +275,6 @@
                     </div>
                 </div>
 
-                <!-- Modal Novo Título -->
                 <div id="modalNovoTitulo" class="modal-titulo">
                     <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoTitulo')">&times;</span>
                         <div class="modal-header">➕ NOVO TÍTULO</div>
@@ -277,7 +284,6 @@
                     </div>
                 </div>
 
-                <!-- Modal Alterar Título de Liderança -->
                 <div id="modalAlterarTitulo" class="modal-alterar-titulo">
                     <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalAlterarTitulo')">&times;</span>
                         <div class="modal-header">👑 ALTERAR TÍTULO DE LIDERANÇA</div>
@@ -292,7 +298,7 @@
                     </div>
                 </div>
 
-                <div id="adminSaques" style="display: none;"><h3>📋 SAQUES PENDENTES</h3><div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...</tr></tbody></table></div></div>
+                <div id="adminSaques" style="display: none;"><h3>📋 SAQUES PENDENTES</h3><div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...</td></tbody></table></div></div>
                 <div id="adminCodigo" style="display: none;"><h3>🔑 GERAR CÓDIGO DE ACESSO</h3><div class="saque-form"><div class="form-group"><label>CPF do participante</label><input type="text" id="novoCpf"></div><button class="btn btn-success" onclick="gerarCodigoAcesso()">GERAR CÓDIGO</button></div><div id="codigoGerado" class="success" style="margin-top: 12px;"><strong>Código gerado:</strong> <span id="novoCodigo"></span></div></div>
                 <div id="adminPioneiro" style="display: none;"><h3>👑 PARÂMETROS DE PIONEIRO</h3><div class="param-grid"><div class="param-card"><div class="param-label">Pioneiros Permitidos</div><div class="param-value" id="param_permitido">-</div></div><div class="param-card"><div class="param-label">Data Limite</div><div class="param-value" id="param_data_limite">-</div></div><div class="param-card"><div class="param-label">Quantidade Máxima</div><div class="param-value" id="param_qtd_maxima">-</div></div><div class="param-card"><div class="param-label">Contador Atual</div><div class="param-value" id="param_contador">-</div></div></div>
                     <h3>✏️ EDITAR PARÂMETROS</h3><div class="param-grid"><div class="form-group"><label>Pioneiros Permitidos</label><select id="edit_permitido"><option value="SIM">SIM</option><option value="NAO">NAO</option></select></div>
@@ -301,7 +307,7 @@
                     <div class="form-group"><label>Contador Atual</label><input type="number" id="edit_contador" min="0"></div></div>
                     <button class="btn btn-success" onclick="salvarParametrosPioneiro()">💾 SALVAR PARÂMETROS</button>
                     <h3>🏆 APROVAR NOVO PIONEIRO</h3><div class="saque-form"><div class="form-group"><label>ID da Cota</label><input type="number" id="pioneiroIdCota"></div><button class="btn btn-success" onclick="aprovarPioneiro()">APROVAR PIONEIRO</button></div></div>
-                <div id="adminLog" style="display: none;"><h3>📋 LOG DE ALTERAÇÕES</h3><div class="table-wrapper log-table"><table id="logTable"><thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logBody"><tr><td colspan="4">Carregando...</tr></tbody></table></div><button class="btn btn-secondary btn-small" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button></div>
+                <div id="adminLog" style="display: none;"><h3>📋 LOG DE ALTERAÇÕES</h3><div class="table-wrapper log-table"><table id="logTable"><thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logBody"><tr><td colspan="4">Carregando...</td></tbody></table></div><button class="btn btn-secondary btn-small" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button></div>
             </div>
         </div>
     </div>
@@ -361,6 +367,7 @@
         async function carregarDashboard() {
             await carregarExtratoESaldos();
             await carregarArvore();
+            await carregarInativos();
             if (isAdmin) { await carregarSaquesPendentes(); await carregarParametrosPioneiro(); }
         }
 
@@ -381,7 +388,7 @@
             } catch(e) { console.error(e); }
         }
 
-        // ==================== ÁRVORE CORRIGIDA ====================
+        // ÁRVORE PRINCIPAL (APENAS ATIVOS)
         async function carregarArvore() {
             const container = document.getElementById('arvoreContainer');
             container.innerHTML = 'Carregando rede...';
@@ -408,13 +415,12 @@
                 }
                 
                 function montarArvoreRecursiva(id_pai) {
-                    // MOSTRAR TODOS OS STATUS (incluindo Inativos, Atrasados, Pendentes)
-                    const filhos = redeData.filter(p => p.id_pai === id_pai);
+                    const filhos = redeData.filter(p => p.id_pai === id_pai && p.status === 'Ativo');
                     if (filhos.length === 0) return '';
                     
                     let html = '<div class="children open">';
                     for (const filho of filhos) {
-                        const temFilhos = redeData.some(p => p.id_pai === filho.id);
+                        const temFilhos = redeData.some(p => p.id_pai === filho.id && p.status === 'Ativo');
                         html += `
                             <div class="tree-node">
                                 <div class="tree-node-content">
@@ -449,6 +455,54 @@
             }
         }
 
+        // INATIVOS/ATRASADOS/PENDENTES (APENAS REDE DIRETA)
+        async function carregarInativos() {
+            const container = document.getElementById('inativosContainer');
+            if (!container) return;
+            container.innerHTML = 'Carregando...';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ p_id_participante: usuarioAtual.id })
+                });
+                
+                const redeData = await response.json();
+                const inativos = redeData.filter(p => p.id_pai === usuarioAtual.id && (p.status === 'Inativo' || p.status === 'Atrasado' || p.status === 'Pendente'));
+                
+                if (inativos.length === 0) {
+                    container.innerHTML = '✅ Nenhum membro inativo, atrasado ou pendente na sua rede direta.';
+                    return;
+                }
+                
+                let html = '<div class="children open">';
+                for (const p of inativos) {
+                    html += `
+                        <div class="tree-node">
+                            <div class="tree-node-content">
+                                <span>📌</span>
+                                <span><strong>${p.nome}</strong></span>
+                                <span>(${p.plano})</span>
+                                <span class="status-${p.status}">${p.status}</span>
+                                ${p.posicao ? `<span>📍 Pos ${p.posicao}</span>` : ''}
+                            </div>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Erro ao carregar inativos:', error);
+                container.innerHTML = 'Erro ao carregar membros inativos.';
+            }
+        }
+
         window.toggleChildren = function(e) {
             const node = e.closest('.tree-node');
             const children = node.querySelector('.children');
@@ -457,7 +511,6 @@
                 e.innerText = children.classList.contains('open') ? '📂' : '📁';
             }
         };
-        // ==================== FIM ÁRVORE CORRIGIDA ====================
 
         // ADMIN: ALTERAR TÍTULO
         window.mostrarAlterarTitulo = async function() {
