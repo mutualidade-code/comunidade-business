@@ -455,14 +455,14 @@
             }
         }
 
-        // INATIVOS/ATRASADOS/PENDENTES - REDE INTEIRA (não só diretos)
+        // INATIVOS/ATRASADOS/PENDENTES - REDE INTEIRA (usando rede_completa)
         async function carregarInativos() {
             const container = document.getElementById('inativosContainer');
             if (!container) return;
             container.innerHTML = 'Carregando...';
             
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede`, {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/rede_completa`, {
                     method: 'POST',
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
@@ -472,7 +472,10 @@
                     body: JSON.stringify({ p_id_participante: usuarioAtual.id })
                 });
                 
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
                 const redeData = await response.json();
+                console.log('Rede completa carregada:', redeData);
                 
                 // Filtrar TODOS os membros da rede (exceto a raiz) que não estão Ativos
                 const inativos = redeData.filter(p => 
@@ -485,32 +488,10 @@
                     return;
                 }
                 
-                // Função para encontrar o caminho (cadeia de indicação)
-                function encontrarCaminho(id_pessoa, dados, raizId) {
-                    const caminho = [];
-                    let atual = id_pessoa;
-                    while (atual !== raizId) {
-                        const pai = dados.find(p => p.id === atual);
-                        if (!pai || pai.id_pai === 0) break;
-                        const paiNome = dados.find(p => p.id === pai.id_pai)?.nome || 'Raiz';
-                        caminho.unshift(paiNome);
-                        atual = pai.id_pai;
-                    }
-                    return caminho;
-                }
-                
                 let html = '<div class="children open">';
                 for (const p of inativos) {
-                    // Encontrar o patrocinador (quem indicou)
                     const indicador = redeData.find(ind => ind.id === p.id_indicador);
-                    const nomeIndicador = indicador ? indicador.nome : 'Desconhecido';
-                    
-                    // Encontrar o ID_Pai (posição na matriz)
-                    const paiMatriz = redeData.find(pp => pp.id === p.id_pai);
-                    const nomePaiMatriz = paiMatriz ? paiMatriz.nome : 'Raiz';
-                    
-                    // Calcular nível na rede
-                    const nivel = p.nivel || 0;
+                    const nomeIndicador = indicador ? indicador.nome : (p.id_indicador ? `ID ${p.id_indicador}` : 'Nenhum');
                     
                     html += `
                         <div class="tree-node">
@@ -519,39 +500,28 @@
                                 <span><strong>${p.nome}</strong></span>
                                 <span>(${p.plano})</span>
                                 <span class="status-${p.status}">${p.status}</span>
-                                ${p.posicao ? `<span>📍 Pos na matriz: ${p.posicao}</span>` : ''}
-                                <span style="font-size: 0.7rem; color: #666;">🔗 Nível: ${nivel}</span>
+                                ${p.posicao ? `<span>📍 Pos ${p.posicao}</span>` : ''}
+                                <span style="font-size: 0.7rem;">🔗 Nível ${p.nivel}</span>
                             </div>
                             <div style="margin-left: 28px; font-size: 0.75rem; color: #555; padding: 4px 0;">
-                                👑 Indicado por: <strong>${nomeIndicador}</strong><br>
-                                📌 Posicionado sob: <strong>${nomePaiMatriz}</strong> (ID_Pai: ${p.id_pai})
+                                👑 Indicado por: <strong>${nomeIndicador}</strong>
                             </div>
                         </div>
                     `;
                 }
                 html += '</div>';
                 
-                // Adicionar estatísticas
                 const totalInativos = inativos.length;
-                const porStatus = {
-                    Inativo: inativos.filter(p => p.status === 'Inativo').length,
-                    Atrasado: inativos.filter(p => p.status === 'Atrasado').length,
-                    Pendente: inativos.filter(p => p.status === 'Pendente').length
-                };
-                
                 container.innerHTML = `
                     <div style="margin-bottom: 12px; padding: 8px; background: #fff0e0; border-radius: 8px;">
-                        <strong>📊 Resumo da rede inativa:</strong> ${totalInativos} membro(s) no total
-                        ${porStatus.Inativo > 0 ? ` | 🔴 Inativos: ${porStatus.Inativo}` : ''}
-                        ${porStatus.Atrasado > 0 ? ` | 🟠 Atrasados: ${porStatus.Atrasado}` : ''}
-                        ${porStatus.Pendente > 0 ? ` | 🟡 Pendentes: ${porStatus.Pendente}` : ''}
+                        <strong>📊 Total de membros inativos/atrasados na rede: ${totalInativos}</strong>
                     </div>
                     ${html}
                 `;
                 
             } catch (error) {
                 console.error('Erro ao carregar inativos:', error);
-                container.innerHTML = 'Erro ao carregar membros inativos.';
+                container.innerHTML = `Erro ao carregar: ${error.message}`;
             }
         }
 
