@@ -113,15 +113,16 @@
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
         th { background: #f8f9fa; font-weight: bold; color: #495057; }
         .tree { font-family: monospace; }
-        .tree-node { margin-left: 20px; padding: 4px 0; cursor: pointer; }
+        .tree-node { margin-left: 0px; padding: 4px 0; }
         .tree-node-content { display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; transition: background 0.2s; flex-wrap: wrap; }
         .tree-node-content:hover { background: #e9ecef; }
-        .toggle-icon { cursor: pointer; width: 20px; font-weight: bold; }
-        .children { display: none; margin-left: 24px; }
+        .toggle-icon { cursor: pointer; width: 24px; font-weight: bold; font-size: 16px; }
+        .children { display: none; margin-left: 28px; border-left: 2px dashed #cbd5e1; padding-left: 12px; }
         .children.open { display: block; }
         .status-Ativo { color: #28a745; font-weight: bold; }
         .status-Pendente { color: #ffc107; }
         .status-Inativo { color: #dc3545; }
+        .status-Atrasado { color: #fd7e14; }
         .saque-form { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
         .saque-form .form-group { flex: 1; margin-bottom: 0; }
         .saque-form .btn { width: auto; padding: 12px 32px; }
@@ -142,6 +143,7 @@
         .btn-small { padding: 4px 8px; font-size: 12px; width: auto; margin: 0 2px; }
         .busca-cpf { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
         .info-participante { background: #e9ecef; padding: 12px; border-radius: 8px; margin: 12px 0; }
+        .inativos-card { background: #fff8e7; border-left: 4px solid #fd7e14; margin-top: 20px; }
         @media (max-width: 768px) {
             .saldo-grid, .stats-grid, .param-grid { grid-template-columns: 1fr; }
             .saque-form { flex-direction: column; }
@@ -206,15 +208,22 @@
                 <div class="table-wrapper">
                     <table id="extratoTable">
                         <thead><tr><th>Código</th><th>Nome</th><th>Entradas</th><th>Saídas</th><th>Reserva Mensalidade</th><th>Saldo Bruto</th><th>Saque Mês Livre</th><th>Saque Acumulado Livre</th><th>Disponível para Saque</th><th>Saldo Comercial</th><th>Atualizado</th></tr></thead>
-                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...</td></tr></tbody>
+                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...</td></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Árvore -->
+            <!-- Árvore Principal (Apenas Ativos) -->
             <div class="card">
-                <div class="card-header">🌳 MINHA REDE (3x10)</div>
+                <div class="card-header">🌳 MINHA REDE (3x10) - MEMBROS ATIVOS</div>
                 <div id="arvoreContainer" class="tree">Carregando rede...</div>
+            </div>
+
+            <!-- Árvore de Inativos/Atrasados -->
+            <div class="card inativos-card">
+                <div class="card-header">⚠️ MEMBROS INATIVOS/ATRASADOS/PENDENTES EM TODA A MINHA REDE</div>
+                <div id="inativosContainer" class="tree">Carregando...</div>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">📌 Estes membros estão com mensalidade atrasada ou temporariamente inativos. Entre em contato para ajudar na regularização.</p>
             </div>
 
             <!-- Solicitar Saque -->
@@ -240,7 +249,7 @@
                     <button class="btn btn-secondary" onclick="mostrarLogAlteracoes()">📋 LOG</button>
                 </div>
 
-                <!-- Modal Novo Participante -->
+                <!-- Modais (mantidos iguais aos originais) -->
                 <div id="modalNovoParticipante" class="modal">
                     <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoParticipante')">&times;</span>
                         <div class="modal-header">➕ NOVO PARTICIPANTE</div>
@@ -255,11 +264,10 @@
                     </div>
                 </div>
 
-                <!-- Modal Editar Títulos -->
                 <div id="modalEditarTitulos" class="modal-titulo">
                     <div class="modal-content" style="max-width: 800px;"><span class="close-modal" onclick="fecharModal('modalEditarTitulos')">&times;</span>
                         <div class="modal-header">📋 EDITAR TÍTULOS DE LIDERANÇA</div>
-                        <div class="table-wrapper"><table class="titulos-table" id="titulosTable"><thead><tr><th>Título</th><th>Valor Mensal (R$)</th><th>Ações</th></tr></thead><tbody id="titulosTableBody"><tr><td colspan="3">Carregando...</td></tr></tbody></table></div>
+                        <div class="table-wrapper"><table class="titulos-table" id="titulosTable"><thead><tr><th>Título</th><th>Valor Mensal (R$)</th><th>Ações</th></tr></thead><tbody id="titulosTableBody"><tr><td colspan="3">Carregando...</tr></tbody></table></div>
                         <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
                             <button class="btn btn-success btn-small" onclick="mostrarNovoTitulo()">➕ NOVO TÍTULO</button>
                             <button class="btn btn-success btn-small" onclick="salvarTodosTitulos()">💾 SALVAR TODAS ALTERAÇÕES</button>
@@ -267,7 +275,6 @@
                     </div>
                 </div>
 
-                <!-- Modal Novo Título -->
                 <div id="modalNovoTitulo" class="modal-titulo">
                     <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoTitulo')">&times;</span>
                         <div class="modal-header">➕ NOVO TÍTULO</div>
@@ -277,7 +284,6 @@
                     </div>
                 </div>
 
-                <!-- Modal Alterar Título de Liderança -->
                 <div id="modalAlterarTitulo" class="modal-alterar-titulo">
                     <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalAlterarTitulo')">&times;</span>
                         <div class="modal-header">👑 ALTERAR TÍTULO DE LIDERANÇA</div>
@@ -292,7 +298,7 @@
                     </div>
                 </div>
 
-                <div id="adminSaques" style="display: none;"><h3>📋 SAQUES PENDENTES</h3><div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...</td></tr></tbody></table></div></div>
+                <div id="adminSaques" style="display: none;"><h3>📋 SAQUES PENDENTES</h3><div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...</td></tbody></table></div></div>
                 <div id="adminCodigo" style="display: none;"><h3>🔑 GERAR CÓDIGO DE ACESSO</h3><div class="saque-form"><div class="form-group"><label>CPF do participante</label><input type="text" id="novoCpf"></div><button class="btn btn-success" onclick="gerarCodigoAcesso()">GERAR CÓDIGO</button></div><div id="codigoGerado" class="success" style="margin-top: 12px;"><strong>Código gerado:</strong> <span id="novoCodigo"></span></div></div>
                 <div id="adminPioneiro" style="display: none;"><h3>👑 PARÂMETROS DE PIONEIRO</h3><div class="param-grid"><div class="param-card"><div class="param-label">Pioneiros Permitidos</div><div class="param-value" id="param_permitido">-</div></div><div class="param-card"><div class="param-label">Data Limite</div><div class="param-value" id="param_data_limite">-</div></div><div class="param-card"><div class="param-label">Quantidade Máxima</div><div class="param-value" id="param_qtd_maxima">-</div></div><div class="param-card"><div class="param-label">Contador Atual</div><div class="param-value" id="param_contador">-</div></div></div>
                     <h3>✏️ EDITAR PARÂMETROS</h3><div class="param-grid"><div class="form-group"><label>Pioneiros Permitidos</label><select id="edit_permitido"><option value="SIM">SIM</option><option value="NAO">NAO</option></select></div>
@@ -301,7 +307,7 @@
                     <div class="form-group"><label>Contador Atual</label><input type="number" id="edit_contador" min="0"></div></div>
                     <button class="btn btn-success" onclick="salvarParametrosPioneiro()">💾 SALVAR PARÂMETROS</button>
                     <h3>🏆 APROVAR NOVO PIONEIRO</h3><div class="saque-form"><div class="form-group"><label>ID da Cota</label><input type="number" id="pioneiroIdCota"></div><button class="btn btn-success" onclick="aprovarPioneiro()">APROVAR PIONEIRO</button></div></div>
-                <div id="adminLog" style="display: none;"><h3>📋 LOG DE ALTERAÇÕES</h3><div class="table-wrapper log-table"><table id="logTable"><thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logBody"><tr><td colspan="4">Carregando...</td></tr></tbody></table></div><button class="btn btn-secondary btn-small" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button></div>
+                <div id="adminLog" style="display: none;"><h3>📋 LOG DE ALTERAÇÕES</h3><div class="table-wrapper log-table"><table id="logTable"><thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logBody"><tr><td colspan="4">Carregando...</td></tbody></table></div><button class="btn btn-secondary btn-small" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button></div>
             </div>
         </div>
     </div>
@@ -332,14 +338,23 @@
                 if (!acessos || !acessos.length) { errorDiv.style.display='block'; errorDiv.innerText='CPF ou código inválido'; return; }
                 const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
                 if (!participantes || !participantes.length) { errorDiv.style.display='block'; errorDiv.innerText='Participante não encontrado'; return; }
-                usuarioAtual = participantes[0];
+                
+                // CORREÇÃO: Buscar a cota Start Ativa (raiz da rede da pessoa)
+                let cotaPrincipal = participantes.find(p => p.plano === 'Start' && p.status === 'Ativo');
+                if (!cotaPrincipal) {
+                    cotaPrincipal = participantes.find(p => p.status === 'Ativo');
+                }
+                if (!cotaPrincipal) {
+                    cotaPrincipal = participantes[0];
+                }
+                usuarioAtual = cotaPrincipal;
+                
                 isAdmin = (cpf === '1');
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('userNome').innerText = usuarioAtual.nome;
                 document.getElementById('userCpf').innerText = cpf;
-                // Título e Pioneiro
-                const pTitulo = await fetchAPI(`participantes?cpf=eq.${cpf}&select=titulo_lideranca,pioneiro`);
+                const pTitulo = await fetchAPI(`participantes?id=eq.${usuarioAtual.id}&select=titulo_lideranca,pioneiro`);
                 if (pTitulo && pTitulo.length) {
                     document.getElementById('userTitulo').innerText = pTitulo[0].titulo_lideranca || 'Networker';
                     if (pTitulo[0].pioneiro === 'Sim') document.getElementById('pioneiroBadge').style.display = 'flex';
@@ -352,7 +367,11 @@
         async function carregarDashboard() {
             await carregarExtratoESaldos();
             await carregarArvore();
-            if (isAdmin) { await carregarSaquesPendentes(); await carregarParametrosPioneiro(); }
+            await carregarInativos();
+            if (isAdmin) { 
+                await carregarSaquesPendentes(); 
+                await carregarParametrosPioneiro(); 
+            }
         }
 
         async function carregarExtratoESaldos() {
@@ -372,13 +391,158 @@
             } catch(e) { console.error(e); }
         }
 
+        // ÁRVORE PRINCIPAL (APENAS ATIVOS)
+        async function carregarArvore() {
+            const container = document.getElementById('arvoreContainer');
+            container.innerHTML = 'Carregando rede...';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ p_id_participante: usuarioAtual.id })
+                });
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const redeData = await response.json();
+                console.log('Rede carregada:', redeData);
+                
+                if (!redeData || redeData.length === 0) {
+                    container.innerHTML = 'Nenhum membro na rede.';
+                    return;
+                }
+                
+                function montarArvoreRecursiva(id_pai) {
+                    const filhos = redeData.filter(p => p.id_pai === id_pai && p.status === 'Ativo');
+                    if (filhos.length === 0) return '';
+                    
+                    let html = '<div class="children open">';
+                    for (const filho of filhos) {
+                        const temFilhos = redeData.some(p => p.id_pai === filho.id && p.status === 'Ativo');
+                        html += `
+                            <div class="tree-node">
+                                <div class="tree-node-content">
+                                    <span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos ? '📂' : '📄'}</span>
+                                    <span>${filho.nome}</span>
+                                    <span>(${filho.plano})</span>
+                                    <span class="status-${filho.status}">${filho.status}</span>
+                                    ${filho.posicao ? `<span style="font-size:0.7rem;">📍Pos ${filho.posicao}</span>` : ''}
+                                </div>
+                                <div class="children" data-parent="${filho.id}">
+                                    ${montarArvoreRecursiva(filho.id)}
+                                </div>
+                            </div>
+                        `;
+                    }
+                    html += '</div>';
+                    return html;
+                }
+                
+                const raiz = redeData.find(p => p.id === usuarioAtual.id);
+                if (!raiz) {
+                    container.innerHTML = 'Erro: participante não encontrado na árvore.';
+                    return;
+                }
+                
+                const htmlArvore = montarArvoreRecursiva(usuarioAtual.id);
+                container.innerHTML = htmlArvore || 'Nenhum indicado direto';
+                
+            } catch (error) {
+                console.error('Erro ao carregar rede:', error);
+                container.innerHTML = `Erro ao carregar rede: ${error.message}`;
+            }
+        }
+
+        // INATIVOS/ATRASADOS/PENDENTES - REDE INTEIRA (usando rede_completa)
+        async function carregarInativos() {
+            const container = document.getElementById('inativosContainer');
+            if (!container) return;
+            container.innerHTML = 'Carregando...';
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/rede_completa`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ p_id_participante: usuarioAtual.id })
+                });
+                
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const redeData = await response.json();
+                console.log('Rede completa carregada:', redeData);
+                
+                // Filtrar TODOS os membros da rede (exceto a raiz) que não estão Ativos
+                const inativos = redeData.filter(p => 
+                    p.id !== usuarioAtual.id && 
+                    (p.status === 'Inativo' || p.status === 'Atrasado' || p.status === 'Pendente')
+                );
+                
+                if (inativos.length === 0) {
+                    container.innerHTML = '✅ Nenhum membro inativo, atrasado ou pendente em toda a sua rede.';
+                    return;
+                }
+                
+                let html = '<div class="children open">';
+                for (const p of inativos) {
+                    const indicador = redeData.find(ind => ind.id === p.id_indicador);
+                    const nomeIndicador = indicador ? indicador.nome : (p.id_indicador ? `ID ${p.id_indicador}` : 'Nenhum');
+                    
+                    html += `
+                        <div class="tree-node">
+                            <div class="tree-node-content">
+                                <span>⚠️</span>
+                                <span><strong>${p.nome}</strong></span>
+                                <span>(${p.plano})</span>
+                                <span class="status-${p.status}">${p.status}</span>
+                                ${p.posicao ? `<span>📍 Pos ${p.posicao}</span>` : ''}
+                                <span style="font-size: 0.7rem;">🔗 Nível ${p.nivel}</span>
+                            </div>
+                            <div style="margin-left: 28px; font-size: 0.75rem; color: #555; padding: 4px 0;">
+                                👑 Indicado por: <strong>${nomeIndicador}</strong>
+                            </div>
+                        </div>
+                    `;
+                }
+                html += '</div>';
+                
+                const totalInativos = inativos.length;
+                container.innerHTML = `
+                    <div style="margin-bottom: 12px; padding: 8px; background: #fff0e0; border-radius: 8px;">
+                        <strong>📊 Total de membros inativos/atrasados na rede: ${totalInativos}</strong>
+                    </div>
+                    ${html}
+                `;
+                
+            } catch (error) {
+                console.error('Erro ao carregar inativos:', error);
+                container.innerHTML = `Erro ao carregar: ${error.message}`;
+            }
+        }
+
+        window.toggleChildren = function(e) {
+            const node = e.closest('.tree-node');
+            const children = node.querySelector('.children');
+            if (children) {
+                children.classList.toggle('open');
+                e.innerText = children.classList.contains('open') ? '📂' : '📁';
+            }
+        };
+
         // ADMIN: ALTERAR TÍTULO
         window.mostrarAlterarTitulo = async function() {
             document.getElementById('modalAlterarTitulo').style.display = 'flex';
             document.getElementById('alterarTituloMsg').style.display = 'none';
             document.getElementById('buscarCpfTitulo').value = '';
             document.getElementById('infoParticipante').style.display = 'none';
-            // Carregar dropdown de títulos (excluir Pioneiro, ordenado por ordem)
             const titulos = await fetchAPI(`titulos?select=titulo,ordem&order=ordem.asc`);
             const select = document.getElementById('novoTituloSelect');
             select.innerHTML = '<option value="">Selecione um título</option>';
@@ -419,7 +583,7 @@
         async function carregarTitulos() {
             const titulos = await fetchAPI(`titulos?order=ordem.asc&select=*`);
             const tbody = document.getElementById('titulosTableBody');
-            if (!titulos || !titulos.length) { tbody.innerHTML = '</tr><td colspan="3">Nenhum título cadastrado</td> Septy'; return; }
+            if (!titulos || !titulos.length) { tbody.innerHTML = '<tr><td colspan="3">Nenhum título cadastrado</td></tr>'; return; }
             tbody.innerHTML = '';
             titulos.forEach(t => {
                 const row = tbody.insertRow();
@@ -462,9 +626,9 @@
         function fecharModal(id) { document.getElementById(id).style.display='none'; }
 
         async function carregarSaquesPendentes() {
-            const saques = await fetchAPI(`saques?status=eq.Em processamento&select=*`);
+            const saques = await fetchAPI(`saques?status=eq.Em%20processamento&select=*`);
             const tbody = document.getElementById('saquesPendentesBody');
-            if (!saques || !saques.length) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</td> </tr>'; return; }
+            if (!saques || !saques.length) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</td></tr>'; return; }
             tbody.innerHTML = '';
             for (const s of saques) {
                 const p = await fetchAPI(`participantes?id=eq.${s.participante_id}&select=nome`);
@@ -520,27 +684,7 @@
             tbody.innerHTML='';
             logs.forEach(l=>{ tbody.innerHTML+=`<tr><td>${new Date(l.data_hora).toLocaleString()}</td><td>${l.operador||'-'}</td><td>${l.acao||'-'}</td><td>${l.observacao||'-'}</td></tr>`; });
         }
-        // ÁRVORE
-        async function carregarArvore() {
-            const filhos = await fetchAPI(`participantes?id_pai=eq.${usuarioAtual.id}&select=*`);
-            if(!filhos.length){ document.getElementById('arvoreContainer').innerHTML='Nenhum indicado direto'; return; }
-            let html='<div class="children open">';
-            for(const f of filhos){
-                const temFilhos = await (await fetchAPI(`participantes?id_pai=eq.${f.id}&select=id&limit=1`)).length>0;
-                html+=`<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos?'📂':'📄'}</span><span>${f.nome}</span><span>(${f.plano})</span><span class="status-${f.status}">${f.status}</span></div><div class="children" data-parent="${f.id}">${await montarSubArvore(f.id)}</div></div>`;
-            } html+='</div>';
-            document.getElementById('arvoreContainer').innerHTML=html;
-        }
-        async function montarSubArvore(id) {
-            const filhos = await fetchAPI(`participantes?id_pai=eq.${id}&select=*`);
-            if(!filhos.length) return '';
-            let h='';
-            for(const f of filhos){
-                const temFilhos = await (await fetchAPI(`participantes?id_pai=eq.${f.id}&select=id&limit=1`)).length>0;
-                h+=`<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos?'📂':'📄'}</span><span>${f.nome}</span><span>(${f.plano})</span><span class="status-${f.status}">${f.status}</span></div><div class="children" data-parent="${f.id}">${await montarSubArvore(f.id)}</div></div>`;
-            } return h;
-        }
-        window.toggleChildren = function(e){ const node=e.closest('.tree-node'), children=node.querySelector('.children'); if(children){ children.classList.toggle('open'); e.innerText=children.classList.contains('open')?'📂':'📁'; } };
+        
         async function solicitarSaque() {
             const valor = parseFloat(document.getElementById('valorSaque').value), msg = document.getElementById('saqueMensagem');
             if(isNaN(valor)||valor<=0){ msg.style.display='block'; msg.innerText='Valor inválido'; return; }
