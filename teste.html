@@ -367,8 +367,11 @@
         async function carregarDashboard() {
             await carregarExtratoESaldos();
             await carregarArvore();
-            await rede_completa();
-            if (isAdmin) { await carregarSaquesPendentes(); await carregarParametrosPioneiro(); }
+            await carregarInativos();
+            if (isAdmin) { 
+                await carregarSaquesPendentes(); 
+                await carregarParametrosPioneiro(); 
+            }
         }
 
         async function carregarExtratoESaldos() {
