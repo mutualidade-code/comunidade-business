@@ -367,7 +367,7 @@
         async function carregarDashboard() {
             await carregarExtratoESaldos();
             await carregarArvore();
-            await carregarInativos();
+            await rede_completa();
             if (isAdmin) { await carregarSaquesPendentes(); await carregarParametrosPioneiro(); }
         }
 
