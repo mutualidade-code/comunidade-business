@@ -2,306 +2,46 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Comunidade Business - MAP 3x10</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comunidade Business - Área do Participante</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container { max-width: 1600px; margin: 0 auto; padding: 20px; }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        .card-header {
-            border-bottom: 2px solid #e9ecef;
-            padding-bottom: 10px;
-            margin-bottom: 16px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        .login-container { max-width: 450px; margin: 60px auto; }
-        .login-card {
-            background: white;
-            border-radius: 16px;
-            padding: 24px 32px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            text-align: center;
-        }
-        .logo-login { width: 100px; height: auto; margin-bottom: 0px; display: block; margin-left: auto; margin-right: auto; }
-        .login-card h1 { font-size: 1.5rem; margin-bottom: 10px; color: #2c3e50; }
-        .login-card .subtitle { text-align: center; color: #6c757d; margin-bottom: 30px; }
-        .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #495057; text-align: left; }
-        .form-group input, .form-group select { width: 100%; padding: 10px 14px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 16px; transition: border-color 0.3s; }
-        .form-group input:focus, .form-group select:focus { outline: none; border-color: #667eea; }
-        .btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; transition: transform 0.2s; }
-        .btn:hover { transform: translateY(-2px); }
-        .btn-danger { background: #dc3545; width: auto; padding: 8px 20px; }
-        .btn-secondary { background: #6c757d; width: auto; padding: 8px 16px; }
-        .btn-success { background: #28a745; width: auto; padding: 8px 16px; }
-        .btn-warning { background: #fd7e14; width: auto; padding: 8px 16px; }
-        .error { background: #f8d7da; color: #721c24; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
-        .success { background: #d4edda; color: #155724; padding: 12px; border-radius: 8px; margin-bottom: 20px; display: none; }
-        .dashboard { display: none; }
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-        .user-info {
-            background: white;
-            padding: 6px 16px;
-            border-radius: 40px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .user-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
-        .user-info span { font-weight: bold; color: #667eea; }
-        .titulo-container {
-            background: linear-gradient(135deg, #FFD700 0%, #DAA520 100%);
-            padding: 6px 16px;
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            flex-wrap: wrap;
-        }
-        .pioneiro-badge {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            padding: 6px 16px;
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 1px 1px 0 rgba(0,0,0,0.2);
-        }
-        .coroa-esq, .coroa-dir { font-size: 18px; }
-        .titulo-label { font-size: 13px; font-weight: normal; color: #fff; opacity: 0.9; }
-        .titulo-valor { font-weight: bold; font-size: 15px; color: #fff; letter-spacing: 1px; }
-        .saldo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
-        .saldo-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-align: center; }
-        .saldo-card h3 { font-size: 14px; opacity: 0.9; margin-bottom: 10px; }
-        .saldo-card .valor { font-size: 24px; font-weight: bold; }
-        .saldo-card.reserva { background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%); }
-        .saldo-card.bruto { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
-        .saldo-card.disponivel { background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%); }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
-        .stat-card { background: #f8f9fa; padding: 16px; border-radius: 12px; text-align: center; border-left: 4px solid #667eea; }
-        .stat-card h4 { font-size: 12px; color: #6c757d; margin-bottom: 8px; }
-        .stat-card .stat-value { font-size: 20px; font-weight: bold; color: #2c3e50; }
-        .table-wrapper { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
-        th { background: #f8f9fa; font-weight: bold; color: #495057; }
-        .tree { font-family: monospace; }
-        .tree-node { margin-left: 20px; padding: 4px 0; cursor: pointer; }
-        .tree-node-content { display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; transition: background 0.2s; flex-wrap: wrap; }
-        .tree-node-content:hover { background: #e9ecef; }
-        .toggle-icon { cursor: pointer; width: 20px; font-weight: bold; }
-        .children { display: none; margin-left: 24px; }
-        .children.open { display: block; }
-        .status-Ativo { color: #28a745; font-weight: bold; }
-        .status-Pendente { color: #ffc107; }
-        .status-Inativo { color: #dc3545; }
-        .saque-form { display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
-        .saque-form .form-group { flex: 1; margin-bottom: 0; }
-        .saque-form .btn { width: auto; padding: 12px 32px; }
-        .admin-section { background: #f8f9fa; border-left: 4px solid #667eea; }
-        .param-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
-        .param-card { background: white; padding: 16px; border-radius: 8px; border: 1px solid #dee2e6; }
-        .param-label { font-weight: bold; color: #495057; margin-bottom: 8px; }
-        .param-value { font-size: 24px; font-weight: bold; color: #2c3e50; }
-        .log-table { max-height: 300px; overflow-y: auto; }
-        .modal, .modal-titulo, .modal-alterar-titulo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
-        .modal-content { background: white; border-radius: 16px; padding: 32px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; }
-        .modal-header { font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; color: #2c3e50; }
-        .close-modal { float: right; cursor: pointer; font-size: 24px; }
-        .titulos-table { width: 100%; border-collapse: collapse; }
-        .titulos-table th, .titulos-table td { padding: 10px; border-bottom: 1px solid #dee2e6; text-align: left; }
-        .titulos-table th { background: #667eea; color: white; }
-        .titulos-table input { width: 100px; padding: 6px; border: 1px solid #dee2e6; border-radius: 4px; }
-        .btn-small { padding: 4px 8px; font-size: 12px; width: auto; margin: 0 2px; }
-        .busca-cpf { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-        .info-participante { background: #e9ecef; padding: 12px; border-radius: 8px; margin: 12px 0; }
-        @media (max-width: 768px) {
-            .saldo-grid, .stats-grid, .param-grid { grid-template-columns: 1fr; }
-            .saque-form { flex-direction: column; }
-            .saque-form .btn { width: 100%; }
-            .dashboard-header { flex-direction: column; align-items: stretch; }
-            .user-info, .titulo-container, .pioneiro-badge, .btn-danger { justify-content: center; }
-        }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        h1 { color: #366092; margin-bottom: 10px; }
+        h2 { color: #366092; font-size: 18px; margin-bottom: 15px; border-bottom: 2px solid #366092; padding-bottom: 5px; }
+        .tree-node { margin: 5px 0; padding: 8px; border-left: 3px solid #366092; background: #f9f9f9; }
+        .tree-node.active { background: #e8f5e9; border-left-color: #4caf50; }
+        .tree-children { margin-left: 30px; }
+        .status-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; }
+        .status-Ativo { background: #4caf50; color: white; }
+        .status-Pendente { background: #ff9800; color: white; }
+        .status-Atrasado { background: #f44336; color: white; }
+        .plano-badge { background: #366092; color: white; padding: 2px 8px; border-radius: 12px; font-size: 11px; }
+        .stats { background: #e3f2fd; padding: 10px; border-radius: 8px; margin-top: 15px; }
+        .loading { text-align: center; padding: 40px; color: #666; }
+        .error { background: #ffebee; color: #c62828; padding: 15px; border-radius: 8px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Tela de Login -->
-        <div id="loginScreen" class="login-container">
-            <div class="login-card">
-                <img src="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png" alt="Comunidade Business" class="logo-login">
-                <h1><img src="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png" alt="Comunidade Business" style="width: 48px; height: 48px; vertical-align: middle; margin-right: 1px;">Comunidade Business</h1>
-                <p class="subtitle">Sistema de Redes Múltiplas MAP 3x10</p>
-                <div id="loginError" class="error"></div>
-                <div class="form-group"><label>CPF</label><input type="text" id="cpf" placeholder="Digite seu CPF" maxlength="11"></div>
-                <div class="form-group"><label>Código de Acesso</label><input type="text" id="codigo" placeholder="Ex: MMN-ABCD-1234"></div>
-                <button class="btn" onclick="fazerLogin()">Entrar</button>
+        <div class="card">
+            <h1>🌳 Comunidade Business</h1>
+            <p>Sistema MMN 3x10 - Matriz Forçada com Derramamento</p>
+        </div>
+
+        <div class="card">
+            <h2>📊 Meus Indicadores</h2>
+            <div id="indicadores">
+                <div class="loading">Carregando indicadores...</div>
             </div>
         </div>
 
-        <!-- Dashboard -->
-        <div id="dashboard" class="dashboard">
-            <div class="dashboard-header">
-                <div class="user-info">
-                    <img src="https://wlkmzazcxymjhksuvgzo.supabase.co/storage/v1/object/public/publiccb/android-chrome-192x192.png" alt="Logo" class="user-avatar">
-                    <span id="userNome"></span> | CPF: <span id="userCpf"></span>
-                </div>
-                <div class="titulo-container" id="tituloContainer">
-                    <span class="coroa-esq">🏆</span>
-                    <span class="titulo-label">Título:</span>
-                    <span class="titulo-valor" id="userTitulo">Networker</span>
-                    <span class="coroa-dir">👑</span>
-                </div>
-                <div id="pioneiroBadge" class="pioneiro-badge" style="display: none;">
-                    <span>⭐</span> <span>Pioneiro</span>
-                </div>
-                <button class="btn btn-danger" onclick="logout()">Sair</button>
-            </div>
-
-            <!-- Cards de Saldo -->
-            <div class="saldo-grid">
-                <div class="saldo-card reserva"><h3>🏦 Reserva Mensalidade</h3><div class="valor" id="saldoReserva">R$ 0,00</div></div>
-                <div class="saldo-card bruto"><h3>📊 Saldo Bruto</h3><div class="valor" id="saldoBruto">R$ 0,00</div></div>
-                <div class="saldo-card disponivel"><h3>💰 Disponível para Saque</h3><div class="valor" id="saldoDisponivel">R$ 0,00</div></div>
-            </div>
-
-            <!-- Cards Secundários -->
-            <div class="stats-grid">
-                <div class="stat-card"><h4>💸 Total Mensalidades Pagas</h4><div class="stat-value" id="totalMensalidades">R$ 0,00</div></div>
-                <div class="stat-card"><h4>🎯 Total BI Ganhos</h4><div class="stat-value" id="totalBI">R$ 0,00</div></div>
-                <div class="stat-card"><h4>🌐 Total BR Ganhos</h4><div class="stat-value" id="totalBR">R$ 0,00</div></div>
-                <div class="stat-card"><h4>👥 Tamanho Rede Ativa</h4><div class="stat-value" id="tamanhoRede">0</div></div>
-            </div>
-
-            <!-- Extrato -->
-            <div class="card">
-                <div class="card-header">📋 EXTRATO CONSOLIDADO</div>
-                <div class="table-wrapper">
-                    <table id="extratoTable">
-                        <thead><tr><th>Código</th><th>Nome</th><th>Entradas</th><th>Saídas</th><th>Reserva Mensalidade</th><th>Saldo Bruto</th><th>Saque Mês Livre</th><th>Saque Acumulado Livre</th><th>Disponível para Saque</th><th>Saldo Comercial</th><th>Atualizado</th></tr></thead>
-                        <tbody id="extratoBody"><tr><td colspan="11">Carregando...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Árvore -->
-            <div class="card">
-                <div class="card-header">🌳 MINHA REDE (3x10)</div>
-                <div id="arvoreContainer" class="tree">Carregando rede...</div>
-            </div>
-
-            <!-- Solicitar Saque -->
-            <div class="card">
-                <div class="card-header">💸 SOLICITAR SAQUE</div>
-                <div class="saque-form">
-                    <div class="form-group"><label>Valor (R$)</label><input type="number" id="valorSaque" step="0.01" min="1" placeholder="Digite o valor"></div>
-                    <button class="btn" onclick="solicitarSaque()">Solicitar Saque</button>
-                </div>
-                <div id="saqueMensagem" class="error" style="margin-top: 16px;"></div>
-            </div>
-
-            <!-- Admin -->
-            <div id="adminSection" class="card admin-section" style="display: none;">
-                <div class="card-header">👑 PAINEL ADMINISTRATIVO</div>
-                <div style="display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;">
-                    <button class="btn btn-secondary" onclick="mostrarNovoParticipante()">➕ NOVO PARTICIPANTE</button>
-                    <button class="btn btn-secondary" onclick="mostrarAprovacaoSaques()">💰 APROVAR SAQUES</button>
-                    <button class="btn btn-secondary" onclick="mostrarGerarCodigo()">🔑 GERAR CÓDIGO</button>
-                    <button class="btn btn-secondary" onclick="mostrarParametrosPioneiro()">👑 PARÂMETROS PIONEIRO</button>
-                    <button class="btn btn-secondary" onclick="mostrarEditarTitulos()">📋 EDITAR TÍTULOS</button>
-                    <button class="btn btn-secondary" onclick="mostrarAlterarTitulo()">👑 ALTERAR TÍTULO</button>
-                    <button class="btn btn-secondary" onclick="mostrarLogAlteracoes()">📋 LOG</button>
-                </div>
-
-                <!-- Modal Novo Participante -->
-                <div id="modalNovoParticipante" class="modal">
-                    <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoParticipante')">&times;</span>
-                        <div class="modal-header">➕ NOVO PARTICIPANTE</div>
-                        <div class="form-group"><label>Nome Completo *</label><input type="text" id="novoNome" placeholder="Nome do participante"></div>
-                        <div class="form-group"><label>CPF *</label><input type="text" id="novoCpfCad" placeholder="Apenas números" maxlength="11"></div>
-                        <div class="form-group"><label>Email</label><input type="email" id="novoEmail" placeholder="email@exemplo.com"></div>
-                        <div class="form-group"><label>Telefone</label><input type="text" id="novoTelefone" placeholder="(11) 99999-9999"></div>
-                        <div class="form-group"><label>ID do Indicador (opcional)</label><input type="number" id="novoIndicador" placeholder="ID da cota que indicou"></div>
-                        <div class="form-group"><label>Depósito inicial (R$)</label><input type="number" id="novoDeposito" step="0.01" value="0"></div>
-                        <button class="btn btn-success" onclick="criarNovoParticipante()">✅ CRIAR PARTICIPANTE</button>
-                        <div id="novoParticipanteMsg" class="success" style="margin-top: 16px;"></div>
-                    </div>
-                </div>
-
-                <!-- Modal Editar Títulos -->
-                <div id="modalEditarTitulos" class="modal-titulo">
-                    <div class="modal-content" style="max-width: 800px;"><span class="close-modal" onclick="fecharModal('modalEditarTitulos')">&times;</span>
-                        <div class="modal-header">📋 EDITAR TÍTULOS DE LIDERANÇA</div>
-                        <div class="table-wrapper"><table class="titulos-table" id="titulosTable"><thead><tr><th>Título</th><th>Valor Mensal (R$)</th><th>Ações</th></tr></thead><tbody id="titulosTableBody"><tr><td colspan="3">Carregando...</td></tr></tbody></table></div>
-                        <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
-                            <button class="btn btn-success btn-small" onclick="mostrarNovoTitulo()">➕ NOVO TÍTULO</button>
-                            <button class="btn btn-success btn-small" onclick="salvarTodosTitulos()">💾 SALVAR TODAS ALTERAÇÕES</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modal Novo Título -->
-                <div id="modalNovoTitulo" class="modal-titulo">
-                    <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoTitulo')">&times;</span>
-                        <div class="modal-header">➕ NOVO TÍTULO</div>
-                        <div class="form-group"><label>Nome do Título</label><input type="text" id="novoTituloNome"></div>
-                        <div class="form-group"><label>Valor Mensal (R$)</label><input type="number" id="novoTituloValor" step="0.01"></div>
-                        <button class="btn btn-success" onclick="adicionarNovoTitulo()">✅ ADICIONAR</button>
-                    </div>
-                </div>
-
-                <!-- Modal Alterar Título de Liderança -->
-                <div id="modalAlterarTitulo" class="modal-alterar-titulo">
-                    <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalAlterarTitulo')">&times;</span>
-                        <div class="modal-header">👑 ALTERAR TÍTULO DE LIDERANÇA</div>
-                        <div class="busca-cpf">
-                            <div class="form-group" style="flex:2"><label>CPF do participante</label><input type="text" id="buscarCpfTitulo" placeholder="Digite o CPF"></div>
-                            <button class="btn btn-secondary btn-small" style="margin-top: 24px;" onclick="buscarParticipantePorCpf()">🔍 BUSCAR</button>
-                        </div>
-                        <div id="infoParticipante" class="info-participante" style="display: none;"></div>
-                        <div class="form-group"><label>Novo Título de Liderança</label><select id="novoTituloSelect"><option value="">Selecione um título</option></select></div>
-                        <button class="btn btn-success" onclick="salvarAlteracaoTitulo()">💾 SALVAR ALTERAÇÃO</button>
-                        <div id="alterarTituloMsg" class="success" style="margin-top: 16px;"></div>
-                    </div>
-                </div>
-
-                <div id="adminSaques" style="display: none;"><h3>📋 SAQUES PENDENTES</h3><div class="table-wrapper"><table id="saquesPendentesTable"><thead><tr><th>ID</th><th>Participante</th><th>Valor</th><th>Data</th><th>Ações</th></tr></thead><tbody id="saquesPendentesBody"><tr><td colspan="5">Carregando...</td></tr></tbody></table></div></div>
-                <div id="adminCodigo" style="display: none;"><h3>🔑 GERAR CÓDIGO DE ACESSO</h3><div class="saque-form"><div class="form-group"><label>CPF do participante</label><input type="text" id="novoCpf"></div><button class="btn btn-success" onclick="gerarCodigoAcesso()">GERAR CÓDIGO</button></div><div id="codigoGerado" class="success" style="margin-top: 12px;"><strong>Código gerado:</strong> <span id="novoCodigo"></span></div></div>
-                <div id="adminPioneiro" style="display: none;"><h3>👑 PARÂMETROS DE PIONEIRO</h3><div class="param-grid"><div class="param-card"><div class="param-label">Pioneiros Permitidos</div><div class="param-value" id="param_permitido">-</div></div><div class="param-card"><div class="param-label">Data Limite</div><div class="param-value" id="param_data_limite">-</div></div><div class="param-card"><div class="param-label">Quantidade Máxima</div><div class="param-value" id="param_qtd_maxima">-</div></div><div class="param-card"><div class="param-label">Contador Atual</div><div class="param-value" id="param_contador">-</div></div></div>
-                    <h3>✏️ EDITAR PARÂMETROS</h3><div class="param-grid"><div class="form-group"><label>Pioneiros Permitidos</label><select id="edit_permitido"><option value="SIM">SIM</option><option value="NAO">NAO</option></select></div>
-                    <div class="form-group"><label>Data Limite (DD/MM/AAAA)</label><input type="text" id="edit_data_limite" placeholder="31/12/2026" maxlength="10"></div>
-                    <div class="form-group"><label>Quantidade Máxima</label><input type="number" id="edit_qtd_maxima" min="1" max="1000"></div>
-                    <div class="form-group"><label>Contador Atual</label><input type="number" id="edit_contador" min="0"></div></div>
-                    <button class="btn btn-success" onclick="salvarParametrosPioneiro()">💾 SALVAR PARÂMETROS</button>
-                    <h3>🏆 APROVAR NOVO PIONEIRO</h3><div class="saque-form"><div class="form-group"><label>ID da Cota</label><input type="number" id="pioneiroIdCota"></div><button class="btn btn-success" onclick="aprovarPioneiro()">APROVAR PIONEIRO</button></div></div>
-                <div id="adminLog" style="display: none;"><h3>📋 LOG DE ALTERAÇÕES</h3><div class="table-wrapper log-table"><table id="logTable"><thead><tr><th>Data/Hora</th><th>Operador</th><th>Ação</th><th>Detalhes</th></tr></thead><tbody id="logBody"><tr><td colspan="4">Carregando...</td></tr></tbody></table></div><button class="btn btn-secondary btn-small" onclick="carregarLogAlteracoes()">🔄 ATUALIZAR</button></div>
+        <div class="card">
+            <h2>🌿 Minha Rede (3x10)</h2>
+            <div id="arvore-rede">
+                <div class="loading">Carregando árvore da rede...</div>
             </div>
         </div>
     </div>
@@ -309,304 +49,138 @@
     <script>
         const SUPABASE_URL = 'https://wlkmzazcxymjhksuvgzo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
-        let usuarioAtual = null, isAdmin = false, titulosEditados = {};
+        
+        // ID do participante logado (futuramente virá do login)
+        const USUARIO_ID = 1;
 
-        async function fetchAPI(endpoint, options = {}) {
-            const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
-            const headers = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', ...options.headers };
-            const res = await fetch(url, { ...options, headers });
-            if (!res.ok) throw new Error(`Erro ${res.status}`);
-            return res.json();
-        }
-
-        function formatarDataBR(dataISO) { if (!dataISO) return ''; const p = dataISO.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : dataISO; }
-        function formatarDataISO(dataBR) { if (!dataBR) return ''; const p = dataBR.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : dataBR; }
-
-async function fazerLogin() {
-    const cpf = document.getElementById('cpf').value.trim();
-    const codigo = document.getElementById('codigo').value.trim().toUpperCase();
-    const errorDiv = document.getElementById('loginError');
-    if (!cpf || !codigo) { 
-        errorDiv.style.display='block'; 
-        errorDiv.innerText='Preencha CPF e código'; 
-        return; 
-    }
-    try {
-        const acessos = await fetchAPI(`acessos?cpf=eq.${cpf}&codigo=eq.${codigo}&ativo=eq.true&select=*`);
-        if (!acessos || !acessos.length) { 
-            errorDiv.style.display='block'; 
-            errorDiv.innerText='CPF ou código inválido'; 
-            return; 
-        }
-        
-        const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
-        if (!participantes || !participantes.length) { 
-            errorDiv.style.display='block'; 
-            errorDiv.innerText='Participante não encontrado'; 
-            return; 
-        }
-        
-        usuarioAtual = participantes[0];
-        isAdmin = (cpf === '1');
-        
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('userNome').innerText = usuarioAtual.nome;
-        document.getElementById('userCpf').innerText = cpf;
-        
-        // ========== PARTE CORRIGIDA ==========
-        const pTitulo = await fetchAPI(`participantes?cpf=eq.${cpf}&select=titulo_lideranca,pioneiro`);
-        
-        console.log('Dados do participante:', pTitulo);
-        
-        if (pTitulo && pTitulo.length) {
-            const tituloAtual = pTitulo[0].titulo_lideranca || 'Networker';
-            document.getElementById('userTitulo').innerText = tituloAtual;
-            
-            const valorPioneiro = pTitulo[0].pioneiro;
-            let isPioneiro = false;
-            
-            if (valorPioneiro === 'Sim' || 
-                valorPioneiro === 'sim' || 
-                valorPioneiro === 'SIM' || 
-                valorPioneiro === 'S' ||
-                valorPioneiro === 'true' ||
-                valorPioneiro === true ||
-                valorPioneiro === 1 ||
-                valorPioneiro === '1') {
-                isPioneiro = true;
-            }
-            
-            console.log('É pioneiro?', isPioneiro, 'Valor original:', valorPioneiro);
-            
-            if (isPioneiro) {
-                const badge = document.getElementById('pioneiroBadge');
-                badge.style.display = 'flex';
-                console.log('Badge de pioneiro exibido');
-            } else {
-                console.log('Badge NÃO exibido - valor:', valorPioneiro);
-            }
-        } else {
-            console.error('Não foi possível carregar título/pioneiro');
-        }
-        // ========== FIM DA PARTE CORRIGIDA ==========
-        
-        if (isAdmin) document.getElementById('adminSection').style.display = 'block';
-        await carregarDashboard();
-        
-    } catch(e) { 
-        errorDiv.style.display='block'; 
-        errorDiv.innerText='Erro: '+e.message;
-        console.error('Erro no login:', e);
-    }
-}
-
-        async function carregarDashboard() {
-            await carregarExtratoESaldos();
-            await carregarArvore();
-            if (isAdmin) { await carregarSaquesPendentes(); await carregarParametrosPioneiro(); }
-        }
-
-        async function carregarExtratoESaldos() {
+        async function carregarIndicadores() {
             try {
-                const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-                if (saldo && saldo.length) {
-                    const r = saldo[0];
-                    document.getElementById('saldoReserva').innerText = `R$ ${(r.reserva_atual||0).toFixed(2)}`;
-                    document.getElementById('saldoBruto').innerText = `R$ ${(r.saldo_bruto||0).toFixed(2)}`;
-                    document.getElementById('saldoDisponivel').innerText = `R$ ${(r.disponivel_saque||0).toFixed(2)}`;
-                    document.getElementById('totalMensalidades').innerText = `R$ ${(r.total_mensalidades_pagas||0).toFixed(2)}`;
-                    document.getElementById('totalBI').innerText = `R$ ${(r.total_bi||0).toFixed(2)}`;
-                    document.getElementById('totalBR').innerText = `R$ ${(r.total_br||0).toFixed(2)}`;
-                    document.getElementById('tamanhoRede').innerText = r.tamanho_rede_ativa||0;
-                    document.getElementById('extratoBody').innerHTML = `<tr><td>${r.id_pessoa}</td><td>${r.nome}</td><td>R$ ${(r.total_entradas||0).toFixed(2)}</td><td>R$ ${(r.total_saidas||0).toFixed(2)}</td><td>R$ ${(r.reserva_atual||0).toFixed(2)}</td><td>R$ ${(r.saldo_bruto||0).toFixed(2)}</td><td>R$ ${(r.saque_mes_livre||0).toFixed(2)}</td><td>R$ ${(r.saque_acum_livre||0).toFixed(2)}</td><td>R$ ${(r.disponivel_saque||0).toFixed(2)}</td><td>R$ ${(r.saldo_comercial||0).toFixed(2)}</td><td>${new Date(r.data_atualizacao).toLocaleString()}</td></tr>`;
-                }
-            } catch(e) { console.error(e); }
-        }
-
-        // ADMIN: ALTERAR TÍTULO
-        window.mostrarAlterarTitulo = async function() {
-            document.getElementById('modalAlterarTitulo').style.display = 'flex';
-            document.getElementById('alterarTituloMsg').style.display = 'none';
-            document.getElementById('buscarCpfTitulo').value = '';
-            document.getElementById('infoParticipante').style.display = 'none';
-            // Carregar dropdown de títulos (excluir Pioneiro, ordenado por ordem)
-            const titulos = await fetchAPI(`titulos?select=titulo,ordem&order=ordem.asc`);
-            const select = document.getElementById('novoTituloSelect');
-            select.innerHTML = '<option value="">Selecione um título</option>';
-            titulos.forEach(t => { 
-                if (t.titulo !== 'Pioneiro') {
-                    select.innerHTML += `<option value="${t.titulo}">${t.titulo}</option>`;
-                }
-            });
-        };
-
-        window.buscarParticipantePorCpf = async function() {
-            const cpf = document.getElementById('buscarCpfTitulo').value.trim();
-            if (!cpf) { alert('Digite um CPF'); return; }
-            const p = await fetchAPI(`participantes?cpf=eq.${cpf}&select=id_pessoa,nome,titulo_lideranca`);
-            if (!p || !p.length) { alert('Participante não encontrado'); return; }
-            const info = document.getElementById('infoParticipante');
-            info.style.display = 'block';
-            info.innerHTML = `<strong>Nome:</strong> ${p[0].nome}<br><strong>Título atual:</strong> ${p[0].titulo_lideranca}`;
-            window.participanteSelecionado = { id_pessoa: p[0].id_pessoa, titulo_atual: p[0].titulo_lideranca };
-        };
-
-        window.salvarAlteracaoTitulo = async function() {
-            const novoTitulo = document.getElementById('novoTituloSelect').value;
-            if (!window.participanteSelecionado) { alert('Busque um participante primeiro'); return; }
-            if (!novoTitulo) { alert('Selecione um novo título'); return; }
-            try {
-                await fetch(`${SUPABASE_URL}/rest/v1/participantes?id_pessoa=eq.${window.participanteSelecionado.id_pessoa}`, {
-                    method: 'PATCH', headers: { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ titulo_lideranca: novoTitulo })
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/participantes?select=id,nome,plano,status,id_pai&id_pai=eq.${USUARIO_ID}`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
                 });
-                document.getElementById('alterarTituloMsg').style.display = 'block';
-                document.getElementById('alterarTituloMsg').innerHTML = '✅ Título alterado com sucesso!';
-                setTimeout(() => fecharModal('modalAlterarTitulo'), 2000);
-            } catch(e) { alert('Erro: '+e.message); }
-        };
-
-        // ADMIN: TÍTULOS (CRUD)
-        async function carregarTitulos() {
-            const titulos = await fetchAPI(`titulos?order=ordem.asc&select=*`);
-            const tbody = document.getElementById('titulosTableBody');
-            if (!titulos || !titulos.length) { tbody.innerHTML = '</tr><td colspan="3">Nenhum título cadastrado</td> Septy'; return; }
-            tbody.innerHTML = '';
-            titulos.forEach(t => {
-                const row = tbody.insertRow();
-                row.insertCell(0).innerText = t.titulo;
-                const valCell = row.insertCell(1);
-                const inp = document.createElement('input'); inp.type='number'; inp.step='0.01'; inp.value=t.valor_mensal; inp.style.width='100px';
-                inp.dataset.id = t.id; inp.dataset.original = t.valor_mensal;
-                inp.onchange = function() { titulosEditados[this.dataset.id] = parseFloat(this.value); };
-                valCell.appendChild(inp);
-                const acoes = row.insertCell(2);
-                const del = document.createElement('button'); del.innerText='🗑️'; del.className='btn-small btn-danger'; del.onclick=()=>excluirTitulo(t.id,t.titulo);
-                acoes.appendChild(del);
-            });
-        }
-
-        window.salvarTodosTitulos = async function() {
-            if (Object.keys(titulosEditados).length===0) { alert('Nenhuma alteração'); return; }
-            for (const [id, novo] of Object.entries(titulosEditados))
-                await fetch(`${SUPABASE_URL}/rest/v1/titulos?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor_mensal: novo }) });
-            alert('Salvo!'); titulosEditados={}; await carregarTitulos();
-        };
-
-        window.excluirTitulo = async (id, nome) => { if(confirm(`Excluir "${nome}"?`)) { await fetch(`${SUPABASE_URL}/rest/v1/titulos?id=eq.${id}`, { method:'DELETE', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` } }); await carregarTitulos(); } };
-        window.mostrarNovoTitulo = () => document.getElementById('modalNovoTitulo').style.display='flex';
-        window.adicionarNovoTitulo = async () => {
-            const nome = document.getElementById('novoTituloNome').value.trim();
-            const valor = parseFloat(document.getElementById('novoTituloValor').value);
-            if(!nome || isNaN(valor)) { alert('Preencha nome e valor'); return; }
-            await fetch(`${SUPABASE_URL}/rest/v1/titulos`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ titulo: nome, valor_mensal: valor, ordem: 999 }) });
-            fecharModal('modalNovoTitulo'); document.getElementById('novoTituloNome').value=''; document.getElementById('novoTituloValor').value=''; await carregarTitulos();
-        };
-
-        // ADMIN: SAQUES, CÓDIGOS, PIONEIRO (simplificado)
-        window.mostrarEditarTitulos = () => { carregarTitulos(); document.getElementById('modalEditarTitulos').style.display='flex'; };
-        window.mostrarAprovacaoSaques = () => { document.getElementById('adminSaques').style.display='block'; document.getElementById('adminCodigo').style.display='none'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='none'; carregarSaquesPendentes(); };
-        window.mostrarGerarCodigo = () => { document.getElementById('adminSaques').style.display='none'; document.getElementById('adminCodigo').style.display='block'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='none'; };
-        window.mostrarParametrosPioneiro = () => { document.getElementById('adminSaques').style.display='none'; document.getElementById('adminCodigo').style.display='none'; document.getElementById('adminPioneiro').style.display='block'; document.getElementById('adminLog').style.display='none'; carregarParametrosPioneiro(); };
-        window.mostrarLogAlteracoes = () => { document.getElementById('adminSaques').style.display='none'; document.getElementById('adminCodigo').style.display='none'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='block'; carregarLogAlteracoes(); };
-        window.mostrarNovoParticipante = () => document.getElementById('modalNovoParticipante').style.display='flex';
-        function fecharModal(id) { document.getElementById(id).style.display='none'; }
-
-        async function carregarSaquesPendentes() {
-            const saques = await fetchAPI(`saques?status=eq.Em processamento&select=*`);
-            const tbody = document.getElementById('saquesPendentesBody');
-            if (!saques || !saques.length) { tbody.innerHTML = '<tr><td colspan="5">Nenhum saque pendente</td> </tr>'; return; }
-            tbody.innerHTML = '';
-            for (const s of saques) {
-                const p = await fetchAPI(`participantes?id=eq.${s.participante_id}&select=nome`);
-                const nome = (p && p.length) ? p[0].nome : '-';
-                tbody.innerHTML += `<tr><td>${s.id}</td><td>${nome}</td><td>R$ ${s.valor.toFixed(2)}</td><td>${new Date(s.data_solicitacao).toLocaleString()}</td><td><button class="btn-small btn-success" onclick="aprovarSaque(${s.id})">✅</button> <button class="btn-small btn-danger" onclick="recusarSaque(${s.id})">❌</button></td></tr>`;
+                
+                const diretos = await response.json();
+                const indicadoresDiv = document.getElementById('indicadores');
+                
+                if (diretos && diretos.length > 0) {
+                    let html = '<ul style="list-style: none;">';
+                    diretos.forEach(p => {
+                        html += `<li>✅ ${p.nome} - ${p.plano} <span class="status-badge status-${p.status}">${p.status}</span></li>`;
+                    });
+                    html += '</ul>';
+                    html += `<p><strong>Total de indicados diretos: ${diretos.length}</strong></p>`;
+                    indicadoresDiv.innerHTML = html;
+                } else {
+                    indicadoresDiv.innerHTML = '<p>⚠️ Nenhum indicado direto ainda.</p>';
+                }
+            } catch (error) {
+                document.getElementById('indicadores').innerHTML = `<div class="error">Erro ao carregar indicadores: ${error.message}</div>`;
             }
         }
-        window.aprovarSaque = async (id) => { await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ status:'Aprovado' }) }); carregarSaquesPendentes(); alert('Aprovado'); };
-        window.recusarSaque = async (id) => { await fetch(`${SUPABASE_URL}/rest/v1/saques?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ status:'Recusado' }) }); carregarSaquesPendentes(); alert('Recusado'); };
-        window.gerarCodigoAcesso = async () => {
-            const cpf = document.getElementById('novoCpf').value.trim();
-            if (!cpf) { alert('Digite o CPF'); return; }
-            const exist = await fetchAPI(`acessos?cpf=eq.${cpf}&select=*`);
-            if (exist && exist.length) { document.getElementById('novoCodigo').innerText = exist[0].codigo; document.getElementById('codigoGerado').style.display='block'; setTimeout(()=>document.getElementById('codigoGerado').style.display='none',5000); return; }
-            const novo = 'MMN-'+Math.random().toString(36).substring(2,6).toUpperCase()+'-'+Math.random().toString(36).substring(2,6).toUpperCase();
-            await fetch(`${SUPABASE_URL}/rest/v1/acessos`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ cpf, codigo:novo, ativo:true }) });
-            document.getElementById('novoCodigo').innerText = novo; document.getElementById('codigoGerado').style.display='block'; setTimeout(()=>document.getElementById('codigoGerado').style.display='none',5000);
-        };
-        window.criarNovoParticipante = async () => {
-            const nome = document.getElementById('novoNome').value.trim(), cpf = document.getElementById('novoCpfCad').value.trim();
-            if (!nome || !cpf) { alert('Nome e CPF obrigatórios'); return; }
-            const exist = await fetchAPI(`participantes?cpf=eq.${cpf}&select=cpf`);
-            if (exist && exist.length) { alert('CPF já existe'); return; }
-            alert('Função simplificada. Use a planilha para cadastros completos.');
-        };
-        async function carregarParametrosPioneiro() {
-            const params = await fetchAPI(`configuracoes?select=*`);
-            let permitido='SIM', dataL='31/12/2026', qtd='100', cont='7';
-            if(params) for(const p of params) { if(p.chave==='pioneiro_permitido') permitido=p.valor; if(p.chave==='pioneiro_data_limite') dataL=formatarDataBR(p.valor); if(p.chave==='pioneiro_quantidade_maxima') qtd=p.valor; if(p.chave==='pioneiro_contador_atual') cont=p.valor; }
-            document.getElementById('param_permitido').innerText=permitido; document.getElementById('param_data_limite').innerText=dataL; document.getElementById('param_qtd_maxima').innerText=qtd; document.getElementById('param_contador').innerText=cont;
-            document.getElementById('edit_permitido').value=permitido; document.getElementById('edit_data_limite').value=dataL; document.getElementById('edit_qtd_maxima').value=qtd; document.getElementById('edit_contador').value=cont;
+
+        async function carregarArvoreRede() {
+            const arvoreDiv = document.getElementById('arvore-rede');
+            
+            try {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/view_rede_completa?select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data || data.length === 0) {
+                    arvoreDiv.innerHTML = '<p>❌ Nenhum dado encontrado na view_rede_completa.</p>';
+                    return;
+                }
+                
+                // Encontrar a raiz (nivel 0)
+                const root = data.find(p => p.nivel === 0);
+                if (!root) {
+                    arvoreDiv.innerHTML = '<p>❌ Raiz da rede não encontrada.</p>';
+                    return;
+                }
+                
+                // Montar árvore
+                function buildTree(parentId) {
+                    const children = data.filter(p => p.id_pai === parentId && p.status === 'Ativo');
+                    return children.map(child => ({
+                        ...child,
+                        children: buildTree(child.id)
+                    }));
+                }
+                
+                const tree = {
+                    ...root,
+                    children: buildTree(root.id)
+                };
+                
+                // Renderizar árvore recursivamente
+                function renderNode(node, level = 0) {
+                    const indent = level * 25;
+                    const statusClass = node.status === 'Ativo' ? 'active' : '';
+                    
+                    let html = `<div class="tree-node ${statusClass}" style="margin-left: ${indent}px">`;
+                    html += `<strong>${node.nome || '(sem nome)'}</strong> `;
+                    html += `<span style="color: #666;">(ID:${node.id})</span> `;
+                    html += `<span class="plano-badge">${node.plano || '?'}</span> `;
+                    html += `<span class="status-badge status-${node.status}">${node.status || '?'}</span>`;
+                    if (node.posicao > 0) html += ` <span style="font-size: 11px; color: #666;">📍 Pos: ${node.posicao}</span>`;
+                    html += `</div>`;
+                    
+                    if (node.children && node.children.length > 0) {
+                        html += `<div class="tree-children">`;
+                        node.children.forEach(child => {
+                            html += renderNode(child, level + 1);
+                        });
+                        html += `</div>`;
+                    }
+                    
+                    return html;
+                }
+                
+                arvoreDiv.innerHTML = renderNode(tree);
+                
+                // Estatísticas
+                const totalAtivos = data.filter(p => p.status === 'Ativo').length;
+                const totalNiveis = Math.max(...data.map(p => p.nivel));
+                const totalIndicadosDiretos = data.filter(p => p.id_pai === USUARIO_ID && p.status === 'Ativo').length;
+                
+                arvoreDiv.innerHTML += `
+                    <div class="stats">
+                        <strong>📊 Estatísticas da rede:</strong><br>
+                        • Total de membros ativos: ${totalAtivos}<br>
+                        • Profundidade máxima: ${totalNiveis} níveis<br>
+                        • Indicados diretos: ${totalIndicadosDiretos}
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('Erro detalhado:', error);
+                arvoreDiv.innerHTML = `<div class="error">
+                    <strong>❌ Erro ao carregar rede:</strong><br>
+                    ${error.message}<br><br>
+                    Verifique se a VIEW 'view_rede_completa' foi criada no Supabase.
+                </div>`;
+            }
         }
-        window.salvarParametrosPioneiro = async () => {
-            const permitido = document.getElementById('edit_permitido').value;
-            const dataISO = formatarDataISO(document.getElementById('edit_data_limite').value);
-            const qtd = document.getElementById('edit_qtd_maxima').value, cont = document.getElementById('edit_contador').value;
-            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_permitido`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:permitido }) });
-            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_data_limite`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:dataISO }) });
-            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_quantidade_maxima`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:qtd }) });
-            await fetch(`${SUPABASE_URL}/rest/v1/configuracoes?chave=eq.pioneiro_contador_atual`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ valor:cont }) });
-            alert('Salvo!'); carregarParametrosPioneiro();
-        };
-        window.aprovarPioneiro = async () => {
-            const id = document.getElementById('pioneiroIdCota').value;
-            if (!id) { alert('Digite o ID da cota'); return; }
-            await fetch(`${SUPABASE_URL}/rest/v1/participantes?id=eq.${id}`, { method:'PATCH', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ pioneiro:'Sim' }) });
-            alert('Aprovado!');
-        };
-        async function carregarLogAlteracoes() {
-            const logs = await fetchAPI(`log_alteracoes?order=data_hora.desc&limit=30&select=*`);
-            const tbody = document.getElementById('logBody');
-            if(!logs||!logs.length){ tbody.innerHTML='<tr><td colspan="4">Nenhum registro</td></tr>'; return; }
-            tbody.innerHTML='';
-            logs.forEach(l=>{ tbody.innerHTML+=`<tr><td>${new Date(l.data_hora).toLocaleString()}</td><td>${l.operador||'-'}</td><td>${l.acao||'-'}</td><td>${l.observacao||'-'}</td></tr>`; });
+        
+        // Carregar tudo
+        async function iniciar() {
+            await carregarIndicadores();
+            await carregarArvoreRede();
         }
-        // ÁRVORE
-        async function carregarArvore() {
-            const filhos = await fetchAPI(`participantes?id_pai=eq.${usuarioAtual.id}&select=*`);
-            if(!filhos.length){ document.getElementById('arvoreContainer').innerHTML='Nenhum indicado direto'; return; }
-            let html='<div class="children open">';
-            for(const f of filhos){
-                const temFilhos = await (await fetchAPI(`participantes?id_pai=eq.${f.id}&select=id&limit=1`)).length>0;
-                html+=`<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos?'📂':'📄'}</span><span>${f.nome}</span><span>(${f.plano})</span><span class="status-${f.status}">${f.status}</span></div><div class="children" data-parent="${f.id}">${await montarSubArvore(f.id)}</div></div>`;
-            } html+='</div>';
-            document.getElementById('arvoreContainer').innerHTML=html;
-        }
-        async function montarSubArvore(id) {
-            const filhos = await fetchAPI(`participantes?id_pai=eq.${id}&select=*`);
-            if(!filhos.length) return '';
-            let h='';
-            for(const f of filhos){
-                const temFilhos = await (await fetchAPI(`participantes?id_pai=eq.${f.id}&select=id&limit=1`)).length>0;
-                h+=`<div class="tree-node"><div class="tree-node-content"><span class="toggle-icon" onclick="toggleChildren(this)">${temFilhos?'📂':'📄'}</span><span>${f.nome}</span><span>(${f.plano})</span><span class="status-${f.status}">${f.status}</span></div><div class="children" data-parent="${f.id}">${await montarSubArvore(f.id)}</div></div>`;
-            } return h;
-        }
-        window.toggleChildren = function(e){ const node=e.closest('.tree-node'), children=node.querySelector('.children'); if(children){ children.classList.toggle('open'); e.innerText=children.classList.contains('open')?'📂':'📁'; } };
-        async function solicitarSaque() {
-            const valor = parseFloat(document.getElementById('valorSaque').value), msg = document.getElementById('saqueMensagem');
-            if(isNaN(valor)||valor<=0){ msg.style.display='block'; msg.innerText='Valor inválido'; return; }
-            const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-            const disp = (saldo && saldo.length) ? (saldo[0].disponivel_saque||0) : 0;
-            if(valor>disp){ msg.style.display='block'; msg.innerText=`Saldo insuficiente. Disponível: R$ ${disp.toFixed(2)}`; return; }
-            try{
-                await fetch(`${SUPABASE_URL}/rest/v1/saques`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ participante_id:usuarioAtual.id, id_pessoa:usuarioAtual.id_pessoa, valor, status:'Em processamento', data_solicitacao:new Date().toISOString() }) });
-                msg.style.display='block'; msg.innerText=`✅ Solicitação de R$ ${valor.toFixed(2)} enviada!`; msg.style.background='#d4edda'; msg.style.color='#155724';
-                document.getElementById('valorSaque').value='';
-                if(isAdmin) await carregarSaquesPendentes();
-            } catch(e){ msg.style.display='block'; msg.innerText='Erro ao solicitar saque'; }
-        }
-        function logout(){ usuarioAtual=null; isAdmin=false; document.getElementById('loginScreen').style.display='block'; document.getElementById('dashboard').style.display='none'; document.getElementById('cpf').value=''; document.getElementById('codigo').value=''; }
+        
+        iniciar();
     </script>
 </body>
 </html>
