@@ -549,19 +549,99 @@
 
         async function carregarExtratoESaldos() {
             try {
-                const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-                if (saldo && saldo.length) {
-                    const r = saldo[0];
-                    document.getElementById('saldoReserva').innerText = `R$ ${(r.reserva_atual||0).toFixed(2)}`;
-                    document.getElementById('saldoBruto').innerText = `R$ ${(r.saldo_bruto||0).toFixed(2)}`;
-                    document.getElementById('saldoDisponivel').innerText = `R$ ${(r.disponivel_saque||0).toFixed(2)}`;
-                    document.getElementById('totalMensalidades').innerText = `R$ ${(r.total_mensalidades_pagas||0).toFixed(2)}`;
-                    document.getElementById('totalBI').innerText = `R$ ${(r.total_bi||0).toFixed(2)}`;
-                    document.getElementById('totalBR').innerText = `R$ ${(r.total_br||0).toFixed(2)}`;
-                    document.getElementById('tamanhoRede').innerText = r.tamanho_rede_ativa||0;
-                    document.getElementById('extratoBody').innerHTML = `<tr><td>${r.id_pessoa}</td><td>${r.nome}</td><td>R$ ${(r.total_entradas||0).toFixed(2)}</td><td>R$ ${(r.total_saidas||0).toFixed(2)}</td><td>R$ ${(r.reserva_atual||0).toFixed(2)}</td><td>R$ ${(r.saldo_bruto||0).toFixed(2)}</td><td>R$ ${(r.saque_mes_livre||0).toFixed(2)}</td><td>R$ ${(r.saque_acum_livre||0).toFixed(2)}</td><td>R$ ${(r.disponivel_saque||0).toFixed(2)}</td><td>R$ ${(r.saldo_comercial||0).toFixed(2)}</td><td>${new Date(r.data_atualizacao).toLocaleString()}</td></tr>`;
+                // Buscar transações da pessoa
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/transacoes?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                
+                const transacoes = await response.json();
+                
+                if (!transacoes || transacoes.length === 0) {
+                    console.log('Nenhuma transação encontrada');
+                    return;
                 }
-            } catch(e) { console.error(e); }
+                
+                // Calcular totais
+                let total_entradas = 0;
+                let total_saidas = 0;
+                let total_bi = 0;
+                let total_br = 0;
+                let total_mensalidades = 0;
+                
+                for (const t of transacoes) {
+                    const valor = t.valor || 0;
+                    const tipo = t.tipo;
+                    
+                    if (tipo === 'BI' && valor > 0) {
+                        total_entradas += valor;
+                        total_bi += valor;
+                    }
+                    if (tipo === 'BR' && valor > 0) {
+                        total_entradas += valor;
+                        total_br += valor;
+                    }
+                    if (tipo === 'Depósito' && valor > 0) {
+                        total_entradas += valor;
+                    }
+                    if (tipo === 'Mensalidade' && valor < 0) {
+                        total_saidas += Math.abs(valor);
+                        total_mensalidades += Math.abs(valor);
+                    }
+                    if (tipo === 'Saque' && valor < 0) {
+                        total_saidas += Math.abs(valor);
+                    }
+                }
+                
+                const saldo_total = total_entradas - total_saidas; // 71.50 - 66.00 = 5.50
+                const limite_reserva = 35.00; // Start(10) + Bronze(25)
+                
+                // Regra: Reserva = mínimo(saldo_total, limite_reserva)
+                let reserva_atual = saldo_total > 0 ? Math.min(saldo_total, limite_reserva) : 0;
+                let saldo_bruto = saldo_total - reserva_atual;
+                
+                // Buscar tamanho da rede ativa
+                const redeResponse = await fetch(`${SUPABASE_URL}/rest/v1/participantes?id=eq.${usuarioAtual.id}&select=tam_rede_ativa&limit=1`, {
+                    headers: {
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+                    }
+                });
+                const redeData = await redeResponse.json();
+                const tamanho_rede = redeData[0]?.tam_rede_ativa || 0;
+                
+                console.log('Totais calculados:', { total_entradas, total_saidas, saldo_total, reserva_atual, saldo_bruto });
+                
+                // Exibir valores
+                document.getElementById('saldoReserva').innerText = `R$ ${reserva_atual.toFixed(2)}`;
+                document.getElementById('saldoBruto').innerText = `R$ ${saldo_bruto.toFixed(2)}`;
+                document.getElementById('saldoDisponivel').innerText = `R$ 0,00`;
+                document.getElementById('totalMensalidades').innerText = `R$ ${total_mensalidades.toFixed(2)}`;
+                document.getElementById('totalBI').innerText = `R$ ${total_bi.toFixed(2)}`;
+                document.getElementById('totalBR').innerText = `R$ ${total_br.toFixed(2)}`;
+                document.getElementById('tamanhoRede').innerText = tamanho_rede;
+                
+                // Exibir no extrato consolidado
+                document.getElementById('extratoBody').innerHTML = `<tr>
+                    <td>${usuarioAtual.id_pessoa}</td>
+                    <td>${usuarioAtual.nome}</td>
+                    <td style="font-weight: bold;">R$ ${total_entradas.toFixed(2)}</td>
+                    <td style="font-weight: bold;">R$ ${total_saidas.toFixed(2)}</td>
+                    <td style="font-weight: bold;">R$ ${reserva_atual.toFixed(2)}</td>
+                    <td style="font-weight: bold;">R$ ${saldo_bruto.toFixed(2)}</td>
+                    <td>R$ 0.00</td>
+                    <td>R$ 0.00</td>
+                    <td>R$ 0.00</td>
+                    <td>R$ 0.00</td>
+                    <td>${new Date().toLocaleString()}</td>
+                </tr>`;
+                
+            } catch(e) { 
+                console.error('Erro:', e);
+                document.getElementById('extratoBody').innerHTML = `<tr><td colspan="11">Erro ao carregar dados: ${e.message}</td></tr>`;
+            }
         }
 
         // ÁRVORE PRINCIPAL (APENAS ATIVOS)
