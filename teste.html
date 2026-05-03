@@ -140,6 +140,7 @@
         .saldo-card.reserva { background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%); }
         .saldo-card.bruto { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
         .saldo-card.disponivel { background: linear-gradient(135deg, #fd7e14 0%, #dc3545 100%); }
+        .saldo-card.comercial { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
         .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
         .stat-card { background: #f8f9fa; padding: 16px; border-radius: 12px; text-align: center; border-left: 4px solid #667eea; }
         .stat-card h4 { font-size: 12px; color: #6c757d; margin-bottom: 8px; }
@@ -305,9 +306,9 @@
 
             <!-- Cards de Saldo -->
             <div class="saldo-grid">
-                <div class="saldo-card reserva"><h3>🏦 Reserva Mensalidade</h3><div class="valor" id="saldoReserva">R$ 0,00</div></div>
-                <div class="saldo-card bruto"><h3>📊 Saldo Bruto</h3><div class="valor" id="saldoBruto">R$ 0,00</div></div>
                 <div class="saldo-card disponivel"><h3>💰 Disponível para Saque</h3><div class="valor" id="saldoDisponivel">R$ 0,00</div></div>
+                <div class="saldo-card reserva"><h3>🏦 Reserva Mensalidade</h3><div class="valor" id="saldoReserva">R$ 0,00</div></div>
+                <div class="saldo-card comercial"><h3>📊 Saldo Comercial</h3><div class="valor" id="saldoComercial">R$ 0,00</div></div>
             </div>
 
             <!-- Cards Secundários -->
@@ -635,6 +636,18 @@
                 }
                 if (isAdmin) document.getElementById('adminSection').style.display = 'block';
                 await carregarDashboard();
+                
+                // FALLBACK: Verificar se precisa migrar saque acumulado (primeiro dia do mês)
+                const hoje = new Date();
+                if (hoje.getDate() === 1) {
+                    try {
+                        await callRPC('migrar_saque_acumulado');
+                        console.log('Migração de saque acumulado executada');
+                    } catch(e) {
+                        console.warn('Erro na migração:', e);
+                    }
+                }
+                
                 iniciarMonitorInatividade();
             } catch(e) { errorDiv.style.display='block'; errorDiv.innerText='Erro: '+e.message; }
         }
@@ -680,44 +693,57 @@
         }
 
         // ==================== SALDOS E EXTRATO CONSOLIDADO ====================
-        async function carregarExtratoESaldos() {
-            try {
-                const consolidado = await callRPC('visao_consolidada_participante', { p_id_pessoa: usuarioAtual.id_pessoa });
-                const disponivel = await callRPC('disponivel_saque', { p_id_participante: usuarioAtual.id });
-                
-                document.getElementById('saldoReserva').innerText = `R$ ${(consolidado.reserva_atual || 0).toFixed(2)}`;
-                document.getElementById('saldoBruto').innerText = `R$ ${(consolidado.saldo_bruto || 0).toFixed(2)}`;
-                document.getElementById('saldoDisponivel').innerText = `R$ ${disponivel.toFixed(2)}`;
-                
-                const extratoBody = document.getElementById('extratoBody');
+async function carregarExtratoESaldos() {
+    try {
+        // Ler a view (tabela virtual)
+        const saldo = await fetchAPI(`vw_saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
+        
+        if (saldo && saldo.length > 0) {
+            const s = saldo[0];
+            
+            document.getElementById('saldoDisponivel').innerHTML = `R$ ${(s.disponivel_saque || 0).toFixed(2)}`;
+            document.getElementById('saldoReserva').innerHTML = `R$ ${(s.reserva_atual || 0).toFixed(2)}`;
+            document.getElementById('saldoComercial').innerHTML = `R$ ${(s.saldo_comercial || 0).toFixed(2)}`;
+            
+            const extratoBody = document.getElementById('extratoBody');
+            if (extratoBody) {
                 extratoBody.innerHTML = `
                     <tr>
                         <td>${usuarioAtual.id_pessoa}</td>
                         <td>${usuarioAtual.nome}</td>
-                        <td style="font-weight: bold;">R$ ${(consolidado.total_entradas || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(consolidado.total_saidas || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(consolidado.reserva_atual || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(consolidado.saldo_bruto || 0).toFixed(2)}</td>
-                        <td>R$ ${disponivel.toFixed(2)}</td>
-                        <td>R$ 0,00</td>
-                        <td>R$ ${disponivel.toFixed(2)}</td>
-                        <td>R$ ${((consolidado.saldo_bruto || 0) - disponivel).toFixed(2)}</td>
-                        <td>${new Date().toLocaleString()}</td>
+                        <td style="font-weight: bold;">R$ ${(s.total_entradas || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(s.total_saidas || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(s.reserva_atual || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(s.saldo_bruto || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(s.saque_mes_livre || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(s.saque_acum_livre || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(s.disponivel_saque || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(s.saldo_comercial || 0).toFixed(2)}</td>
+                        <td>${new Date(s.data_atualizacao).toLocaleString()}</td>
                     </tr>
                 `;
-                
-                // Indicadores do mês atual
-                const indicadores = await callRPC('indicadores_mes_atual', { p_id_participante: usuarioAtual.id });
-                document.getElementById('totalMensalidades').innerText = `R$ ${(indicadores.total_mensalidades || 0).toFixed(2)}`;
-                document.getElementById('totalBI').innerText = `R$ ${(indicadores.total_bi || 0).toFixed(2)}`;
-                document.getElementById('totalBR').innerText = `R$ ${(indicadores.total_br || 0).toFixed(2)}`;
-                document.getElementById('tamanhoRede').innerText = indicadores.tamanho_rede_ativa || 0;
-                
-            } catch(e) { 
-                console.error('Erro ao carregar saldos:', e);
-                document.getElementById('extratoBody').innerHTML = `<tr><td colspan="11">Erro ao carregar dados: ${e.message}</td></tr>`;
             }
+        } else {
+            console.warn('Nenhum dado encontrado na view vw_saldo_consolidado');
         }
+        
+        // Indicadores do mês atual
+        const indicadores = await callRPC('indicadores_mes_atual', { p_id_participante: usuarioAtual.id });
+        if (indicadores) {
+            document.getElementById('totalMensalidades').innerText = `R$ ${(indicadores.total_mensalidades || 0).toFixed(2)}`;
+            document.getElementById('totalBI').innerText = `R$ ${(indicadores.total_bi || 0).toFixed(2)}`;
+            document.getElementById('totalBR').innerText = `R$ ${(indicadores.total_br || 0).toFixed(2)}`;
+            document.getElementById('tamanhoRede').innerText = indicadores.tamanho_rede_ativa || 0;
+        }
+        
+    } catch(e) { 
+        console.error('Erro ao carregar saldos:', e);
+        const extratoBody = document.getElementById('extratoBody');
+        if (extratoBody) {
+            extratoBody.innerHTML = `<tr><td colspan="11">Erro ao carregar dados: ${e.message}</td></tr>`;
+        }
+    }
+}
 
         // ==================== ÁRVORE PRINCIPAL (ATIVOS) ====================
         async function carregarArvore() {
