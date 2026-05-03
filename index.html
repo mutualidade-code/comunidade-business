@@ -71,7 +71,6 @@
         .btn-success { background: #28a745; width: auto; padding: 8px 16px; }
         .btn-warning { background: #fd7e14; width: auto; padding: 8px 16px; }
         
-        /* Botão de filtro - fundo claro e texto visível */
         .btn-filtro {
             background: #e9ecef;
             color: #2c3e50;
@@ -182,7 +181,6 @@
         .info-participante { background: #e9ecef; padding: 12px; border-radius: 8px; margin: 12px 0; }
         .inativos-card { background: #fff8e7; border-left: 4px solid #fd7e14; margin-top: 20px; }
         
-        /* Estilo para agrupamento de movimentações */
         .periodo-group {
             margin-top: 16px;
             border-left: 3px solid #366092;
@@ -264,6 +262,11 @@
             .mov-item .mov-descricao::before { content: "📝 "; font-weight: bold; }
             .mov-item .mov-saldo::before { content: "🏦 Saldo: "; font-weight: bold; }
         }
+
+        .card-header:hover {
+            background-color: #f0f0f0;
+            transition: background-color 0.2s;
+        }
     </style>
 </head>
 <body>
@@ -315,9 +318,9 @@
                 <div class="stat-card"><h4>👥 Tamanho Rede Ativa</h4><div class="stat-value" id="tamanhoRede">0</div></div>
             </div>
 
-            <!-- Extrato -->
+            <!-- Extrato Consolidado -->
             <div class="card">
-                <div class="card-header">📋 EXTRATO CONSOLIDADO</div>
+                <div class="card-header">📋 EXTRATO CONSOLIDADO (toda a vida)</div>
                 <div class="table-wrapper">
                     <table id="extratoTable">
                         <thead><tr><th>Código</th><th>Nome</th><th>Entradas</th><th>Saídas</th><th>Reserva Mensalidade</th><th>Saldo Bruto</th><th>Saque Mês Livre</th><th>Saque Acumulado Livre</th><th>Disponível para Saque</th><th>Saldo Comercial</th><th>Atualizado</th></tr></thead>
@@ -332,11 +335,71 @@
                 <div id="arvoreContainer" class="tree">Carregando rede...</div>
             </div>
 
-            <!-- Árvore de Inativos/Atrasados -->
+            <!-- Árvore de Inativos/Atrasados (Expansível) -->
             <div class="card inativos-card">
-                <div class="card-header">⚠️ MEMBROS INATIVOS/ATRASADOS/PENDENTES EM TODA A MINHA REDE</div>
-                <div id="inativosContainer" class="tree">Carregando...</div>
-                <p style="font-size: 12px; color: #666; margin-top: 10px;">📌 Estes membros estão com mensalidade atrasada ou temporariamente inativos. Entre em contato para ajudar na regularização.</p>
+                <div class="card-header" id="inativosHeader" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <span id="inativosToggleIcon">▶</span>
+                        <span class="texto-ajuda" style="font-size: 0.8rem; color: #666; font-weight: normal;">Clique para expandir</span>
+                        <span>⚠️ MEMBROS INATIVOS/ATRASADOS/PENDENTES EM TODA A MINHA REDE</span>
+                    </div>
+                </div>
+                <div id="inativosContent" style="display: none;">
+                    <div id="inativosContainer" class="tree">Carregando...</div>
+                    <p style="font-size: 12px; color: #666; margin-top: 10px;">📌 Estes membros estão com mensalidade atrasada ou temporariamente inativos. Entre em contato para ajudar na regularização.</p>
+                </div>
+            </div>
+
+            <!-- VISÃO MENSAL -->
+            <div class="card">
+              <div class="card-header">📅 VISÃO MENSAL (Saldo Anterior, Entradas, Saídas, Reserva, Saldo Bruto)</div>
+            
+              <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 16px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label>Ano</label>
+                  <select id="visaoAno">
+                    <option value="2026">2026</option>
+                  </select>
+                </div>
+              
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label>Mês</label>
+                  <select id="visaoMes">
+                    <option value="3">Março</option>
+                    <option value="4">Abril</option>
+                    <option value="5" selected>Maio</option>
+                  </select>
+                </div>
+              
+                <button class="btn-filtro" onclick="carregarVisaoMensal()">Consultar</button>
+              </div>
+            
+              <div id="visaoMensalResultado" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 16px;">
+                <div class="stat-card">
+                  <h4>SALDO ANTERIOR</h4>
+                  <div class="stat-value" id="vmSaldoAnterior">-</div>
+                </div>
+              
+                <div class="stat-card">
+                  <h4>ENTRADAS</h4>
+                  <div class="stat-value" id="vmEntradas">-</div>
+                </div>
+              
+                <div class="stat-card">
+                  <h4>SAÍDAS</h4>
+                  <div class="stat-value" id="vmSaidas">-</div>
+                </div>
+              
+                <div class="stat-card">
+                  <h4>RESERVA MENSALIDADE</h4>
+                  <div class="stat-value" id="vmReserva">-</div>
+                </div>
+              
+                <div class="stat-card">
+                  <h4>SALDO BRUTO</h4>
+                  <div class="stat-value" id="vmSaldoBruto">-</div>
+                </div>
+              </div>
             </div>
 
             <!-- MINHAS MOVIMENTAÇÕES -->
@@ -376,11 +439,8 @@
                             <option value="BI">BI (Bônus Indicação)</option>
                             <option value="BR">BR (Bônus Rede)</option>
                             <option value="Depósito">Depósito</option>
-                            <option value="Pagamento">Pagamento</option>
                             <option value="Mensalidade">Mensalidade</option>
                             <option value="Saque">Saque</option>
-                            <option value="Reserva">Reserva</option>
-                            <option value="Transferência">Transferência (em breve)</option>
                         </select>
                     </div>
                     <button class="btn-filtro" onclick="aplicarFiltrosMovimentacoes()">🔍 Filtrar</button>
@@ -421,7 +481,6 @@
                     <button class="btn btn-secondary" onclick="mostrarLogAlteracoes()">📋 LOG</button>
                 </div>
 
-                <!-- Modais (mantidos iguais aos originais) -->
                 <div id="modalNovoParticipante" class="modal">
                     <div class="modal-content"><span class="close-modal" onclick="fecharModal('modalNovoParticipante')">&times;</span>
                         <div class="modal-header">➕ NOVO PARTICIPANTE</div>
@@ -439,7 +498,7 @@
                 <div id="modalEditarTitulos" class="modal-titulo">
                     <div class="modal-content" style="max-width: 800px;"><span class="close-modal" onclick="fecharModal('modalEditarTitulos')">&times;</span>
                         <div class="modal-header">📋 EDITAR TÍTULOS DE LIDERANÇA</div>
-                        <div class="table-wrapper"><table class="titulos-table" id="titulosTable"><thead><tr><th>Título</th><th>Valor Mensal (R$)</th><th>Ações</th></tr></thead><tbody id="titulosTableBody"><tr><td colspan="3">Carregando...</tr></tbody></table></div>
+                        <div class="table-wrapper"><table class="titulos-table" id="titulosTable"><thead><tr><th>Título</th><th>Valor Mensal (R$)</th><th>Ações</th></tr></thead><tbody id="titulosTableBody"><tr><td colspan="3">Carregando...</td></tbody></tr></div>
                         <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
                             <button class="btn btn-success btn-small" onclick="mostrarNovoTitulo()">➕ NOVO TÍTULO</button>
                             <button class="btn btn-success btn-small" onclick="salvarTodosTitulos()">💾 SALVAR TODAS ALTERAÇÕES</button>
@@ -489,6 +548,22 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_BpaEG3Ayb2_POqT1cSfV5A_GBIJLtal';
         let usuarioAtual = null, isAdmin = false, titulosEditados = {};
 
+        // ==================== FUNÇÃO RPC (chamada direta às funções SQL) ====================
+        async function callRPC(func, params = {}) {
+            const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/${func}`, {
+                method: 'POST',
+                headers: {
+                    'apikey': SUPABASE_ANON_KEY,
+                    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(params)
+            });
+            if (!res.ok) throw new Error(`Erro ${res.status} em ${func}`);
+            return res.json();
+        }
+
+        // ==================== FETCH API (para consultas simples) ====================
         async function fetchAPI(endpoint, options = {}) {
             const url = `${SUPABASE_URL}/rest/v1/${endpoint}`;
             const headers = { 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type': 'application/json', ...options.headers };
@@ -500,6 +575,37 @@
         function formatarDataBR(dataISO) { if (!dataISO) return ''; const p = dataISO.split('-'); return p.length===3 ? `${p[2]}/${p[1]}/${p[0]}` : dataISO; }
         function formatarDataISO(dataBR) { if (!dataBR) return ''; const p = dataBR.split('/'); return p.length===3 ? `${p[2]}-${p[1]}-${p[0]}` : dataBR; }
 
+        // ==================== INATIVIDADE (LOGOUT AUTOMÁTICO) ====================
+        let timeoutInatividade;
+        const TEMPO_INATIVIDADE = 10 * 60 * 1000;
+
+        function resetarTimeout() {
+            if (timeoutInatividade) clearTimeout(timeoutInatividade);
+            if (usuarioAtual) {
+                timeoutInatividade = setTimeout(() => {
+                    alert('⏰ Sessão expirada por inatividade. Faça login novamente.');
+                    logout();
+                }, TEMPO_INATIVIDADE);
+            }
+        }
+
+        function iniciarMonitorInatividade() {
+            const eventos = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+            eventos.forEach(evento => {
+                document.addEventListener(evento, resetarTimeout);
+            });
+            resetarTimeout();
+        }
+
+        function pararMonitorInatividade() {
+            if (timeoutInatividade) clearTimeout(timeoutInatividade);
+            const eventos = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+            eventos.forEach(evento => {
+                document.removeEventListener(evento, resetarTimeout);
+            });
+        }
+
+        // ==================== LOGIN ====================
         async function fazerLogin() {
             const cpf = document.getElementById('cpf').value.trim();
             const codigo = document.getElementById('codigo').value.trim().toUpperCase();
@@ -511,14 +617,9 @@
                 const participantes = await fetchAPI(`participantes?cpf=eq.${cpf}&select=*`);
                 if (!participantes || !participantes.length) { errorDiv.style.display='block'; errorDiv.innerText='Participante não encontrado'; return; }
                 
-                // CORREÇÃO: Buscar a cota Start Ativa (raiz da rede da pessoa)
                 let cotaPrincipal = participantes.find(p => p.plano === 'Start' && p.status === 'Ativo');
-                if (!cotaPrincipal) {
-                    cotaPrincipal = participantes.find(p => p.status === 'Ativo');
-                }
-                if (!cotaPrincipal) {
-                    cotaPrincipal = participantes[0];
-                }
+                if (!cotaPrincipal) cotaPrincipal = participantes.find(p => p.status === 'Ativo');
+                if (!cotaPrincipal) cotaPrincipal = participantes[0];
                 usuarioAtual = cotaPrincipal;
                 
                 isAdmin = (cpf === '1');
@@ -526,6 +627,7 @@
                 document.getElementById('dashboard').style.display = 'block';
                 document.getElementById('userNome').innerText = usuarioAtual.nome;
                 document.getElementById('userCpf').innerText = cpf;
+                
                 const pTitulo = await fetchAPI(`participantes?id=eq.${usuarioAtual.id}&select=titulo_lideranca,pioneiro`);
                 if (pTitulo && pTitulo.length) {
                     document.getElementById('userTitulo').innerText = pTitulo[0].titulo_lideranca || 'Networker';
@@ -533,13 +635,43 @@
                 }
                 if (isAdmin) document.getElementById('adminSection').style.display = 'block';
                 await carregarDashboard();
+                iniciarMonitorInatividade();
             } catch(e) { errorDiv.style.display='block'; errorDiv.innerText='Erro: '+e.message; }
         }
 
+        async function carregarVisaoMensal() {
+            const ano = document.getElementById('visaoAno').value;
+            const mes = document.getElementById('visaoMes').value;
+            const id_pessoa = usuarioAtual.id_pessoa;
+            
+            try {
+                const resultado = await callRPC('visao_mensal_participante', {
+                    p_id_pessoa: id_pessoa,
+                    p_ano: parseInt(ano),
+                    p_mes: parseInt(mes)
+                });
+                
+                if (resultado && resultado.length > 0) {
+                    const vm = resultado[0];
+                    
+                    document.getElementById('vmSaldoAnterior').innerText = `R$ ${(vm.saldo_anterior || 0).toFixed(2)}`;
+                    document.getElementById('vmEntradas').innerText = `R$ ${(vm.entradas_mes || 0).toFixed(2)}`;
+                    document.getElementById('vmSaidas').innerText = `R$ ${(vm.saidas_mes || 0).toFixed(2)}`;
+                    document.getElementById('vmReserva').innerText = `R$ ${(vm.reserva_mes_seguinte || 0).toFixed(2)}`;
+                    document.getElementById('vmSaldoBruto').innerText = `R$ ${(vm.saldo_bruto_final || 0).toFixed(2)}`;
+                } else {
+                    console.warn('Nenhum resultado para visão mensal');
+                }
+            } catch (error) {
+                console.error('Erro visão mensal:', error);
+            }
+        }
+
+        // ==================== DASHBOARD PRINCIPAL ====================
         async function carregarDashboard() {
             await carregarExtratoESaldos();
             await carregarArvore();
-            await carregarInativos();
+            // await carregarInativos();   // Removido - agora carrega apenas ao expandir
             await carregarMovimentacoes();
             if (isAdmin) { 
                 await carregarSaquesPendentes(); 
@@ -547,123 +679,53 @@
             }
         }
 
+        // ==================== SALDOS E EXTRATO CONSOLIDADO ====================
         async function carregarExtratoESaldos() {
             try {
-                // Buscar transações da pessoa
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/transacoes?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
+                const consolidado = await callRPC('visao_consolidada_participante', { p_id_pessoa: usuarioAtual.id_pessoa });
+                const disponivel = await callRPC('disponivel_saque', { p_id_participante: usuarioAtual.id });
                 
-                const transacoes = await response.json();
+                document.getElementById('saldoReserva').innerText = `R$ ${(consolidado.reserva_atual || 0).toFixed(2)}`;
+                document.getElementById('saldoBruto').innerText = `R$ ${(consolidado.saldo_bruto || 0).toFixed(2)}`;
+                document.getElementById('saldoDisponivel').innerText = `R$ ${disponivel.toFixed(2)}`;
                 
-                if (!transacoes || transacoes.length === 0) {
-                    console.log('Nenhuma transação encontrada');
-                    return;
-                }
+                const extratoBody = document.getElementById('extratoBody');
+                extratoBody.innerHTML = `
+                    <tr>
+                        <td>${usuarioAtual.id_pessoa}</td>
+                        <td>${usuarioAtual.nome}</td>
+                        <td style="font-weight: bold;">R$ ${(consolidado.total_entradas || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(consolidado.total_saidas || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(consolidado.reserva_atual || 0).toFixed(2)}</td>
+                        <td style="font-weight: bold;">R$ ${(consolidado.saldo_bruto || 0).toFixed(2)}</td>
+                        <td>R$ ${disponivel.toFixed(2)}</td>
+                        <td>R$ 0,00</td>
+                        <td>R$ ${disponivel.toFixed(2)}</td>
+                        <td>R$ ${((consolidado.saldo_bruto || 0) - disponivel).toFixed(2)}</td>
+                        <td>${new Date().toLocaleString()}</td>
+                    </tr>
+                `;
                 
-                // Calcular totais
-                let total_entradas = 0;
-                let total_saidas = 0;
-                let total_bi = 0;
-                let total_br = 0;
-                let total_mensalidades = 0;
-                
-                for (const t of transacoes) {
-                    const valor = t.valor || 0;
-                    const tipo = t.tipo;
-                    
-                    if (tipo === 'BI' && valor > 0) {
-                        total_entradas += valor;
-                        total_bi += valor;
-                    }
-                    if (tipo === 'BR' && valor > 0) {
-                        total_entradas += valor;
-                        total_br += valor;
-                    }
-                    if (tipo === 'Depósito' && valor > 0) {
-                        total_entradas += valor;
-                    }
-                    if (tipo === 'Mensalidade' && valor < 0) {
-                        total_saidas += Math.abs(valor);
-                        total_mensalidades += Math.abs(valor);
-                    }
-                    if (tipo === 'Saque' && valor < 0) {
-                        total_saidas += Math.abs(valor);
-                    }
-                }
-                
-                const saldo_total = total_entradas - total_saidas; // 71.50 - 66.00 = 5.50
-                const limite_reserva = 35.00; // Start(10) + Bronze(25)
-                
-                // Regra: Reserva = mínimo(saldo_total, limite_reserva)
-                let reserva_atual = saldo_total > 0 ? Math.min(saldo_total, limite_reserva) : 0;
-                let saldo_bruto = saldo_total - reserva_atual;
-                
-                // Buscar tamanho da rede ativa
-                const redeResponse = await fetch(`${SUPABASE_URL}/rest/v1/participantes?id=eq.${usuarioAtual.id}&select=tam_rede_ativa&limit=1`, {
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
-                });
-                const redeData = await redeResponse.json();
-                const tamanho_rede = redeData[0]?.tam_rede_ativa || 0;
-                
-                console.log('Totais calculados:', { total_entradas, total_saidas, saldo_total, reserva_atual, saldo_bruto });
-                
-                // Exibir valores
-                document.getElementById('saldoReserva').innerText = `R$ ${reserva_atual.toFixed(2)}`;
-                document.getElementById('saldoBruto').innerText = `R$ ${saldo_bruto.toFixed(2)}`;
-                document.getElementById('saldoDisponivel').innerText = `R$ 0,00`;
-                document.getElementById('totalMensalidades').innerText = `R$ ${total_mensalidades.toFixed(2)}`;
-                document.getElementById('totalBI').innerText = `R$ ${total_bi.toFixed(2)}`;
-                document.getElementById('totalBR').innerText = `R$ ${total_br.toFixed(2)}`;
-                document.getElementById('tamanhoRede').innerText = tamanho_rede;
-                
-                // Exibir no extrato consolidado
-                document.getElementById('extratoBody').innerHTML = `<tr>
-                    <td>${usuarioAtual.id_pessoa}</td>
-                    <td>${usuarioAtual.nome}</td>
-                    <td style="font-weight: bold;">R$ ${total_entradas.toFixed(2)}</td>
-                    <td style="font-weight: bold;">R$ ${total_saidas.toFixed(2)}</td>
-                    <td style="font-weight: bold;">R$ ${reserva_atual.toFixed(2)}</td>
-                    <td style="font-weight: bold;">R$ ${saldo_bruto.toFixed(2)}</td>
-                    <td>R$ 0.00</td>
-                    <td>R$ 0.00</td>
-                    <td>R$ 0.00</td>
-                    <td>R$ 0.00</td>
-                    <td>${new Date().toLocaleString()}</td>
-                </tr>`;
+                // Indicadores do mês atual
+                const indicadores = await callRPC('indicadores_mes_atual', { p_id_participante: usuarioAtual.id });
+                document.getElementById('totalMensalidades').innerText = `R$ ${(indicadores.total_mensalidades || 0).toFixed(2)}`;
+                document.getElementById('totalBI').innerText = `R$ ${(indicadores.total_bi || 0).toFixed(2)}`;
+                document.getElementById('totalBR').innerText = `R$ ${(indicadores.total_br || 0).toFixed(2)}`;
+                document.getElementById('tamanhoRede').innerText = indicadores.tamanho_rede_ativa || 0;
                 
             } catch(e) { 
-                console.error('Erro:', e);
+                console.error('Erro ao carregar saldos:', e);
                 document.getElementById('extratoBody').innerHTML = `<tr><td colspan="11">Erro ao carregar dados: ${e.message}</td></tr>`;
             }
         }
 
-        // ÁRVORE PRINCIPAL (APENAS ATIVOS)
+        // ==================== ÁRVORE PRINCIPAL (ATIVOS) ====================
         async function carregarArvore() {
             const container = document.getElementById('arvoreContainer');
             container.innerHTML = 'Carregando rede...';
             
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/testar_rede`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ p_id_participante: usuarioAtual.id })
-                });
-                
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
-                const redeData = await response.json();
-                console.log('Rede carregada:', redeData);
+                const redeData = await callRPC('testar_rede', { p_id_participante: usuarioAtual.id });
                 
                 if (!redeData || redeData.length === 0) {
                     container.innerHTML = 'Nenhum membro na rede.';
@@ -711,44 +773,23 @@
             }
         }
 
-        // INATIVOS/ATRASADOS/PENDENTES - REDE INTEIRA (usando rede_completa)
+        // ==================== INATIVOS/ATRASADOS/PENDENTES ====================
         async function carregarInativos() {
             const container = document.getElementById('inativosContainer');
             if (!container) return;
             container.innerHTML = 'Carregando...';
             
             try {
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/rede_completa`, {
-                    method: 'POST',
-                    headers: {
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ p_id_participante: usuarioAtual.id })
-                });
+                // Usar a RPC otimizada que busca apenas inativos com vínculo
+                const inativos = await callRPC('inativos_na_rede', { p_id_participante: usuarioAtual.id });
                 
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
-                const redeData = await response.json();
-                console.log('Rede completa carregada:', redeData);
-                
-                // Filtrar TODOS os membros da rede (exceto a raiz) que não estão Ativos
-                const inativos = redeData.filter(p => 
-                    p.id !== usuarioAtual.id && 
-                    (p.status === 'Inativo' || p.status === 'Atrasado' || p.status === 'Pendente')
-                );
-                
-                if (inativos.length === 0) {
+                if (!inativos || inativos.length === 0) {
                     container.innerHTML = '✅ Nenhum membro inativo, atrasado ou pendente em toda a sua rede.';
                     return;
                 }
                 
                 let html = '<div class="children open">';
                 for (const p of inativos) {
-                    const indicador = redeData.find(ind => ind.id === p.id_indicador);
-                    const nomeIndicador = indicador ? indicador.nome : (p.id_indicador ? `ID ${p.id_indicador}` : 'Nenhum');
-                    
                     html += `
                         <div class="tree-node">
                             <div class="tree-node-content">
@@ -760,17 +801,16 @@
                                 <span style="font-size: 0.7rem;">🔗 Nível ${p.nivel}</span>
                             </div>
                             <div style="margin-left: 28px; font-size: 0.75rem; color: #555; padding: 4px 0;">
-                                👑 Indicado por: <strong>${nomeIndicador}</strong>
+                                👑 Indicado por: <strong>${p.nome_indicador}</strong>
                             </div>
                         </div>
                     `;
                 }
                 html += '</div>';
                 
-                const totalInativos = inativos.length;
                 container.innerHTML = `
                     <div style="margin-bottom: 12px; padding: 8px; background: #fff0e0; border-radius: 8px;">
-                        <strong>📊 Total de membros inativos/atrasados na rede: ${totalInativos}</strong>
+                        <strong>📊 Total de membros inativos/atrasados na rede: ${inativos.length}</strong>
                     </div>
                     ${html}
                 `;
@@ -789,7 +829,6 @@
             const container = document.getElementById('movimentacoesContainer');
             if (!container) return;
             
-            // Verificar se usuarioAtual existe antes de continuar
             if (!usuarioAtual || !usuarioAtual.id_pessoa) {
                 console.warn('Aguardando login para carregar movimentações...');
                 container.innerHTML = '<div class="loading">Aguardando login...</div>';
@@ -799,7 +838,7 @@
             container.innerHTML = '<div class="loading">Carregando movimentações...</div>';
             
             try {
-                const data = await fetchAPI(`transacoes?id_pessoa=eq.${usuarioAtual.id_pessoa}&order=data_hora.desc`);
+                const data = await callRPC('listar_movimentacoes', { p_id_pessoa: usuarioAtual.id_pessoa });
                 
                 if (!data || data.length === 0) {
                     container.innerHTML = '<p>📭 Nenhuma movimentação encontrada.</p>';
@@ -809,7 +848,6 @@
                 movimentacoesCompletas = data;
                 movimentacoesFiltradas = [...data];
                 
-                // Popular dropdown de anos
                 const anos = [...new Set(data.map(m => new Date(m.data_hora).getFullYear()))];
                 const selectAno = document.getElementById('filtroAno');
                 if (selectAno) {
@@ -843,11 +881,32 @@
             let dataFiltrada = [...movimentacoesCompletas];
             
             if (anoFiltro !== 'todos') {
-                dataFiltrada = dataFiltrada.filter(m => new Date(m.data_hora).getFullYear() === parseInt(anoFiltro));
+                dataFiltrada = dataFiltrada.filter(m => {
+                    // Extrair ano da data no formato DD/MM/AAAA
+                    if (typeof m.data_hora === 'string') {
+                        const partes = m.data_hora.split(' ');
+                        const dataPartes = partes[0].split('/');
+                        if (dataPartes.length === 3) {
+                            const ano = parseInt(dataPartes[2]);
+                            return ano === parseInt(anoFiltro);
+                        }
+                    }
+                    return false;
+                });
             }
             
             if (mesFiltro !== 'todos') {
-                dataFiltrada = dataFiltrada.filter(m => (new Date(m.data_hora).getMonth() + 1) === parseInt(mesFiltro));
+                dataFiltrada = dataFiltrada.filter(m => {
+                    if (typeof m.data_hora === 'string') {
+                        const partes = m.data_hora.split(' ');
+                        const dataPartes = partes[0].split('/');
+                        if (dataPartes.length === 3) {
+                            const mes = parseInt(dataPartes[1]);
+                            return mes === parseInt(mesFiltro);
+                        }
+                    }
+                    return false;
+                });
             }
             
             if (tipoFiltro !== 'todos') {
@@ -856,26 +915,25 @@
             
             movimentacoesFiltradas = dataFiltrada;
             
-            // Determinar qual mês/ano deve abrir automaticamente
             let mesParaAbrir = null;
             let anoParaAbrir = null;
             
             if (mesFiltro !== 'todos') {
                 mesParaAbrir = parseInt(mesFiltro);
-                
-                // Se o ano NÃO foi selecionado, pegar o ano do primeiro movimento filtrado
-                if (anoFiltro === 'todos' && dataFiltrada.length > 0) {
-                    anoParaAbrir = new Date(dataFiltrada[0].data_hora).getFullYear();
-                } else if (anoFiltro !== 'todos') {
+                if (anoFiltro !== 'todos') {
                     anoParaAbrir = parseInt(anoFiltro);
+                } else if (dataFiltrada.length > 0) {
+                    // Extrair ano da primeira movimentação
+                    const primeira = dataFiltrada[0];
+                    if (typeof primeira.data_hora === 'string') {
+                        const partes = primeira.data_hora.split(' ');
+                        const dataPartes = partes[0].split('/');
+                        if (dataPartes.length === 3) {
+                            anoParaAbrir = parseInt(dataPartes[2]);
+                        }
+                    }
                 }
-            } else if (anoFiltro !== 'todos') {
-                // Se apenas o ano foi selecionado, abrir o primeiro mês com dados?
-                // Por enquanto, não abre (deixa todos fechados)
-                anoParaAbrir = null;
             }
-            
-            console.log('Filtrando:', { mesParaAbrir, anoParaAbrir, total: dataFiltrada.length });
             
             renderizarMovimentacoesAgrupadas(mesParaAbrir, anoParaAbrir);
         }
@@ -884,48 +942,77 @@
             const container = document.getElementById('movimentacoesContainer');
             if (!container) return;
             
-            if (movimentacoesFiltradas.length === 0) {
+            if (!movimentacoesFiltradas || movimentacoesFiltradas.length === 0) {
                 container.innerHTML = '<p>📭 Nenhuma movimentação encontrada com os filtros selecionados.</p>';
                 return;
             }
             
-            // Agrupar por ano/mês
             const grupos = {};
-            movimentacoesFiltradas.forEach(mov => {
-                const data = new Date(mov.data_hora);
+            
+            for (const mov of movimentacoesFiltradas) {
+                // CORREÇÃO 1: Converter data corretamente (DD/MM/AAAA)
+                let data;
+                if (typeof mov.data_hora === 'string') {
+                    const partes = mov.data_hora.split(' ');
+                    const dataPartes = partes[0].split('/');
+                    if (dataPartes.length === 3) {
+                        const dia = parseInt(dataPartes[0], 10);
+                        const mes = parseInt(dataPartes[1], 10) - 1;
+                        const ano = parseInt(dataPartes[2], 10);
+                        let hora = 0, minuto = 0, segundo = 0;
+                        if (partes[1]) {
+                            const horaPartes = partes[1].split(':');
+                            hora = parseInt(horaPartes[0], 10) || 0;
+                            minuto = parseInt(horaPartes[1], 10) || 0;
+                            segundo = parseInt(horaPartes[2], 10) || 0;
+                        }
+                        data = new Date(ano, mes, dia, hora, minuto, segundo);
+                    } else {
+                        data = new Date(mov.data_hora);
+                    }
+                } else {
+                    data = new Date(mov.data_hora);
+                }
+                
+                if (isNaN(data.getTime())) continue;
+                
                 const ano = data.getFullYear();
                 const mes = data.getMonth() + 1;
-                const chave = `${ano}-${mes.toString().padStart(2,'0')}`;
+                const chave = `${ano}-${mes.toString().padStart(2, '0')}`;
                 const nomeMes = data.toLocaleString('pt-BR', { month: 'long' });
+                
                 if (!grupos[chave]) {
                     grupos[chave] = { ano, mes, nomeMes, movimentos: [] };
                 }
-                grupos[chave].movimentos.push(mov);
-            });
+                
+                // CORREÇÃO 2: Converter valor com vírgula para número
+                let valorOriginal = mov.valor;
+                let valorNumerico = 0;
+                if (typeof valorOriginal === 'string') {
+                    valorNumerico = parseFloat(valorOriginal.replace(',', '.'));
+                } else if (typeof valorOriginal === 'number') {
+                    valorNumerico = valorOriginal;
+                }
+                if (isNaN(valorNumerico)) valorNumerico = 0;
+                
+                // Criar cópia com valor já convertido
+                const movCorrigido = { ...mov, valor: valorNumerico };
+                grupos[chave].movimentos.push(movCorrigido);
+            }
             
             const chavesOrdenadas = Object.keys(grupos).sort().reverse();
             let html = '';
             
             for (const chave of chavesOrdenadas) {
                 const grupo = grupos[chave];
-                const movimentosOrdenados = grupo.movimentos;
                 
                 let saldoPeriodo = 0;
-                movimentosOrdenados.forEach(m => { saldoPeriodo += m.valor || 0; });
+                for (const m of grupo.movimentos) {
+                    saldoPeriodo += m.valor;
+                }
                 
                 const mesAnoLabel = `${grupo.nomeMes.charAt(0).toUpperCase() + grupo.nomeMes.slice(1)} de ${grupo.ano}`;
-                
-                // Verificar se este grupo deve ficar aberto
-                let deveAbrir = false;
-                if (mesParaAbrir !== null && anoParaAbrir !== null) {
-                    deveAbrir = (grupo.mes === mesParaAbrir && grupo.ano === anoParaAbrir);
-                }
-                
-                // LOG para depuração
-                if (mesParaAbrir !== null) {
-                    console.log(`Grupo ${grupo.ano}-${grupo.mes}: deveAbrir=${deveAbrir} (filtro: ${anoParaAbrir}-${mesParaAbrir})`);
-                }
-                
+                const deveAbrir = (mesParaAbrir !== null && anoParaAbrir !== null && grupo.mes === mesParaAbrir && grupo.ano === anoParaAbrir);
                 const abertoClass = deveAbrir ? 'open' : '';
                 const simbolo = deveAbrir ? '▼' : '▶';
                 
@@ -935,33 +1022,34 @@
                             <span class="toggle-symbol">${simbolo}</span>
                             <span>📅 ${mesAnoLabel}</span>
                             <span style="font-size:0.7rem; color:#666;">(${grupo.movimentos.length} movimentações)</span>
-                            <span style="margin-left: auto; font-size:0.8rem;">💰 ${saldoPeriodo.toFixed(2)}</span>
+                            <span style="margin-left: auto; font-size:0.8rem;">💰 R$ ${saldoPeriodo.toFixed(2)}</span>
                         </div>
                         <div class="periodo-content ${abertoClass}">
-                            <div class="mov-item header">
+                            <div class="mov-item header" style="display: grid; grid-template-columns: 160px 120px 100px 1fr; gap: 12px; padding: 10px 12px; font-weight: bold; background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
                                 <span>Data/Hora</span>
                                 <span>Tipo</span>
                                 <span>Valor (R$)</span>
                                 <span>Descrição</span>
-                                <span>Saldo</span>
                             </div>
                 `;
                 
-                for (const m of movimentosOrdenados) {
-                    const valor = m.valor || 0;
-                    const valorAbs = Math.abs(valor);
-                    const ehEntrada = valor >= 0;
+                for (const m of grupo.movimentos) {
+                    const valorAbs = Math.abs(m.valor);
+                    const ehEntrada = m.valor > 0;
                     const sinal = ehEntrada ? '+' : '-';
-                    const valorClass = ehEntrada ? 'entrada' : 'saida';
-                    const saldoMomento = m.saldo_depois || 0;
+                    
+                    let dataExibicao = m.data_hora;
+                    if (typeof dataExibicao === 'string' && !dataExibicao.includes('/')) {
+                        const d = new Date(dataExibicao);
+                        dataExibicao = d.toLocaleString('pt-BR');
+                    }
                     
                     html += `
-                        <div class="mov-item">
-                            <div class="mov-data">${new Date(m.data_hora).toLocaleString()}</div>
-                            <div class="mov-tipo"><span class="badge">${m.tipo || '-'}</span></div>
-                            <div class="mov-valor ${valorClass}">${sinal} R$ ${valorAbs.toFixed(2)}</div>
+                        <div class="mov-item" style="display: grid; grid-template-columns: 160px 120px 100px 1fr; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #e9ecef;">
+                            <div class="mov-data">${dataExibicao || '-'}</div>
+                            <div class="mov-tipo"><span class="badge" style="font-size: 11px; padding: 3px 8px; border-radius: 12px; background: #e9ecef;">${m.tipo || '-'}</span></div>
+                            <div class="mov-valor" style="${ehEntrada ? 'color: #28a745; font-weight: bold;' : 'color: #dc3545; font-weight: bold;'}">${sinal} R$ ${valorAbs.toFixed(2)}</div>
                             <div class="mov-descricao">${m.descricao || '-'}</div>
-                            <div class="mov-saldo">R$ ${saldoMomento.toFixed(2)}</div>
                         </div>
                     `;
                 }
@@ -978,9 +1066,7 @@
             const symbol = element.querySelector('.toggle-symbol');
             if (content) {
                 content.classList.toggle('open');
-                if (symbol) {
-                    symbol.innerText = content.classList.contains('open') ? '▼' : '▶';
-                }
+                if (symbol) symbol.innerText = content.classList.contains('open') ? '▼' : '▶';
             }
         };
 
@@ -993,7 +1079,7 @@
             }
         };
 
-        // ADMIN: ALTERAR TÍTULO
+        // ==================== ADMIN: TÍTULOS ====================
         window.mostrarAlterarTitulo = async function() {
             document.getElementById('modalAlterarTitulo').style.display = 'flex';
             document.getElementById('alterarTituloMsg').style.display = 'none';
@@ -1035,7 +1121,6 @@
             } catch(e) { alert('Erro: '+e.message); }
         };
 
-        // ADMIN: TÍTULOS (CRUD)
         async function carregarTitulos() {
             const titulos = await fetchAPI(`titulos?order=ordem.asc&select=*`);
             const tbody = document.getElementById('titulosTableBody');
@@ -1072,7 +1157,7 @@
             fecharModal('modalNovoTitulo'); document.getElementById('novoTituloNome').value=''; document.getElementById('novoTituloValor').value=''; await carregarTitulos();
         };
 
-        // ADMIN: SAQUES, CÓDIGOS, PIONEIRO (simplificado)
+        // ==================== ADMIN: SAQUES, CÓDIGOS, PIONEIRO ====================
         window.mostrarEditarTitulos = () => { carregarTitulos(); document.getElementById('modalEditarTitulos').style.display='flex'; };
         window.mostrarAprovacaoSaques = () => { document.getElementById('adminSaques').style.display='block'; document.getElementById('adminCodigo').style.display='none'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='none'; carregarSaquesPendentes(); };
         window.mostrarGerarCodigo = () => { document.getElementById('adminSaques').style.display='none'; document.getElementById('adminCodigo').style.display='block'; document.getElementById('adminPioneiro').style.display='none'; document.getElementById('adminLog').style.display='none'; };
@@ -1136,7 +1221,7 @@
         async function carregarLogAlteracoes() {
             const logs = await fetchAPI(`log_alteracoes?order=data_hora.desc&limit=30&select=*`);
             const tbody = document.getElementById('logBody');
-            if(!logs||!logs.length){ tbody.innerHTML='<tr><td colspan="4">Nenhum registro</td></tr>'; return; }
+            if(!logs||!logs.length){ tbody.innerHTML='<tr><td colspan="4">Nenhum registro</td><tr>'; return; }
             tbody.innerHTML='';
             logs.forEach(l=>{ tbody.innerHTML+=`<tr><td>${new Date(l.data_hora).toLocaleString()}</td><td>${l.operador||'-'}</td><td>${l.acao||'-'}</td><td>${l.observacao||'-'}</td></tr>`; });
         }
@@ -1144,9 +1229,8 @@
         async function solicitarSaque() {
             const valor = parseFloat(document.getElementById('valorSaque').value), msg = document.getElementById('saqueMensagem');
             if(isNaN(valor)||valor<=0){ msg.style.display='block'; msg.innerText='Valor inválido'; return; }
-            const saldo = await fetchAPI(`saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-            const disp = (saldo && saldo.length) ? (saldo[0].disponivel_saque||0) : 0;
-            if(valor>disp){ msg.style.display='block'; msg.innerText=`Saldo insuficiente. Disponível: R$ ${disp.toFixed(2)}`; return; }
+            const disponivel = await callRPC('disponivel_saque', { p_id_participante: usuarioAtual.id });
+            if(valor>disponivel){ msg.style.display='block'; msg.innerText=`Saldo insuficiente. Disponível: R$ ${disponivel.toFixed(2)}`; return; }
             try{
                 await fetch(`${SUPABASE_URL}/rest/v1/saques`, { method:'POST', headers:{ 'apikey': SUPABASE_ANON_KEY, 'Authorization': `Bearer ${SUPABASE_ANON_KEY}`, 'Content-Type':'application/json' }, body:JSON.stringify({ participante_id:usuarioAtual.id, id_pessoa:usuarioAtual.id_pessoa, valor, status:'Em processamento', data_solicitacao:new Date().toISOString() }) });
                 msg.style.display='block'; msg.innerText=`✅ Solicitação de R$ ${valor.toFixed(2)} enviada!`; msg.style.background='#d4edda'; msg.style.color='#155724';
@@ -1154,7 +1238,33 @@
                 if(isAdmin) await carregarSaquesPendentes();
             } catch(e){ msg.style.display='block'; msg.innerText='Erro ao solicitar saque'; }
         }
-        function logout(){ usuarioAtual=null; isAdmin=false; document.getElementById('loginScreen').style.display='block'; document.getElementById('dashboard').style.display='none'; document.getElementById('cpf').value=''; document.getElementById('codigo').value=''; }
+
+        // Expansão da seção de inativos
+        document.getElementById('inativosHeader')?.addEventListener('click', function() {
+            const content = document.getElementById('inativosContent');
+            const icon = document.getElementById('inativosToggleIcon');
+            const textoAjuda = this.querySelector('.texto-ajuda');
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                icon.innerText = '▼';
+                if (textoAjuda) textoAjuda.style.display = 'none';
+                const container = document.getElementById('inativosContainer');
+                if (container.innerHTML === 'Carregando...' || container.innerHTML === '') {
+                    carregarInativos();
+                }
+            } else {
+                content.style.display = 'none';
+                icon.innerText = '▶';
+                if (textoAjuda) textoAjuda.style.display = 'inline';
+            }
+        });
+        
+        function logout() {
+            pararMonitorInatividade();
+            usuarioAtual = null;
+            isAdmin = false;
+            location.reload();
+        }
     </script>
 </body>
 </html>
