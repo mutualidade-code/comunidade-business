@@ -1,61 +1,47 @@
-# CHANGELOG - SISTEMA MMN
+# CHANGELOG - SISTEMA MAP
+
+## [7.2] - 04/05/2026
+
+### CORREÇÕES CRÍTICAS
+
+#### Corrigido
+- **Tamanho da Rede Ativa:** função `calcular_tamanho_rede_ativa_completa` criada
+  - Agora conta todas as cotas ativas (própria pessoa + rede)
+  - Respeita regra de acumulação de planos
+  - Exemplo: P001 agora mostra 16 (antes 5)
+- **Reserva Mensalidade:** ajuste no cálculo
+  - Exibição: limite de 1 mês (R$ 35,00 para P002)
+  - Acumulação: permite até 2 meses internamente
+- **Disponível para Saque:** transferência dinâmica implementada
+  - Saldo_Bruto agora é transferido para Saque_Mês_Livre em tempo real
+  - Exemplo: P002 agora mostra R$ 68,50 (antes R$ 0,00)
+
+#### Adicionado
+- Função `verifica_acumulacao(id)` - valida hierarquia de planos
+- Função `calcular_tamanho_rede_ativa_completa(id)` - cálculo correto da rede
+- Função `calcular_saldo_consolidado(pessoa)` atualizada com transferência dinâmica
+- Conceito de Saldo_Bruto como acumulador temporário (sempre zera no fim do mês)
+- Conceito de Depósito Reservado (documentado, pendente implementação)
+
+### PENDENTES PARA PRÓXIMAS VERSÕES
+
+- Lançamentos na Web (Fase 2)
+- Posicionamento na matriz via Web
+- Depósito Reservado (implementação)
+- Transferência entre participantes
+
+---
 
 ## [7.1] - 01/05/2026
 
 ### CORREÇÕES E MELHORIAS
 
-#### Corrigido
-- **Login:** Agora o sistema seleciona a cota Start Ativa (em vez de qualquer cota) ao fazer login
-
-#### Adicionado
-- **Nova função `rede_completa`:** retorna todos os membros da rede (independente do status), com informações de indicador, nível e posição
-- **Nova seção na Área do Participante:** 'Membros Inativos/Atrasados/Pendentes' mostrando TODA a rede inativa
-- **Informação do patrocinador:** exibe quem indicou cada membro inativo
-- **Critério `data_pagamento`:** diferencia inativos reais (já ativaram) de cadastros nunca pagos
-- **Backup completo no Supabase:** script com verificação de existência de tabelas e sufixo de data para manter histórico
-
-### DECISÕES DE PROJETO REGISTRADAS (V7.1)
-- Login prioriza cota Start Ativa para ser a raiz da rede
-- `testar_rede` mantida para árvore de ativos; `rede_completa` para inativos/atrasados/pendentes
-- Inativos/atrasados/pendentes mostrados com indicador, nível e posição
-
-## [7.0] - 28/04/2026
-
-### CONSOLIDAÇÃO FINAL + VERSÃO WEB
-
-#### Adicionado
-- **VERSÃO WEB (ÁREA DO PARTICIPANTE)** - implementada em 28/04/2026
-  - Link: https://mutualidade-code.github.io/comunidade-business/
-  - Autenticação: CPF + código (MMN-XXXX-XXXX)
-  - Dashboard com cards de saldo e indicadores
-  - Extrato Consolidado com 11 colunas
-  - Árvore da rede expansível (clique para expandir/contrair)
-  - Solicitação de saque com status 'Em processamento'
-  - Painel administrativo: aprovar saques, gerar códigos, parâmetros pioneiro, log
-  - Parâmetros de Pioneiro editáveis via interface (E3:G7)
-  - Contador de pioneiros = 7 (importado do Excel)
-- Regra de Substituição de cota Inativa sem rede ativa abaixo
-- Regra de Detecção de ciclo na árvore (alerta, não corrige)
-- Regra de Plano inconsistente (superior ativo sem inferior) - alerta grave
-- Opção 16: Mesclar formatação com preservação de mesclagens (células E3:G3)
-- Padronização de fontes: cabeçalhos = 14, negrito, branco sobre #366092
-
-#### Decisões Registradas (Web)
-- Contagem de indicados: por COTA (não por pessoa)
-- Login simplificado: CPF + código (sem email)
-- Lançamentos: via Excel (Web apenas consulta)
-
-#### Pendências para versões futuras
-- Lançamentos na Web (Fase 2)
-- Senha mestra na Web
-- Posicionamento na matriz via Web
-- Saque_Acum_Livre (acúmulo mensal)
-
-### Status
-- Nenhuma pendência no escopo atual
-- Documentação 100% alinhada com o sistema (Excel + Web)
+- **Login:** seleciona a cota Start Ativa
+- **Nova função `rede_completa`:** retorna todos os membros da rede
+- **Seção de inativos:** mostra toda a rede inativa
+- **Backup no Supabase:** script completo com sufixo de data
 
 ---
 
-**Versão atual:** 7.1
-**Data:** 01/05/2026
+**Versão atual:** 7.2
+**Data:** 04/05/2026
