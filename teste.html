@@ -702,7 +702,22 @@
                     const s = saldo[0];
                     
                     document.getElementById('saldoDisponivel').innerHTML = `R$ ${(s.disponivel_saque || 0).toFixed(2)}`;
-                    document.getElementById('saldoReserva').innerHTML = `R$ ${(s.reserva_atual || 0).toFixed(2)}`;
+                    // Buscar a reserva correta para o mês atual
+                    const hoje = new Date();
+                    const anoAtual = hoje.getFullYear();
+                    const mesAtual = hoje.getMonth() + 1;
+                    try {
+                        const visaoMensal = await callRPC('visao_mensal_participante', {
+                            p_id_pessoa: usuarioAtual.id_pessoa,
+                            p_ano: anoAtual,
+                            p_mes: mesAtual
+                        });
+                        const reservaCorreta = (visaoMensal && visaoMensal[0]) ? visaoMensal[0].reserva_mes_seguinte : 0;
+                        document.getElementById('saldoReserva').innerHTML = `R$ ${reservaCorreta.toFixed(2)}`;
+                    } catch (e) {
+                        console.error('Erro ao buscar reserva mensal:', e);
+                        document.getElementById('saldoReserva').innerHTML = `R$ ${(s.reserva_atual || 0).toFixed(2)}`;
+                    }
                     document.getElementById('saldoComercial').innerHTML = `R$ ${(s.saldo_comercial || 0).toFixed(2)}`;
                     
                     const extratoBody = document.getElementById('extratoBody');
@@ -734,11 +749,10 @@
                     document.getElementById('totalBI').innerText = `R$ ${(indicadores[0].total_bi || 0).toFixed(2)}`;
                     document.getElementById('totalBR').innerText = `R$ ${(indicadores[0].total_br || 0).toFixed(2)}`;
                     
-                    let tamanho = indicadores[0].tamanho_rede_ativa || 0;
-                    if (tamanho > 0) {
-                        tamanho = tamanho - 1;
-                    }
-                    document.getElementById('tamanhoRede').innerText = tamanho;
+                    // CÓDIGO NOVO (correção do tamanho da rede)
+                    const tamanhoReal = await callRPC('calcular_tamanho_rede_ativa_completa', { p_id_participante: usuarioAtual.id });
+                    const tamanhoExibido = tamanhoReal > 0 ? tamanhoReal : 0;
+                    document.getElementById('tamanhoRede').innerText = tamanhoExibido;
                 }
                 
             } catch(e) { 
