@@ -693,57 +693,76 @@
         }
 
         // ==================== SALDOS E EXTRATO CONSOLIDADO ====================
-async function carregarExtratoESaldos() {
-    try {
-        // Ler a view (tabela virtual)
-        const saldo = await fetchAPI(`vw_saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
-        
-        if (saldo && saldo.length > 0) {
-            const s = saldo[0];
-            
-            document.getElementById('saldoDisponivel').innerHTML = `R$ ${(s.disponivel_saque || 0).toFixed(2)}`;
-            document.getElementById('saldoReserva').innerHTML = `R$ ${(s.reserva_atual || 0).toFixed(2)}`;
-            document.getElementById('saldoComercial').innerHTML = `R$ ${(s.saldo_comercial || 0).toFixed(2)}`;
-            
-            const extratoBody = document.getElementById('extratoBody');
-            if (extratoBody) {
-                extratoBody.innerHTML = `
-                    <tr>
-                        <td>${usuarioAtual.id_pessoa}</td>
-                        <td>${usuarioAtual.nome}</td>
-                        <td style="font-weight: bold;">R$ ${(s.total_entradas || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(s.total_saidas || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(s.reserva_atual || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(s.saldo_bruto || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(s.saque_mes_livre || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(s.saque_acum_livre || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(s.disponivel_saque || 0).toFixed(2)}</td>
-                        <td style="font-weight: bold;">R$ ${(s.saldo_comercial || 0).toFixed(2)}</td>
-                        <td>${new Date(s.data_atualizacao).toLocaleString()}</td>
-                    </tr>
-                `;
+        async function carregarExtratoESaldos() {
+            try {
+                // Ler da view de saldo consolidado
+                const saldo = await fetchAPI(`vw_saldo_consolidado?id_pessoa=eq.${usuarioAtual.id_pessoa}&select=*`);
+                
+                if (saldo && saldo.length > 0) {
+                    const s = saldo[0];
+                    
+                    document.getElementById('saldoDisponivel').innerHTML = `R$ ${(s.disponivel_saque || 0).toFixed(2)}`;
+                    // Buscar a reserva correta para o mês atual
+                    const hoje = new Date();
+                    const anoAtual = hoje.getFullYear();
+                    const mesAtual = hoje.getMonth() + 1;
+                    try {
+                        const visaoMensal = await callRPC('visao_mensal_participante', {
+                            p_id_pessoa: usuarioAtual.id_pessoa,
+                            p_ano: anoAtual,
+                            p_mes: mesAtual
+                        });
+                        const reservaCorreta = (visaoMensal && visaoMensal[0]) ? visaoMensal[0].reserva_mes_seguinte : 0;
+                        document.getElementById('saldoReserva').innerHTML = `R$ ${reservaCorreta.toFixed(2)}`;
+                    } catch (e) {
+                        console.error('Erro ao buscar reserva mensal:', e);
+                        document.getElementById('saldoReserva').innerHTML = `R$ ${(s.reserva_atual || 0).toFixed(2)}`;
+                    }
+                    document.getElementById('saldoComercial').innerHTML = `R$ ${(s.saldo_comercial || 0).toFixed(2)}`;
+                    
+                    const extratoBody = document.getElementById('extratoBody');
+                    if (extratoBody) {
+                        extratoBody.innerHTML = `
+                            <tr>
+                                <td>${usuarioAtual.id_pessoa}</td>
+                                <td>${usuarioAtual.nome}</td>
+                                <td style="font-weight: bold;">R$ ${(s.total_entradas || 0).toFixed(2)}</td>
+                                <td style="font-weight: bold;">R$ ${(s.total_saidas || 0).toFixed(2)}</td>
+                                <td style="font-weight: bold;">R$ ${(s.reserva_atual || 0).toFixed(2)}</td>
+                                <td style="font-weight: bold;">R$ ${(s.saldo_bruto || 0).toFixed(2)}</td>
+                                <td style="font-weight: bold;">R$ ${(s.saque_mes_livre || 0).toFixed(2)}</td>
+                                <td style="font-weight: bold;">R$ ${(s.saque_acum_livre || 0).toFixed(2)}</td>
+                                <td style="font-weight: bold;">R$ ${(s.disponivel_saque || 0).toFixed(2)}</td>
+                                <td style="font-weight: bold;">R$ ${(s.saldo_comercial || 0).toFixed(2)}</td>
+                                <td>${new Date(s.data_atualizacao).toLocaleString()}</td>
+                            </tr>
+                        `;
+                    }
+                }
+                
+                // Buscar indicadores acumulados (toda vida)
+                const indicadores = await callRPC('indicadores_mes_atual', { p_id_participante: usuarioAtual.id });
+                if (indicadores && indicadores.length > 0) {
+                    console.log('indicadores recebidos:', indicadores[0]);
+                    console.log('total_mensalidades via RPC:', indicadores[0].total_mensalidades);
+                    document.getElementById('totalMensalidades').innerText = `R$ ${(indicadores[0].total_mensalidades || 0).toFixed(2)}`;
+                    document.getElementById('totalBI').innerText = `R$ ${(indicadores[0].total_bi || 0).toFixed(2)}`;
+                    document.getElementById('totalBR').innerText = `R$ ${(indicadores[0].total_br || 0).toFixed(2)}`;
+                    
+                    // CÓDIGO NOVO (correção do tamanho da rede)
+                    const tamanhoReal = await callRPC('calcular_tamanho_rede_ativa_completa', { p_id_participante: usuarioAtual.id });
+                    const tamanhoExibido = tamanhoReal > 0 ? tamanhoReal : 0;
+                    document.getElementById('tamanhoRede').innerText = tamanhoExibido;
+                }
+                
+            } catch(e) { 
+                console.error('Erro ao carregar saldos:', e);
+                const extratoBody = document.getElementById('extratoBody');
+                if (extratoBody) {
+                    extratoBody.innerHTML = `<tr><td colspan="11">Erro ao carregar dados: ${e.message}</td></tr>`;
+                }
             }
-        } else {
-            console.warn('Nenhum dado encontrado na view vw_saldo_consolidado');
         }
-        
-        // Indicadores do mês atual
-        const indicadores = await callRPC('indicadores_mes_atual', { p_id_participante: usuarioAtual.id });
-        if (indicadores) {
-            document.getElementById('totalMensalidades').innerText = `R$ ${(indicadores.total_mensalidades || 0).toFixed(2)}`;
-            document.getElementById('totalBI').innerText = `R$ ${(indicadores.total_bi || 0).toFixed(2)}`;
-            document.getElementById('totalBR').innerText = `R$ ${(indicadores.total_br || 0).toFixed(2)}`;
-            document.getElementById('tamanhoRede').innerText = indicadores.tamanho_rede_ativa || 0;
-        }
-        
-    } catch(e) { 
-        console.error('Erro ao carregar saldos:', e);
-        const extratoBody = document.getElementById('extratoBody');
-        if (extratoBody) {
-            extratoBody.innerHTML = `<tr><td colspan="11">Erro ao carregar dados: ${e.message}</td></tr>`;
-        }
-    }
-}
 
         // ==================== ÁRVORE PRINCIPAL (ATIVOS) ====================
         async function carregarArvore() {
@@ -976,21 +995,20 @@ async function carregarExtratoESaldos() {
             const grupos = {};
             
             for (const mov of movimentacoesFiltradas) {
-                // CORREÇÃO 1: Converter data corretamente (DD/MM/AAAA)
                 let data;
                 if (typeof mov.data_hora === 'string') {
                     const partes = mov.data_hora.split(' ');
                     const dataPartes = partes[0].split('/');
                     if (dataPartes.length === 3) {
-                        const dia = parseInt(dataPartes[0], 10);
-                        const mes = parseInt(dataPartes[1], 10) - 1;
-                        const ano = parseInt(dataPartes[2], 10);
+                        const dia = parseInt(dataPartes[0]);
+                        const mes = parseInt(dataPartes[1]) - 1;
+                        const ano = parseInt(dataPartes[2]);
                         let hora = 0, minuto = 0, segundo = 0;
                         if (partes[1]) {
                             const horaPartes = partes[1].split(':');
-                            hora = parseInt(horaPartes[0], 10) || 0;
-                            minuto = parseInt(horaPartes[1], 10) || 0;
-                            segundo = parseInt(horaPartes[2], 10) || 0;
+                            hora = parseInt(horaPartes[0]) || 0;
+                            minuto = parseInt(horaPartes[1]) || 0;
+                            segundo = parseInt(horaPartes[2]) || 0;
                         }
                         data = new Date(ano, mes, dia, hora, minuto, segundo);
                     } else {
@@ -1011,17 +1029,14 @@ async function carregarExtratoESaldos() {
                     grupos[chave] = { ano, mes, nomeMes, movimentos: [] };
                 }
                 
-                // CORREÇÃO 2: Converter valor com vírgula para número
-                let valorOriginal = mov.valor;
                 let valorNumerico = 0;
-                if (typeof valorOriginal === 'string') {
-                    valorNumerico = parseFloat(valorOriginal.replace(',', '.'));
-                } else if (typeof valorOriginal === 'number') {
-                    valorNumerico = valorOriginal;
+                if (typeof mov.valor === 'string') {
+                    valorNumerico = parseFloat(mov.valor.replace(',', '.'));
+                } else if (typeof mov.valor === 'number') {
+                    valorNumerico = mov.valor;
                 }
                 if (isNaN(valorNumerico)) valorNumerico = 0;
                 
-                // Criar cópia com valor já convertido
                 const movCorrigido = { ...mov, valor: valorNumerico };
                 grupos[chave].movimentos.push(movCorrigido);
             }
@@ -1038,25 +1053,25 @@ async function carregarExtratoESaldos() {
                 }
                 
                 const mesAnoLabel = `${grupo.nomeMes.charAt(0).toUpperCase() + grupo.nomeMes.slice(1)} de ${grupo.ano}`;
+                
+                // Só abre se veio parâmetro de filtro E for o mês/ano correspondente
                 const deveAbrir = (mesParaAbrir !== null && anoParaAbrir !== null && grupo.mes === mesParaAbrir && grupo.ano === anoParaAbrir);
                 const abertoClass = deveAbrir ? 'open' : '';
                 const simbolo = deveAbrir ? '▼' : '▶';
                 
                 html += `
                     <div class="periodo-group">
-                        <div class="periodo-header" onclick="togglePeriodo(this)">
-                            <span class="toggle-symbol">${simbolo}</span>
-                            <span>📅 ${mesAnoLabel}</span>
-                            <span style="font-size:0.7rem; color:#666;">(${grupo.movimentos.length} movimentações)</span>
-                            <span style="margin-left: auto; font-size:0.8rem;">💰 R$ ${saldoPeriodo.toFixed(2)}</span>
-                        </div>
-                        <div class="periodo-content ${abertoClass}">
-                            <div class="mov-item header" style="display: grid; grid-template-columns: 160px 120px 100px 1fr; gap: 12px; padding: 10px 12px; font-weight: bold; background: #f8f9fa; border-bottom: 2px solid #dee2e6;">
-                                <span>Data/Hora</span>
-                                <span>Tipo</span>
-                                <span>Valor (R$)</span>
-                                <span>Descrição</span>
+                        <div class="periodo-header" onclick="togglePeriodo(this)" style="cursor: pointer; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 12px; background: #f0f2f5; border-radius: 8px; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                <span class="toggle-symbol" style="font-weight: bold;">${simbolo}</span>
+                                <span style="font-weight: bold;">📅 ${mesAnoLabel}</span>
+                                <span style="font-size:0.7rem; color:#666;">(${grupo.movimentos.length} movimentações)</span>
                             </div>
+                            <div style="font-size:0.85rem; font-weight: bold; background: #28a745; color: white; padding: 4px 12px; border-radius: 20px;">
+                                💰 R$ ${saldoPeriodo.toFixed(2)}
+                            </div>
+                        </div>
+                        <div class="periodo-content ${abertoClass}" style="margin-left: 20px; padding-left: 15px; border-left: 2px dashed #cbd5e1;">
                 `;
                 
                 for (const m of grupo.movimentos) {
@@ -1072,10 +1087,10 @@ async function carregarExtratoESaldos() {
                     
                     html += `
                         <div class="mov-item" style="display: grid; grid-template-columns: 160px 120px 100px 1fr; gap: 12px; padding: 10px 12px; border-bottom: 1px solid #e9ecef;">
-                            <div class="mov-data">${dataExibicao || '-'}</div>
-                            <div class="mov-tipo"><span class="badge" style="font-size: 11px; padding: 3px 8px; border-radius: 12px; background: #e9ecef;">${m.tipo || '-'}</span></div>
+                            <div class="mov-data" style="font-size: 0.8rem;">${dataExibicao || '-'}</div>
+                            <div class="mov-tipo"><span style="font-size: 11px; padding: 3px 8px; border-radius: 12px; background: #e9ecef;">${m.tipo || '-'}</span></div>
                             <div class="mov-valor" style="${ehEntrada ? 'color: #28a745; font-weight: bold;' : 'color: #dc3545; font-weight: bold;'}">${sinal} R$ ${valorAbs.toFixed(2)}</div>
-                            <div class="mov-descricao">${m.descricao || '-'}</div>
+                            <div class="mov-descricao" style="font-size: 0.85rem;">${m.descricao || '-'}</div>
                         </div>
                     `;
                 }
